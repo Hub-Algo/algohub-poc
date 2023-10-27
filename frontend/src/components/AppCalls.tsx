@@ -50,18 +50,18 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
     // Instead, you would deploy your contract on your backend and reference it by id.
     // Given the simplicity of the starter contract, we are deploying it on the frontend
     // for demonstration purposes.
-    const isLocal = await algokit.isLocalNet(algodClient)
-    const deployParams = {
-      allowDelete: isLocal,
-      allowUpdate: isLocal,
-      onSchemaBreak: isLocal ? 'replace' : 'fail',
-      onUpdate: isLocal ? 'update' : 'fail',
-    }
-    await appClient.deploy(deployParams).catch((e: Error) => {
-      enqueueSnackbar(`Error deploying the contract: ${e.message}`, { variant: 'error' })
-      setLoading(false)
-      return
-    })
+    // const isLocal = await algokit.isLocalNet(algodClient)
+    // const deployParams = {
+    //   allowDelete: isLocal,
+    //   allowUpdate: isLocal,
+    //   onSchemaBreak: isLocal ? 'replace' : 'fail',
+    //   onUpdate: isLocal ? 'update' : 'fail',
+    // }
+    // await appClient.deploy(deployParams).catch((e: Error) => {
+    //   enqueueSnackbar(`Error deploying the contract: ${e.message}`, { variant: 'error' })
+    //   setLoading(false)
+    //   return
+    // })
 
     const response = await appClient.hello({ name: contractInput }).catch((e: Error) => {
       enqueueSnackbar(`Error calling the contract: ${e.message}`, { variant: 'error' })

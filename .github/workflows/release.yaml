@@ -1,27 +1,27 @@
 name: Release
 
 on:
-    push:
-        branches:
-            - main
-        paths-ignore:
-            - "docs/**"
-            - "**.md"
-            - ".vscode/**"
-            - ".idea/**"
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+      - ".vscode/**"
+      - ".idea/**"
 
 permissions:
   contents: read
   packages: read
 
 jobs:
-    backend-release:
-        name: Backend Release
-        secrets: inherit
-        uses: ./.github/workflows/smart-contracts-cd.yaml
+  backend-release:
+    name: Backend Release
+    secrets: inherit
+    uses: ./.github/workflows/smart-contracts-cd.yaml
 
-    frontend-release:
-        name: Frontend Release
-        secrets: inherit
-        uses: ./.github/workflows/frontend-cd.yaml
-        needs: backend-release
+  frontend-release:
+    name: Frontend Release
+    secrets: inherit
+    uses: ./.github/workflows/frontend-cd.yaml
+    needs: backend-release

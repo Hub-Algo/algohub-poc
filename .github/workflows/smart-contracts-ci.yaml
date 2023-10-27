@@ -1,11 +1,11 @@
 name: Backend CI
 
 on:
-    workflow_call:
+  workflow_call:
 
 jobs:
   checks:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -16,8 +16,8 @@ jobs:
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
-          cache: 'poetry'
+          python-version: "3.10"
+          cache: "poetry"
 
       - name: Install algokit
         run: pipx install algokit
