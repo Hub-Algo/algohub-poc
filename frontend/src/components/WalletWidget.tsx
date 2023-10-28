@@ -1,48 +1,59 @@
 import { useWallet } from '@txnlab/use-wallet'
-import { Link, generatePath } from 'react-router-dom'
+import { generatePath, useNavigate } from 'react-router-dom'
 import routes from '../core/routes'
 import { ellipseAddress } from '../utils/ellipseAddress'
+import Dropdown from './common/dropdown/Dropdown'
+import { Option } from './common/dropdown/Dropdown.types'
 
 interface WalletWidgetPropsInterface {
   walletAddress: string
 }
 
+type WalletWidgetType = Option & {
+  path: string
+}
+
 const WalletWidget = ({ walletAddress }: WalletWidgetPropsInterface) => {
   const { providers, activeAccount } = useWallet()
+  const navigate = useNavigate()
 
-  const handleDisconnect = () => {
-    if (!provider) {
-      return
-    }
-    provider[0].disconnect()
-  }
-
-  const provider = providers?.filter((provider) => provider.metadata.id === activeAccount?.providerId)
-
-  const links = [
-    { title: 'disconnect', path: routes.BASE, function: handleDisconnect },
+  const links: WalletWidgetType[] = [
+    { id: 'disconnect', content: 'Disconnect', path: routes.BASE },
     {
-      title: 'profile',
+      id: 'profile',
+      content: 'Profile',
       path: generatePath(routes.PROFILE.FULL_PATH, { walletAddress }),
     },
   ]
 
-  const linksRenderer = links.map((link) => (
-    <li key={link.title}>
-      <Link onClick={link.function} to={link.path}>
-        {link.title}
-      </Link>
-    </li>
-  ))
-
   return (
-    <details>
-      <summary className="bg-orange-500 text-gray-100 hover:bg-orange-600 hover:text-gray-100 active:bg-orange-600 font-bold">
-        {ellipseAddress(walletAddress)}
-      </summary>
-      <ul className="p-2 bg-base-300 w-36">{linksRenderer}</ul>
-    </details>
+    <Dropdown
+      triggerProps={{
+        title: ellipseAddress(walletAddress),
+        customClassName: 'bg-orange-500 text-gray-100 hover:bg-orange-600 hover:text-gray-100 active:bg-orange-600',
+      }}
+      options={links}
+      onSelect={handleSelect}
+    />
   )
+
+  function handleSelect(option: WalletWidgetType) {
+    if (option.id === 'disconnect') {
+      handleDisconnect()
+    }
+
+    navigate(option.path)
+  }
+
+  function handleDisconnect() {
+    const provider = providers?.filter((provider) => provider.metadata.id === activeAccount?.providerId)
+
+    if (!provider) {
+      return
+    }
+
+    provider[0].disconnect()
+  }
 }
 
 export default WalletWidget
