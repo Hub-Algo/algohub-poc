@@ -9,9 +9,7 @@ interface DropdownProps<DropdownItem extends Option = Option> {
   customClassName?: string
 }
 
-function Dropdown<DropdownItem extends Option = Option>(props: DropdownProps<DropdownItem>) {
-  const { triggerProps, options, onSelect, customClassName } = props
-
+function Dropdown<DropdownItem extends Option = Option>({ triggerProps, options, onSelect, customClassName }: DropdownProps<DropdownItem>) {
   return (
     <details className={classNames('dropdown', customClassName)}>
       <summary className={classNames('btn font-bold rounded-md content-center', triggerProps.customClassName)}>
