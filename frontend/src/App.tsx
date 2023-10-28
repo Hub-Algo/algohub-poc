@@ -4,6 +4,7 @@ import { PeraWalletConnect } from '@perawallet/connect'
 import { PROVIDER_ID, ProvidersArray, WalletProvider, useInitializeProviders, useWallet } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
+import Footer from './components/Footer'
 import NavBar from './components/NavBar'
 import ROUTES from './core/routes'
 import About from './pages/About'
@@ -47,6 +48,7 @@ export default function App() {
         <>
           <NavBar />
           <Outlet context={activeAccount} />
+          <Footer />
         </>
       ),
 
