@@ -1,4 +1,3 @@
-import { useWallet } from '@txnlab/use-wallet'
 import PageContainer from '../components/PageContainer'
 
 export default function About() {
