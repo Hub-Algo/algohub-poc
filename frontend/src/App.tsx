@@ -25,47 +25,46 @@ export default function App() {
       // If you are interested in WalletConnect v2 provider
       // refer to https://github.com/TxnLab/use-wallet for detailed integration instructions
     ]
-
-    const { activeAccount } = useWallet()
-
-    const algodConfig = getAlgodConfigFromViteEnvironment()
-
-    const walletProviders = useInitializeProviders({
-      providers: providersArray,
-      nodeConfig: {
-        network: algodConfig.network,
-        nodeServer: algodConfig.server,
-        nodePort: String(algodConfig.port),
-        nodeToken: String(algodConfig.token),
-      },
-      algosdkStatic: algosdk,
-    })
-
-    const router = createBrowserRouter([
-      {
-        element: (
-          <>
-            <NavBar />
-            <Outlet context={activeAccount} />
-          </>
-        ),
-
-        children: [
-          { path: ROUTES.BASE, element: <Home /> },
-          {
-            path: ROUTES.PROFILE.FULL_PATH,
-            element: <Profile />,
-          },
-          { path: ROUTES.PROJECT_DETAIL.FULL_PATH, element: <div>Details</div> },
-          { path: ROUTES.ABOUT.FULL_PATH, element: <About /> },
-        ],
-      },
-    ])
-
-    return (
-      <WalletProvider value={walletProviders}>
-        <RouterProvider router={router} />
-      </WalletProvider>
-    )
   }
+  const { activeAccount } = useWallet()
+
+  const algodConfig = getAlgodConfigFromViteEnvironment()
+
+  const walletProviders = useInitializeProviders({
+    providers: providersArray,
+    nodeConfig: {
+      network: algodConfig.network,
+      nodeServer: algodConfig.server,
+      nodePort: String(algodConfig.port),
+      nodeToken: String(algodConfig.token),
+    },
+    algosdkStatic: algosdk,
+  })
+
+  const router = createBrowserRouter([
+    {
+      element: (
+        <>
+          <NavBar />
+          <Outlet context={activeAccount} />
+        </>
+      ),
+
+      children: [
+        { path: ROUTES.BASE, element: <Home /> },
+        {
+          path: ROUTES.PROFILE.FULL_PATH,
+          element: <Profile />,
+        },
+        { path: ROUTES.PROJECT_DETAIL.FULL_PATH, element: <div>Details</div> },
+        { path: ROUTES.ABOUT.FULL_PATH, element: <About /> },
+      ],
+    },
+  ])
+
+  return (
+    <WalletProvider value={walletProviders}>
+      <RouterProvider router={router} />
+    </WalletProvider>
+  )
 }
