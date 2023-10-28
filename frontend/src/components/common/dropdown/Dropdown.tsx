@@ -10,19 +10,18 @@ interface DropdownProps<DropdownItem extends Option = Option> {
 }
 
 function Dropdown<DropdownItem extends Option = Option>({ triggerProps, options, onSelect, customClassName }: DropdownProps<DropdownItem>) {
-  return (
-    <details className={classNames('dropdown', customClassName)}>
-      <summary className={classNames('btn font-bold rounded-md content-center', triggerProps.customClassName)}>
-        {triggerProps.title}
-      </summary>
-
-      <ul className={'dropdown-content w-full'}>{renderContent()}</ul>
-    </details>
-  )
-
   function renderContent() {
     return options.map((option) => <DropdownItem key={option.id} onSelect={onSelect} option={option} />)
   }
+
+  return (
+    <details className={classNames('dropdown', customClassName)}>
+      <summary className={classNames('btn btn-sm rounded-md content-center w-full border-none', triggerProps.customClassName)}>
+        {triggerProps.title}
+      </summary>
+      <ul className={'dropdown-content w-full bg-gray-950'}>{renderContent()}</ul>
+    </details>
+  )
 }
 
 export default Dropdown

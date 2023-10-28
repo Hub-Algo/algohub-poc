@@ -7,8 +7,8 @@ interface DropdownItemProps<DropdownItem extends Option = Option> {
 
 function DropdownItem<DropdownItem extends Option = Option>({ option, onSelect }: DropdownItemProps<DropdownItem>) {
   return (
-    <li className={'flex'} onClick={handleClick}>
-      {typeof option.content === 'string' ? <p>{option?.content}</p> : option.content}
+    <li className={'flex hover:bg-gray-900'} onClick={handleClick}>
+      {typeof option.content === 'string' ? <p className="hover:text-gray-100">{option?.content}</p> : option.content}
     </li>
   )
 
