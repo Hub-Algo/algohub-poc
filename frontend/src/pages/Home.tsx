@@ -1,3 +1,5 @@
+import Button from '../components/common/button/Button'
+
 export default function Home() {
   return (
     <div className="flex flex-col">
@@ -9,12 +11,11 @@ export default function Home() {
               Conceive great ideas with help from the world
             </h2>
             <div className="flex gap-6">
-              <button type="submit" className="btn btn-sm bg-orange-500 text-gray-100 hover:bg-orange-600 border-none">
-                Create campaign
-              </button>
-              <button type="submit" className="btn btn-sm bg-transparent border-gray-100 text-gray-100 hover:bg-orange-600">
-                View active campaigns
-              </button>
+              <Button buttonColor={'orange'}>{'Create campaign'}</Button>
+
+              <Button buttonType={'outline'} buttonColor={'transparent'}>
+                {'View active campaigns'}
+              </Button>
             </div>
             <div className="text-gray-300">Built on Algorand</div>
           </div>

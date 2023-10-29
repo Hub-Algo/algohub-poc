@@ -19,6 +19,7 @@ function Dropdown<DropdownItem extends Option = Option>({ triggerProps, options,
       <summary className={classNames('btn btn-sm rounded-md content-center w-full border-none', triggerProps.customClassName)}>
         {triggerProps.title}
       </summary>
+
       <ul className={'dropdown-content w-full bg-gray-950'}>{renderContent()}</ul>
     </details>
   )
