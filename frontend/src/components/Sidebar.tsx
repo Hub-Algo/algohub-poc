@@ -13,10 +13,10 @@ const Sidebar = () => {
           <BiMenu className="hover:text-gray-100" />
         </label>
       </div>
-      <div className="drawer-side">
+      <div className="drawer-side z-10">
         <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
 
-        <ul className="menu p-4 w-80 min-h-full bg-gray-900 text-gray-100 flex flex-col h-full ">
+        <ul className="menu p-4 w-80 min-h-full bg-gray-900 text-gray-100 flex flex-col h-full">
           <div className="py-2 border-b-2 border-orange-500">
             <li className="font-bold text-3xl">
               <a className="hover:text-gray-100" onClick={() => navigate(routes.BASE)}>
