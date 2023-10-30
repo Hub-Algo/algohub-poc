@@ -11,8 +11,6 @@ export class AuthService {
   ) {}
 
   async signup(wallet_address: string): Promise<User> {
-    console.log('signup create wallet address', wallet_address);
-
     const user = await this.prismaService.user.findUnique({
       where: { wallet_address },
     });
@@ -28,5 +26,13 @@ export class AuthService {
     const newUser = await this.usersService.create(wallet_address);
 
     return newUser;
+  }
+
+  async signin(wallet_address: string): Promise<User> {
+    const user = await this.prismaService.user.findUnique({
+      where: { wallet_address },
+    });
+
+    return user;
   }
 }

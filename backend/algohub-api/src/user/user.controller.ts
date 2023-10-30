@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Session } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthService } from 'src/auth/auth.service';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { SigninUserDto } from './dtos/SigninUserDto';
 
-@Controller('/users')
+@Controller('/auth')
 export class UserController {
   constructor(
     private readonly usersService: UserService,
@@ -16,9 +17,33 @@ export class UserController {
     return users;
   }
 
-  @Post()
-  createUser(@Body() createUserDto: CreateUserDto) {
-    const user = this.authServices.signup(createUserDto.wallet_address);
+  @Post('/signup')
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+    @Session() session: any,
+  ) {
+    const user = await this.authServices.signup(createUserDto.wallet_address);
+
+    session.user = user;
+
+    console.log(session);
+
     return user;
   }
+
+  @Post('/signin')
+  async signinUser(
+    @Body() signinUserDto: SigninUserDto,
+    @Session() session: any,
+  ) {
+    const user = await this.authServices.signin(signinUserDto.wallet_address);
+
+    session.user = user;
+
+    console.log('signing', user);
+    return user;
+  }
+
+  @Get('/session')
+  async getUserSession() {}
 }
