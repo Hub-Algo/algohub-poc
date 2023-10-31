@@ -1,12 +1,27 @@
 import { useOutletContext, useParams } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
 import Carousel from '../components/common/carousel/Carousel'
+import Tab from '../components/common/tab/Tab'
+import { TabItem } from '../components/common/tab/Tab.types'
 
 const CampaignDetails = () => {
   //Need typing
   const { campaignList } = useOutletContext() as any
 
   const { campaignId } = useParams()
+
+  const tabItems: TabItem[] = [
+    { id: 'become-vip', content: 'Become VIP' },
+    {
+      id: 'voting-history',
+      content: 'Voting History',
+    },
+    { id: 'details', content: 'Details' },
+    {
+      id: 'Settings',
+      content: 'Settings',
+    },
+  ]
 
   console.log(campaignId)
 
@@ -54,6 +69,17 @@ const CampaignDetails = () => {
               </div>
             </div>
           </div>
+        </section>
+        <section className="mt-6">
+          <Tab items={tabItems}>
+            <div>{'Become VIP content'}</div>
+
+            <div>{'Voting History content'}</div>
+
+            <div>{'Details'}</div>
+
+            <div>{'Settings'}</div>
+          </Tab>
         </section>
       </div>
     </PageContainer>
