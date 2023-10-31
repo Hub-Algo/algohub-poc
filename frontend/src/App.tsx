@@ -14,9 +14,11 @@ import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { getAlgodConfigFromViteEnvironment } from './utils/network/getAlgoClientConfigs'
+import campaigns from './dummy-data/campaigns.json'
+import { CampaignInterface } from './interfaces/campaign-interface'
 
 export default function App() {
-  const [campaignList, setCampaignList] = useState([])
+  const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
 
   let providersArray: ProvidersArray
 
@@ -34,8 +36,8 @@ export default function App() {
   }
 
   const fetchCampaigns = async () => {
-    const allCampaigns = await fetchAllCampaigns()
-    setCampaignList(allCampaigns)
+    // const allCampaigns = await fetchAllCampaigns()
+    setCampaignList(campaigns)
   }
 
   useEffect(() => {

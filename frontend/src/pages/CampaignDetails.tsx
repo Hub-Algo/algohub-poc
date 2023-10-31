@@ -7,7 +7,6 @@ import { CampaignInterface } from '../interfaces/campaign-interface'
 
 interface CampaignOutletInterface {
   campaignList: CampaignInterface[]
-  // other properties...
 }
 
 const CampaignDetails = () => {
