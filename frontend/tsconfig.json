@@ -20,7 +20,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "outDir": "./dist/"
+    "outDir": "./dist/",
+    "noImplicitAny": false
   },
   "include": [
     "src/**/*.ts",
@@ -28,7 +29,7 @@
     "vite.config.js",
     "src/utils/ellipseAddress.spec.tsx",
     "src/utils/ellipseAddress.spec.tsx",
-    "src/main.tsx",
+    "src/main.tsx"
   ],
   "references": [
     {
