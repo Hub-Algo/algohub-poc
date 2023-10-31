@@ -3,10 +3,15 @@ import PageContainer from '../components/PageContainer'
 import Carousel from '../components/common/carousel/Carousel'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
+import { CampaignInterface } from '../interfaces/campaign-interface'
+
+interface CampaignOutletInterface {
+  campaignList: CampaignInterface[]
+  // other properties...
+}
 
 const CampaignDetails = () => {
-  //Need typing
-  const { campaignList } = useOutletContext() as any
+  const { campaignList } = useOutletContext() as CampaignOutletInterface
 
   const { campaignId } = useParams()
 
@@ -23,7 +28,7 @@ const CampaignDetails = () => {
     },
   ]
 
-  const campaign = campaignList.filter((campaign) => campaign.campaignId === campaignId)[0]
+  const campaign = campaignList.filter((campaign) => campaign.campaign_id === campaignId)[0]
 
   return (
     <PageContainer>
