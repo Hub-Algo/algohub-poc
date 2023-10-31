@@ -31,6 +31,9 @@ export default function Home() {
             <button className="bg-red-300" onClick={() => navigate('/campaign/1')}>
               Navigate to campaign 1
             </button>
+            <button className="bg-red-300" onClick={() => navigate('/campaign/2')}>
+              Navigate to campaign 2
+            </button>
           </div>
         </div>
       </section>
