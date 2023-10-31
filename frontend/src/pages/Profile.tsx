@@ -1,8 +1,21 @@
 import PageContainer from '../components/PageContainer'
+import Button from '../components/common/button/Button'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
+import useAsyncProcess from '../core/async-process/useAsyncProcess'
+import { Asset, useWallet } from '@txnlab/use-wallet'
+import { useEffect } from 'react'
 
-export default function Profile() {
+function Profile() {
+  const { getAssets, activeAddress } = useWallet()
+  const { state, runAsyncProcess } = useAsyncProcess<Asset[]>()
+
+  useEffect(() => {
+    if (activeAddress) {
+      runAsyncProcess(getAssets())
+    }
+  }, [getAssets, runAsyncProcess, activeAddress])
+
   const tabItems: TabItem[] = [
     { id: 'become-vip', content: 'Become VIP' },
     {
@@ -20,6 +33,7 @@ export default function Profile() {
     <PageContainer>
       <div>Profile</div>
 
+      <Button shouldDisplaySpinner={state.isRequestPending}>{'profile button'}</Button>
       {
         // TODO: Remove this example
         <Tab items={tabItems}>
@@ -27,7 +41,9 @@ export default function Profile() {
 
           <div>{'Voting History content'}</div>
 
-          <div>{'Details'}</div>
+          <div>
+            <p>{'Details'}</p>
+          </div>
 
           <div>{'Settings'}</div>
         </Tab>
@@ -35,3 +51,5 @@ export default function Profile() {
     </PageContainer>
   )
 }
+
+export default Profile

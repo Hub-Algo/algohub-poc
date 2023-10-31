@@ -12,9 +12,9 @@ import About from './pages/About'
 import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
-import { getAlgodConfigFromViteEnvironment } from './utils/network/getAlgoClientConfigs'
 import campaigns from './dummy-data/campaigns.json'
 import { CampaignInterface } from './interfaces/campaign-interface'
+import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])

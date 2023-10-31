@@ -1,7 +1,7 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { generatePath, useNavigate } from 'react-router-dom'
 import routes from '../core/routes'
-import { ellipseAddress } from '../utils/ellipseAddress'
+import { ellipseAddress } from '../core/util/wallet/ellipseAddress'
 import Dropdown from './common/dropdown/Dropdown'
 import { Option } from './common/dropdown/Dropdown.types'
 

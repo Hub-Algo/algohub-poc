@@ -1,6 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        'onramp-green': '#a0dd1d',
+      },
+    },
+  },
   daisyui: {
     themes: [
       {

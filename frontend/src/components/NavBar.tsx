@@ -4,6 +4,7 @@ import routes from '../core/routes'
 import ConnectDropdown from './ConnectDropdown'
 import Sidebar from './Sidebar'
 import WalletWidget from './WalletWidget'
+import PeraOnrampButton from '../core/pera-onramp/button/PeraOnrampButton'
 
 const NavBar = () => {
   const links = [{ title: 'About us', path: routes.ABOUT.ROUTE }]
@@ -22,6 +23,7 @@ const NavBar = () => {
         <a href={routes.BASE} className="btn btn-ghost normal-case text-xl">
           AlgoHub
         </a>
+        <PeraOnrampButton />
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1 gap-3 flex items-center w-full">
