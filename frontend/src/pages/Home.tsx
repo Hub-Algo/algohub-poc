@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom'
 import Button from '../components/common/button/Button'
 
 export default function Home() {
+  const navigate = useNavigate()
+
   return (
     <div className="flex flex-col">
       <section className="relative h-96 md:h-screen bg-gradient-to-l from-orange-800 via-orange-900 to-gray-900 flex flex-col items-center justify-between -z-10">
@@ -24,7 +27,11 @@ export default function Home() {
       <section className="bg-gray-900 px-6 py-6">
         <div className="flex flex-col gap-6">
           <h3 className="text-2xl font-bold text-gray-100">Active campaigns 🔥</h3>
-          <div className="flex flex-col md:grid items-center gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid 2xl:grid-cols-4 w-full"></div>
+          <div className="flex flex-col md:grid items-center gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid 2xl:grid-cols-4 w-full">
+            <button className="bg-red-300" onClick={() => navigate('/campaign/1')}>
+              Navigate to campaign 1
+            </button>
+          </div>
         </div>
       </section>
     </div>

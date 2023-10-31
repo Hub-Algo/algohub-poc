@@ -1,7 +1,14 @@
 [
   {
-    "campaign_id": "1asd123das",
+    "campaign_id": "1",
     "campaign_title": "Recoop IDO",
+    "creator_address": "AENCK6AVVGCOQM6XGSGTSMZXVHV34QDAHH7RDH226GLD55U34BLT6YP5L4",
+    "campaign_status": "pending",
+    "ido_token": 796425061
+  },
+  {
+    "campaign_id": "2",
+    "campaign_title": "Flipping algos",
     "creator_address": "AENCK6AVVGCOQM6XGSGTSMZXVHV34QDAHH7RDH226GLD55U34BLT6YP5L4",
     "campaign_status": "pending",
     "ido_token": 796425061
