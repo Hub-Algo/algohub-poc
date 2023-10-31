@@ -3,16 +3,21 @@ import { DaffiWalletConnect } from '@daffiwallet/connect'
 import { PeraWalletConnect } from '@perawallet/connect'
 import { PROVIDER_ID, ProvidersArray, WalletProvider, useInitializeProviders, useWallet } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
+import { useEffect, useState } from 'react'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
 import ROUTES from './core/routes'
 import About from './pages/About'
+import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
+import { fetchAllCampaigns } from './services/campaignServices'
 import { getAlgodConfigFromViteEnvironment } from './utils/network/getAlgoClientConfigs'
 
 export default function App() {
+  const [campaignList, setCampaignList] = useState([])
+
   let providersArray: ProvidersArray
 
   if (import.meta.env.VITE_ALGOD_NETWORK === '') {
@@ -27,6 +32,16 @@ export default function App() {
       // refer to https://github.com/TxnLab/use-wallet for detailed integration instructions
     ]
   }
+
+  const fetchCampaigns = async () => {
+    const allCampaigns = await fetchAllCampaigns()
+    setCampaignList(allCampaigns)
+  }
+
+  useEffect(() => {
+    fetchCampaigns()
+  }, [])
+
   const { activeAccount } = useWallet()
 
   const algodConfig = getAlgodConfigFromViteEnvironment()
@@ -47,7 +62,7 @@ export default function App() {
       element: (
         <>
           <NavBar />
-          <Outlet context={activeAccount} />
+          <Outlet context={{ activeAccount, campaignList }} />
           <Footer />
         </>
       ),
@@ -58,7 +73,7 @@ export default function App() {
           path: ROUTES.PROFILE.FULL_PATH,
           element: <Profile />,
         },
-        { path: ROUTES.PROJECT_DETAIL.FULL_PATH, element: <div>Details</div> },
+        { path: ROUTES.PROJECT_DETAIL.FULL_PATH, element: <CampaignDetails /> },
         { path: ROUTES.ABOUT.FULL_PATH, element: <About /> },
       ],
     },
