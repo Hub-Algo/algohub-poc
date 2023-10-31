@@ -23,11 +23,7 @@ const CampaignDetails = () => {
     },
   ]
 
-  console.log(campaignId)
-
   const campaign = campaignList.filter((campaign) => campaign.campaignId === campaignId)[0]
-
-  console.log(campaign)
 
   return (
     <PageContainer>
