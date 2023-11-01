@@ -10,7 +10,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
 
   const campaignListRenderer = campaigns.map((campaign) => {
     return (
-      <button onClick={() => navigate(`/campaign/${campaign.campaign_id}`)} className="bg-green-300">
+      <button key={campaign.campaign_id} onClick={() => navigate(`/campaign/${campaign.campaign_id}`)} className="bg-green-300">
         navigate to {campaign.campaign_id}
       </button>
     )

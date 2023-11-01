@@ -10,6 +10,4 @@ const filterCampaignByCategory = (campaigns: CampaignInterface[], category: stri
   return filteredCampaigns
 }
 
-const createCampaign = async () => {}
-
 export { fetchAllCampaigns, filterCampaignByCategory }
