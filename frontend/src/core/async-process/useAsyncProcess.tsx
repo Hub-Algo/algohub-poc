@@ -47,7 +47,6 @@ function useAsyncProcess<Data>(options?: UseAsyncProcessOptions<Data>): AsyncPro
           latestDataRef.current = asyncCallbackOptions?.responseSerializer ? asyncCallbackOptions.responseSerializer(response) : response
         })
         .catch((error) => {
-          console.error(error)
           asyncStateSetter({
             isRequestPending: false,
             isRequestFetched: true,
