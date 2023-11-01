@@ -1,8 +1,13 @@
-import { useNavigate } from 'react-router-dom'
+import { useOutletContext } from 'react-router-dom'
+import CampaignList from '../components/CampaignList'
 import Button from '../components/common/button/Button'
+import { filterCampaignByCategory } from '../services/campaignServices'
+import { CampaignOutletInterface } from './CampaignDetails'
 
 export default function Home() {
-  const navigate = useNavigate()
+  const { campaignList } = useOutletContext() as CampaignOutletInterface
+
+  const communityCampaigns = filterCampaignByCategory(campaignList, 'community')
 
   return (
     <div className="flex flex-col">
@@ -28,12 +33,7 @@ export default function Home() {
         <div className="flex flex-col gap-6">
           <h3 className="text-2xl font-bold text-gray-100">Active campaigns 🔥</h3>
           <div className="flex flex-col md:grid items-center gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid 2xl:grid-cols-4 w-full">
-            <button className="bg-red-300" onClick={() => navigate('/campaign/1')}>
-              Navigate to campaign 1
-            </button>
-            <button className="bg-red-300" onClick={() => navigate('/campaign/2')}>
-              Navigate to campaign 2
-            </button>
+            <CampaignList campaigns={communityCampaigns} />
           </div>
         </div>
       </section>

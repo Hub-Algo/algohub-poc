@@ -1,11 +1,17 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { Link } from 'react-router-dom'
 import routes from '../core/routes'
+import { UserPropsInterface } from '../interfaces/user-props-interface'
+import { UserInterface } from '../interfaces/userInterface'
 import ConnectDropdown from './ConnectDropdown'
 import Sidebar from './Sidebar'
 import WalletWidget from './WalletWidget'
 
-const NavBar = () => {
+export interface UserDataOutletInterface {
+  userData: UserInterface
+}
+
+const NavBar = ({ userData }: UserPropsInterface) => {
   const links = [{ title: 'About us', path: routes.ABOUT.ROUTE }]
 
   const { activeAccount } = useWallet()
@@ -26,7 +32,9 @@ const NavBar = () => {
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1 gap-3 flex items-center w-full">
           {linksRenderer}
-          <li className="md:block">{activeAccount ? <WalletWidget walletAddress={activeAccount.address} /> : <ConnectDropdown />}</li>
+          <li className="md:block">
+            {activeAccount ? <WalletWidget username={userData?.username} walletAddress={activeAccount.address} /> : <ConnectDropdown />}
+          </li>
           <li className="md:hidden">
             <Sidebar />
           </li>

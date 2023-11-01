@@ -17,7 +17,7 @@ const ConnectDropdown = () => {
           <div className={'flex justify-between'}>
             <p>{provider.metadata.name}</p>
 
-            <img className="w-6" src={provider.metadata.icon} />
+            <img className="w-6 ronded-full" src={provider.metadata.icon} />
           </div>
         ),
         onSelect: provider.connect,
