@@ -8,16 +8,17 @@ import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
 import ROUTES from './core/routes'
+import { CampaignInterface } from './interfaces/campaign-interface'
 import About from './pages/About'
 import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
+import { fetchAllCampaigns } from './services/campaignServices'
 import { getAlgodConfigFromViteEnvironment } from './utils/network/getAlgoClientConfigs'
-import campaigns from './dummy-data/campaigns.json'
-import { CampaignInterface } from './interfaces/campaign-interface'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
+  const [userData, setUserData] = useState({})
 
   let providersArray: ProvidersArray
 
@@ -35,13 +36,26 @@ export default function App() {
   }
 
   const fetchCampaigns = async () => {
-    // const allCampaigns = await fetchAllCampaigns()
-    setCampaignList(campaigns)
+    const allCampaigns = await fetchAllCampaigns()
+    setCampaignList(allCampaigns)
+  }
+
+  const fetchUser = async () => {
+
+    if (activeAccount) {
+       const user = await fetchUserData(activeAccount?.address); setUserData(user) 
+      }
+
+
+
   }
 
   useEffect(() => {
     fetchCampaigns()
   }, [])
+
+
+  useEffect(())
 
   const { activeAccount } = useWallet()
 

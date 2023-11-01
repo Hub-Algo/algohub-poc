@@ -5,7 +5,7 @@ import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
 import { CampaignInterface } from '../interfaces/campaign-interface'
 
-interface CampaignOutletInterface {
+export interface CampaignOutletInterface {
   campaignList: CampaignInterface[]
 }
 
@@ -54,7 +54,7 @@ const CampaignDetails = () => {
             <div className="w-full bg-gray-900 rounded-md p-6 gap-6 flex flex-col">
               <div className="">
                 <p className="text-sm md:text-lg text-gray-400">Fundraise goal</p>
-                <h2 className="text-3xl md:text-5xl font-bold text-gray-100 ">$650,000</h2>
+                <h2 className="text-3xl md:text-5xl font-bold text-gray-100 ">${campaign.hard_goal}</h2>
               </div>
               <div className="text-gray-300 flex w-full items-center justify-between">
                 <p className="w-3/6">Max allocation</p>
@@ -65,16 +65,16 @@ const CampaignDetails = () => {
               <div className="text-gray-300 flex w-full items-center justify-between">
                 <p className="w-3/6">Max allocation</p>
                 <div className="w-1/6 border h-px border-dashed border-gray-600"></div>
-                <p className="w-1/6">$500</p>
+                <p className="w-1/6">${campaign.max_allocation}</p>
               </div>
             </div>
           </div>
         </section>
         <section className="mt-6">
           <Tab items={tabItems}>
-            <div>{'Become VIP content'}</div>
+            <div>{'Campaign info'}</div>
 
-            <div>{'Voting History content'}</div>
+            <div>{'Tokenomics'}</div>
 
             <div>{'Details'}</div>
 
