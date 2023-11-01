@@ -51,9 +51,11 @@ export default function App() {
       const usdcDecimals = 6
       //Asset needs type
       const usdcBalance = userAssets.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0].amount / 10 ** usdcDecimals
+
+      //Algo decimals is being used just as dummy for now
       const algoDecimals = 6
       const username = userNfd || ellipseAddress(walletAddress)
-      setUserData({ wallet_address: activeAccount.address, username, usdc_balance: usdcBalance, algo_balance: 1 })
+      setUserData({ wallet_address: activeAccount.address, username, usdc_balance: usdcBalance, algo_balance: 1 * algoDecimals })
     }
   }
 
