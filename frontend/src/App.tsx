@@ -3,7 +3,7 @@ import { DaffiWalletConnect } from '@daffiwallet/connect'
 import { PeraWalletConnect } from '@perawallet/connect'
 import { PROVIDER_ID, ProvidersArray, WalletProvider, useInitializeProviders, useWallet } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
@@ -42,21 +42,24 @@ export default function App() {
     setCampaignList(allCampaigns)
   }
 
-  const fetchAndAppendUserData = async (walletAddress: string) => {
-    if (activeAccount) {
-      const userAssets = await fetchUserAssets(walletAddress)
-      const userNfd = await fetchUserNfd(walletAddress)
+  const fetchAndAppendUserData = useCallback(
+    async (walletAddress: string) => {
+      if (activeAccount) {
+        const userAssets = await fetchUserAssets(walletAddress)
+        const userNfd = await fetchUserNfd(walletAddress)
 
-      const usdcDecimals = 6
-      //Asset needs type
-      const usdcBalance = userAssets.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0].amount / 10 ** usdcDecimals
+        const usdcDecimals = 6
+        //Asset needs type
+        const usdcBalance = userAssets.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0].amount / 10 ** usdcDecimals
 
-      //Algo decimals is being used just as dummy for now
-      const algoDecimals = 6
-      const username = userNfd || ellipseAddress(walletAddress)
-      setUserData({ wallet_address: activeAccount.address, username, usdc_balance: usdcBalance, algo_balance: 1 * algoDecimals })
-    }
-  }
+        //Algo decimals is being used just as dummy for now
+        const algoDecimals = 6
+        const username = userNfd || ellipseAddress(walletAddress)
+        setUserData({ wallet_address: activeAccount.address, username, usdc_balance: usdcBalance, algo_balance: 1 * algoDecimals })
+      }
+    },
+    [activeAccount, setUserData],
+  )
 
   useEffect(() => {
     fetchCampaigns()
