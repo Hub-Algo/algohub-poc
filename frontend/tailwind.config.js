@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         'onramp-green': '#a0dd1d',
+        'card-bg': '#D9D9D9',
       },
     },
   },
