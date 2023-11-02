@@ -21,7 +21,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "outDir": "./dist/",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "noUnusedLocals": true /* Report errors on unused locals. */,
+    "noUnusedParameters": true /* Report errors on unused parameters. */,
   },
   "include": [
     "src/**/*.ts",

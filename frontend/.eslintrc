@@ -23,6 +23,10 @@
         "destructuredArrayIgnorePattern": "^_"
       }
     ],
-    "prefer-template": "error"
+    "prefer-template": "error",
+    "react/jsx-no-bind": "off",
+    "func-name-matching": "off",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off"
   }
 }

@@ -1,11 +1,11 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { generatePath, useNavigate } from 'react-router-dom'
 import routes from '../core/routes'
-import { ellipseAddress } from '../core/util/wallet/ellipseAddress'
 import Dropdown from './common/dropdown/Dropdown'
 import { Option } from './common/dropdown/Dropdown.types'
 
 interface WalletWidgetPropsInterface {
+  username: string | undefined
   walletAddress: string
 }
 
@@ -13,7 +13,7 @@ type WalletWidgetType = Option & {
   path: string
 }
 
-const WalletWidget = ({ walletAddress }: WalletWidgetPropsInterface) => {
+const WalletWidget = ({ username, walletAddress }: WalletWidgetPropsInterface) => {
   const { providers, activeAccount } = useWallet()
   const navigate = useNavigate()
 
@@ -29,7 +29,7 @@ const WalletWidget = ({ walletAddress }: WalletWidgetPropsInterface) => {
   return (
     <Dropdown
       triggerProps={{
-        title: ellipseAddress(walletAddress),
+        title: username as string,
         customClassName: 'bg-orange-500 text-gray-100 hover:bg-orange-600 hover:text-gray-100 active:bg-orange-600',
       }}
       options={links}
