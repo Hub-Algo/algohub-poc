@@ -10,7 +10,6 @@ import type {
   AppCallTransactionResultOfType,
   CoreAppCallArgs,
   RawAppCallArgs,
-  AppState,
   TealTemplateParams,
   ABIAppCallArg,
 } from '@algorandfoundation/algokit-utils/types/app'
@@ -26,88 +25,89 @@ import type { SendTransactionResult, TransactionToSign, SendTransactionFrom } fr
 import type { TransactionWithSigner } from 'algosdk'
 import { Algodv2, OnApplicationComplete, Transaction, AtomicTransactionComposer } from 'algosdk'
 export const APP_SPEC: AppSpec = {
-  "hints": {
-    "hello(string)string": {
-      "call_config": {
-        "no_op": "CALL"
-      }
-    }
-  },
-  "source": {
-    "approval": "I3ByYWdtYSB2ZXJzaW9uIDgKaW50Y2Jsb2NrIDAgMQpieXRlY2Jsb2NrIDB4CnR4biBOdW1BcHBBcmdzCmludGNfMCAvLyAwCj09CmJueiBtYWluX2w0CnR4bmEgQXBwbGljYXRpb25BcmdzIDAKcHVzaGJ5dGVzIDB4MDJiZWNlMTEgLy8gImhlbGxvKHN0cmluZylzdHJpbmciCj09CmJueiBtYWluX2wzCmVycgptYWluX2wzOgp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIGhlbGxvY2FzdGVyXzMKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDQ6CnR4biBPbkNvbXBsZXRpb24KaW50Y18wIC8vIE5vT3AKPT0KYm56IG1haW5fbDEwCnR4biBPbkNvbXBsZXRpb24KcHVzaGludCA0IC8vIFVwZGF0ZUFwcGxpY2F0aW9uCj09CmJueiBtYWluX2w5CnR4biBPbkNvbXBsZXRpb24KcHVzaGludCA1IC8vIERlbGV0ZUFwcGxpY2F0aW9uCj09CmJueiBtYWluX2w4CmVycgptYWluX2w4Ogp0eG4gQXBwbGljYXRpb25JRAppbnRjXzAgLy8gMAohPQphc3NlcnQKY2FsbHN1YiBkZWxldGVfMQppbnRjXzEgLy8gMQpyZXR1cm4KbWFpbl9sOToKdHhuIEFwcGxpY2F0aW9uSUQKaW50Y18wIC8vIDAKIT0KYXNzZXJ0CmNhbGxzdWIgdXBkYXRlXzAKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDEwOgp0eG4gQXBwbGljYXRpb25JRAppbnRjXzAgLy8gMAo9PQphc3NlcnQKaW50Y18xIC8vIDEKcmV0dXJuCgovLyB1cGRhdGUKdXBkYXRlXzA6CnByb3RvIDAgMAp0eG4gU2VuZGVyCmdsb2JhbCBDcmVhdG9yQWRkcmVzcwo9PQovLyB1bmF1dGhvcml6ZWQKYXNzZXJ0CnB1c2hpbnQgVE1QTF9VUERBVEFCTEUgLy8gVE1QTF9VUERBVEFCTEUKLy8gQ2hlY2sgYXBwIGlzIHVwZGF0YWJsZQphc3NlcnQKcmV0c3ViCgovLyBkZWxldGUKZGVsZXRlXzE6CnByb3RvIDAgMAp0eG4gU2VuZGVyCmdsb2JhbCBDcmVhdG9yQWRkcmVzcwo9PQovLyB1bmF1dGhvcml6ZWQKYXNzZXJ0CnB1c2hpbnQgVE1QTF9ERUxFVEFCTEUgLy8gVE1QTF9ERUxFVEFCTEUKLy8gQ2hlY2sgYXBwIGlzIGRlbGV0YWJsZQphc3NlcnQKcmV0c3ViCgovLyBoZWxsbwpoZWxsb18yOgpwcm90byAxIDEKYnl0ZWNfMCAvLyAiIgpwdXNoYnl0ZXMgMHg0ODY1NmM2YzZmMmMyMCAvLyAiSGVsbG8sICIKZnJhbWVfZGlnIC0xCmV4dHJhY3QgMiAwCmNvbmNhdApmcmFtZV9idXJ5IDAKZnJhbWVfZGlnIDAKbGVuCml0b2IKZXh0cmFjdCA2IDAKZnJhbWVfZGlnIDAKY29uY2F0CmZyYW1lX2J1cnkgMApyZXRzdWIKCi8vIGhlbGxvX2Nhc3RlcgpoZWxsb2Nhc3Rlcl8zOgpwcm90byAwIDAKYnl0ZWNfMCAvLyAiIgpkdXAKdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQpmcmFtZV9idXJ5IDEKZnJhbWVfZGlnIDEKY2FsbHN1YiBoZWxsb18yCmZyYW1lX2J1cnkgMApwdXNoYnl0ZXMgMHgxNTFmN2M3NSAvLyAweDE1MWY3Yzc1CmZyYW1lX2RpZyAwCmNvbmNhdApsb2cKcmV0c3Vi",
-    "clear": "I3ByYWdtYSB2ZXJzaW9uIDgKcHVzaGludCAwIC8vIDAKcmV0dXJu"
-  },
-  "state": {
-    "global": {
-      "num_byte_slices": 0,
-      "num_uints": 0
+  hints: {
+    'hello(string)string': {
+      call_config: {
+        no_op: 'CALL',
+      },
     },
-    "local": {
-      "num_byte_slices": 0,
-      "num_uints": 0
-    }
   },
-  "schema": {
-    "global": {
-      "declared": {},
-      "reserved": {}
+  source: {
+    approval:
+      'I3ByYWdtYSB2ZXJzaW9uIDgKaW50Y2Jsb2NrIDAgMQpieXRlY2Jsb2NrIDB4CnR4biBOdW1BcHBBcmdzCmludGNfMCAvLyAwCj09CmJueiBtYWluX2w0CnR4bmEgQXBwbGljYXRpb25BcmdzIDAKcHVzaGJ5dGVzIDB4MDJiZWNlMTEgLy8gImhlbGxvKHN0cmluZylzdHJpbmciCj09CmJueiBtYWluX2wzCmVycgptYWluX2wzOgp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIGhlbGxvY2FzdGVyXzMKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDQ6CnR4biBPbkNvbXBsZXRpb24KaW50Y18wIC8vIE5vT3AKPT0KYm56IG1haW5fbDEwCnR4biBPbkNvbXBsZXRpb24KcHVzaGludCA0IC8vIFVwZGF0ZUFwcGxpY2F0aW9uCj09CmJueiBtYWluX2w5CnR4biBPbkNvbXBsZXRpb24KcHVzaGludCA1IC8vIERlbGV0ZUFwcGxpY2F0aW9uCj09CmJueiBtYWluX2w4CmVycgptYWluX2w4Ogp0eG4gQXBwbGljYXRpb25JRAppbnRjXzAgLy8gMAohPQphc3NlcnQKY2FsbHN1YiBkZWxldGVfMQppbnRjXzEgLy8gMQpyZXR1cm4KbWFpbl9sOToKdHhuIEFwcGxpY2F0aW9uSUQKaW50Y18wIC8vIDAKIT0KYXNzZXJ0CmNhbGxzdWIgdXBkYXRlXzAKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDEwOgp0eG4gQXBwbGljYXRpb25JRAppbnRjXzAgLy8gMAo9PQphc3NlcnQKaW50Y18xIC8vIDEKcmV0dXJuCgovLyB1cGRhdGUKdXBkYXRlXzA6CnByb3RvIDAgMAp0eG4gU2VuZGVyCmdsb2JhbCBDcmVhdG9yQWRkcmVzcwo9PQovLyB1bmF1dGhvcml6ZWQKYXNzZXJ0CnB1c2hpbnQgVE1QTF9VUERBVEFCTEUgLy8gVE1QTF9VUERBVEFCTEUKLy8gQ2hlY2sgYXBwIGlzIHVwZGF0YWJsZQphc3NlcnQKcmV0c3ViCgovLyBkZWxldGUKZGVsZXRlXzE6CnByb3RvIDAgMAp0eG4gU2VuZGVyCmdsb2JhbCBDcmVhdG9yQWRkcmVzcwo9PQovLyB1bmF1dGhvcml6ZWQKYXNzZXJ0CnB1c2hpbnQgVE1QTF9ERUxFVEFCTEUgLy8gVE1QTF9ERUxFVEFCTEUKLy8gQ2hlY2sgYXBwIGlzIGRlbGV0YWJsZQphc3NlcnQKcmV0c3ViCgovLyBoZWxsbwpoZWxsb18yOgpwcm90byAxIDEKYnl0ZWNfMCAvLyAiIgpwdXNoYnl0ZXMgMHg0ODY1NmM2YzZmMmMyMCAvLyAiSGVsbG8sICIKZnJhbWVfZGlnIC0xCmV4dHJhY3QgMiAwCmNvbmNhdApmcmFtZV9idXJ5IDAKZnJhbWVfZGlnIDAKbGVuCml0b2IKZXh0cmFjdCA2IDAKZnJhbWVfZGlnIDAKY29uY2F0CmZyYW1lX2J1cnkgMApyZXRzdWIKCi8vIGhlbGxvX2Nhc3RlcgpoZWxsb2Nhc3Rlcl8zOgpwcm90byAwIDAKYnl0ZWNfMCAvLyAiIgpkdXAKdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQpmcmFtZV9idXJ5IDEKZnJhbWVfZGlnIDEKY2FsbHN1YiBoZWxsb18yCmZyYW1lX2J1cnkgMApwdXNoYnl0ZXMgMHgxNTFmN2M3NSAvLyAweDE1MWY3Yzc1CmZyYW1lX2RpZyAwCmNvbmNhdApsb2cKcmV0c3Vi',
+    clear: 'I3ByYWdtYSB2ZXJzaW9uIDgKcHVzaGludCAwIC8vIDAKcmV0dXJu',
+  },
+  state: {
+    global: {
+      num_byte_slices: 0,
+      num_uints: 0,
     },
-    "local": {
-      "declared": {},
-      "reserved": {}
-    }
+    local: {
+      num_byte_slices: 0,
+      num_uints: 0,
+    },
   },
-  "contract": {
-    "name": "hello_world",
-    "methods": [
+  schema: {
+    global: {
+      declared: {},
+      reserved: {},
+    },
+    local: {
+      declared: {},
+      reserved: {},
+    },
+  },
+  contract: {
+    name: 'hello_world',
+    methods: [
       {
-        "name": "hello",
-        "args": [
+        name: 'hello',
+        args: [
           {
-            "type": "string",
-            "name": "name"
-          }
+            type: 'string',
+            name: 'name',
+          },
         ],
-        "returns": {
-          "type": "string"
-        }
-      }
+        returns: {
+          type: 'string',
+        },
+      },
     ],
-    "networks": {}
+    networks: {},
   },
-  "bare_call_config": {
-    "delete_application": "CALL",
-    "no_op": "CREATE",
-    "update_application": "CALL"
-  }
+  bare_call_config: {
+    delete_application: 'CALL',
+    no_op: 'CREATE',
+    update_application: 'CALL',
+  },
 }
 
 /**
  * Defines an onCompletionAction of 'no_op'
  */
-export type OnCompleteNoOp =  { onCompleteAction?: 'no_op' | OnApplicationComplete.NoOpOC }
+export type OnCompleteNoOp = { onCompleteAction?: 'no_op' | OnApplicationComplete.NoOpOC }
 /**
  * Defines an onCompletionAction of 'opt_in'
  */
-export type OnCompleteOptIn =  { onCompleteAction: 'opt_in' | OnApplicationComplete.OptInOC }
+export type OnCompleteOptIn = { onCompleteAction: 'opt_in' | OnApplicationComplete.OptInOC }
 /**
  * Defines an onCompletionAction of 'close_out'
  */
-export type OnCompleteCloseOut =  { onCompleteAction: 'close_out' | OnApplicationComplete.CloseOutOC }
+export type OnCompleteCloseOut = { onCompleteAction: 'close_out' | OnApplicationComplete.CloseOutOC }
 /**
  * Defines an onCompletionAction of 'delete_application'
  */
-export type OnCompleteDelApp =  { onCompleteAction: 'delete_application' | OnApplicationComplete.DeleteApplicationOC }
+export type OnCompleteDelApp = { onCompleteAction: 'delete_application' | OnApplicationComplete.DeleteApplicationOC }
 /**
  * Defines an onCompletionAction of 'update_application'
  */
-export type OnCompleteUpdApp =  { onCompleteAction: 'update_application' | OnApplicationComplete.UpdateApplicationOC }
+export type OnCompleteUpdApp = { onCompleteAction: 'update_application' | OnApplicationComplete.UpdateApplicationOC }
 /**
  * A state record containing a single unsigned integer
  */
 export type IntegerState = {
   /**
-   * Gets the state value as a BigInt 
+   * Gets the state value as a BigInt
    */
   asBigInt(): bigint
   /**
@@ -136,14 +136,16 @@ export type HelloWorld = {
   /**
    * Maps method signatures / names to their argument and return types.
    */
-  methods:
-    & Record<'hello(string)string' | 'hello', {
+  methods: Record<
+    'hello(string)string' | 'hello',
+    {
       argsObj: {
         name: string
       }
       argsTuple: [name: string]
       returns: string
-    }>
+    }
+  >
 }
 /**
  * Defines the possible abi call signatures
@@ -155,7 +157,8 @@ export type HelloWorldSig = keyof HelloWorld['methods']
 export type TypedCallParams<TSignature extends HelloWorldSig | undefined> = {
   method: TSignature
   methodArgs: TSignature extends undefined ? undefined : Array<ABIAppCallArg | undefined>
-} & AppClientCallCoreParams & CoreAppCallArgs
+} & AppClientCallCoreParams &
+  CoreAppCallArgs
 /**
  * Defines the arguments required for a bare call
  */
@@ -176,8 +179,7 @@ export type HelloWorldCreateCalls = (typeof HelloWorldCallFactory)['create']
 /**
  * Defines supported create methods for this smart contract
  */
-export type HelloWorldCreateCallParams =
-  | (TypedCallParams<undefined> & (OnCompleteNoOp))
+export type HelloWorldCreateCallParams = TypedCallParams<undefined> & OnCompleteNoOp
 /**
  * A factory for available 'update' calls
  */
@@ -185,8 +187,7 @@ export type HelloWorldUpdateCalls = (typeof HelloWorldCallFactory)['update']
 /**
  * Defines supported update methods for this smart contract
  */
-export type HelloWorldUpdateCallParams =
-  | TypedCallParams<undefined>
+export type HelloWorldUpdateCallParams = TypedCallParams<undefined>
 /**
  * A factory for available 'delete' calls
  */
@@ -194,8 +195,7 @@ export type HelloWorldDeleteCalls = (typeof HelloWorldCallFactory)['delete']
 /**
  * Defines supported delete methods for this smart contract
  */
-export type HelloWorldDeleteCallParams =
-  | TypedCallParams<undefined>
+export type HelloWorldDeleteCallParams = TypedCallParams<undefined>
 /**
  * Defines arguments required for the deploy method.
  */
@@ -215,7 +215,6 @@ export type HelloWorldDeployArgs = {
   deleteCall?: (callFactory: HelloWorldDeleteCalls) => HelloWorldDeleteCallParams
 }
 
-
 /**
  * Exposes methods for constructing all available smart contract calls
  */
@@ -231,7 +230,7 @@ export abstract class HelloWorldCallFactory {
        * @param params Any parameters for the call
        * @returns A TypedCallParams object for the call
        */
-      bare(params: BareCallArgs & AppClientCallCoreParams & CoreAppCallArgs & AppClientCompilationParams & (OnCompleteNoOp) = {}) {
+      bare(params: BareCallArgs & AppClientCallCoreParams & CoreAppCallArgs & AppClientCompilationParams & OnCompleteNoOp = {}) {
         return {
           method: undefined,
           methodArgs: undefined,
@@ -316,12 +315,18 @@ export class HelloWorldClient {
    * @param appDetails appDetails The details to identify the app to deploy
    * @param algod An algod client instance
    */
-  constructor(appDetails: AppDetails, private algod: Algodv2) {
+  constructor(
+    appDetails: AppDetails,
+    private algod: Algodv2,
+  ) {
     this.sender = appDetails.sender
-    this.appClient = algokit.getAppClient({
-      ...appDetails,
-      app: APP_SPEC
-    }, algod)
+    this.appClient = algokit.getAppClient(
+      {
+        ...appDetails,
+        app: APP_SPEC,
+      },
+      algod,
+    )
   }
 
   /**
@@ -331,14 +336,18 @@ export class HelloWorldClient {
    * @param returnValueFormatter An optional delegate to format the return value if required
    * @returns The smart contract response with an updated return value
    */
-  protected mapReturnValue<TReturn>(result: AppCallTransactionResult, returnValueFormatter?: (value: any) => TReturn): AppCallTransactionResultOfType<TReturn> {
-    if(result.return?.decodeError) {
+  protected mapReturnValue<TReturn>(
+    result: AppCallTransactionResult,
+    returnValueFormatter?: (value: any) => TReturn,
+  ): AppCallTransactionResultOfType<TReturn> {
+    if (result.return?.decodeError) {
       throw result.return.decodeError
     }
-    const returnValue = result.return?.returnValue !== undefined && returnValueFormatter !== undefined
-      ? returnValueFormatter(result.return.returnValue)
-      : result.return?.returnValue as TReturn | undefined
-      return { ...result, return: returnValue }
+    const returnValue =
+      result.return?.returnValue !== undefined && returnValueFormatter !== undefined
+        ? returnValueFormatter(result.return.returnValue)
+        : (result.return?.returnValue as TReturn | undefined)
+    return { ...result, return: returnValue }
   }
 
   /**
@@ -348,7 +357,10 @@ export class HelloWorldClient {
    * @param returnValueFormatter An optional delegate which when provided will be used to map non-undefined return values to the target type
    * @returns The result of the smart contract call
    */
-  public async call<TSignature extends keyof HelloWorld['methods']>(typedCallParams: TypedCallParams<TSignature>, returnValueFormatter?: (value: any) => MethodReturn<TSignature>) {
+  public async call<TSignature extends keyof HelloWorld['methods']>(
+    typedCallParams: TypedCallParams<TSignature>,
+    returnValueFormatter?: (value: any) => MethodReturn<TSignature>,
+  ) {
     return this.mapReturnValue<MethodReturn<TSignature>>(await this.appClient.call(typedCallParams), returnValueFormatter)
   }
 
@@ -383,7 +395,9 @@ export class HelloWorldClient {
        * @param args The arguments for the bare call
        * @returns The create result
        */
-      bare(args: BareCallArgs & AppClientCallCoreParams & AppClientCompilationParams & CoreAppCallArgs & (OnCompleteNoOp) = {}): Promise<AppCallTransactionResultOfType<undefined>> {
+      bare(
+        args: BareCallArgs & AppClientCallCoreParams & AppClientCompilationParams & CoreAppCallArgs & OnCompleteNoOp = {},
+      ): Promise<AppCallTransactionResultOfType<undefined>> {
         return $this.appClient.create(args) as unknown as Promise<AppCallTransactionResultOfType<undefined>>
       },
     }
@@ -401,7 +415,9 @@ export class HelloWorldClient {
        * @param args The arguments for the bare call
        * @returns The update result
        */
-      bare(args: BareCallArgs & AppClientCallCoreParams & AppClientCompilationParams & CoreAppCallArgs = {}): Promise<AppCallTransactionResultOfType<undefined>> {
+      bare(
+        args: BareCallArgs & AppClientCallCoreParams & AppClientCompilationParams & CoreAppCallArgs = {},
+      ): Promise<AppCallTransactionResultOfType<undefined>> {
         return $this.appClient.update(args) as unknown as Promise<AppCallTransactionResultOfType<undefined>>
       },
     }
@@ -449,11 +465,13 @@ export class HelloWorldClient {
   public compose(): HelloWorldComposer {
     const client = this
     const atc = new AtomicTransactionComposer()
-    let promiseChain:Promise<unknown> = Promise.resolve()
+    let promiseChain: Promise<unknown> = Promise.resolve()
     const resultMappers: Array<undefined | ((x: any) => any)> = []
     return {
       hello(args: MethodArgs<'hello(string)string'>, params?: AppClientCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.hello(args, {...params, sendParams: {...params?.sendParams, skipSending: true, atc}}))
+        promiseChain = promiseChain.then(() =>
+          client.hello(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+        )
         resultMappers.push(undefined)
         return this
       },
@@ -461,7 +479,9 @@ export class HelloWorldClient {
         const $this = this
         return {
           bare(args?: BareCallArgs & AppClientCallCoreParams & AppClientCompilationParams & CoreAppCallArgs) {
-            promiseChain = promiseChain.then(() => client.update.bare({...args, sendParams: {...args?.sendParams, skipSending: true, atc}}))
+            promiseChain = promiseChain.then(() =>
+              client.update.bare({ ...args, sendParams: { ...args?.sendParams, skipSending: true, atc } }),
+            )
             resultMappers.push(undefined)
             return $this
           },
@@ -471,19 +491,26 @@ export class HelloWorldClient {
         const $this = this
         return {
           bare(args?: BareCallArgs & AppClientCallCoreParams & CoreAppCallArgs) {
-            promiseChain = promiseChain.then(() => client.delete.bare({...args, sendParams: {...args?.sendParams, skipSending: true, atc}}))
+            promiseChain = promiseChain.then(() =>
+              client.delete.bare({ ...args, sendParams: { ...args?.sendParams, skipSending: true, atc } }),
+            )
             resultMappers.push(undefined)
             return $this
           },
         }
       },
       clearState(args?: BareCallArgs & AppClientCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.clearState({...args, sendParams: {...args?.sendParams, skipSending: true, atc}}))
+        promiseChain = promiseChain.then(() => client.clearState({ ...args, sendParams: { ...args?.sendParams, skipSending: true, atc } }))
         resultMappers.push(undefined)
         return this
       },
-      addTransaction(txn: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>, defaultSender?: SendTransactionFrom) {
-        promiseChain = promiseChain.then(async () => atc.addTransaction(await algokit.getTransactionWithSigner(txn, defaultSender ?? client.sender)))
+      addTransaction(
+        txn: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>,
+        defaultSender?: SendTransactionFrom,
+      ) {
+        promiseChain = promiseChain.then(async () =>
+          atc.addTransaction(await algokit.getTransactionWithSigner(txn, defaultSender ?? client.sender)),
+        )
         return this
       },
       async atc() {
@@ -495,9 +522,9 @@ export class HelloWorldClient {
         const result = await algokit.sendAtomicTransactionComposer({ atc, sendParams: {} }, client.algod)
         return {
           ...result,
-          returns: result.returns?.map((val, i) => resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue)
+          returns: result.returns?.map((val, i) => (resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue)),
         }
-      }
+      },
     } as unknown as HelloWorldComposer
   }
 }
@@ -509,7 +536,10 @@ export type HelloWorldComposer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  hello(args: MethodArgs<'hello(string)string'>, params?: AppClientCallCoreParams & CoreAppCallArgs): HelloWorldComposer<[...TReturns, MethodReturn<'hello(string)string'>]>
+  hello(
+    args: MethodArgs<'hello(string)string'>,
+    params?: AppClientCallCoreParams & CoreAppCallArgs,
+  ): HelloWorldComposer<[...TReturns, MethodReturn<'hello(string)string'>]>
 
   /**
    * Gets available update methods
@@ -521,7 +551,9 @@ export type HelloWorldComposer<TReturns extends [...any[]] = []> = {
      * @param args The arguments for the bare call
      * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
      */
-    bare(args?: BareCallArgs & AppClientCallCoreParams & AppClientCompilationParams & CoreAppCallArgs): HelloWorldComposer<[...TReturns, undefined]>
+    bare(
+      args?: BareCallArgs & AppClientCallCoreParams & AppClientCompilationParams & CoreAppCallArgs,
+    ): HelloWorldComposer<[...TReturns, undefined]>
   }
 
   /**
@@ -551,7 +583,10 @@ export type HelloWorldComposer<TReturns extends [...any[]] = []> = {
    * @param txn One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by one of algokit utils helpers (signer is obtained from the defaultSender parameter)
    * @param defaultSender The default sender to be used to obtain a signer where the object provided to the transaction parameter does not include a signer.
    */
-  addTransaction(txn: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>, defaultSender?: SendTransactionFrom): HelloWorldComposer<TReturns>
+  addTransaction(
+    txn: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>,
+    defaultSender?: SendTransactionFrom,
+  ): HelloWorldComposer<TReturns>
   /**
    * Returns the underlying AtomicTransactionComposer instance
    */
