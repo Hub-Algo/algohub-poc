@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { CampaignInterface } from '../interfaces/campaign-interface'
-import CardWithImage from './common/card/with-image/CardWithImage'
 import Button from './common/button/Button'
+import CardWithImage from './common/card/with-image/CardWithImage'
 
 interface CampaignsListPropsInterface {
   campaigns: CampaignInterface[]
@@ -12,7 +12,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
 
   const campaignListRenderer = campaigns.map((campaign) => {
     return (
-      <CardWithImage imageProps={{ src: 'src/core/images/the-recoop.png', alt: 'gunny-tps' }}>
+      <CardWithImage key={campaign.campaign_id} imageProps={{ src: 'src/core/images/the-recoop.png', alt: 'gunny-tps' }}>
         <h2 className={'card-title'}>{campaign.campaign_title}</h2>
         <div className={'mb-8'}>
           <div className={'flex gap-4 w-max'}>

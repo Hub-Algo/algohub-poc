@@ -17,13 +17,12 @@ import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
-import { userServices } from './services/userServices'
+import { fetchUserAssets, fetchUserNfd } from './services/userServices'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
   const [userData, setUserData] = useState<UserInterface>()
 
-  const userService = new userServices()
   const { activeAccount } = useWallet()
 
   let providersArray: ProvidersArray
@@ -45,8 +44,8 @@ export default function App() {
 
   const fetchAndAppendUserData = async (walletAddress: string) => {
     if (activeAccount) {
-      const userAssets = await userService.fetchUserAssets(walletAddress)
-      const userNfd = await userService.fetchUserNfd(walletAddress)
+      const userAssets = await fetchUserAssets(walletAddress)
+      const userNfd = await fetchUserNfd(walletAddress)
 
       const usdcDecimals = 6
       //Asset needs type
@@ -67,7 +66,7 @@ export default function App() {
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
     }
-  }, [activeAccount, fetchAndAppendUserData])
+  }, [activeAccount])
 
   const algodConfig = getAlgodConfigFromViteEnvironment()
 
