@@ -5,8 +5,8 @@ const HeroSection = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 md:h-screen bg-gray-900">
       <div className="colspan-1 h-screen">
         <div className="h-3/5 rounded-md flex flex-col items-center justify-center ">
-          <div className="w-2/3 flex flex-col items-center text-center">
-            <p className="text-5xl font-oswald font-bold text-orange-500">ALGOHUB</p>
+          <div className="w-2/3 flex flex-col items-center text-center md:text-start md:items-start">
+            <p className="text-6xl font-oswald font-bold text-orange-500">ALGOHUB</p>
             <p className="font-oswald font-normal text-orange-500">Powerful Projects. Vetted Quality. Investment, beyond funds</p>
           </div>
         </div>
