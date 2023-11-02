@@ -8,16 +8,16 @@ import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
 import ROUTES from './core/routes'
+import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
+import { ellipseAddress } from './core/util/wallet/ellipseAddress'
 import { CampaignInterface } from './interfaces/campaign-interface'
 import { UserInterface } from './interfaces/userInterface'
 import About from './pages/About'
 import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
-import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { userServices } from './services/userServices'
-import { ellipseAddress } from './core/util/wallet/ellipseAddress'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
@@ -67,7 +67,7 @@ export default function App() {
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
     }
-  }, [activeAccount])
+  }, [activeAccount, fetchAndAppendUserData])
 
   const algodConfig = getAlgodConfigFromViteEnvironment()
 
