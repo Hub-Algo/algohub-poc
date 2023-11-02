@@ -14,10 +14,10 @@ import About from './pages/About'
 import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
+import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { userServices } from './services/userServices'
-import { ellipseAddress } from './utils/ellipseAddress'
-import { getAlgodConfigFromViteEnvironment } from './utils/network/getAlgoClientConfigs'
+import { ellipseAddress } from './core/util/wallet/ellipseAddress'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])

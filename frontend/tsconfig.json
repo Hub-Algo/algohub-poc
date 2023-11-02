@@ -21,15 +21,17 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "outDir": "./dist/",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "noUnusedLocals": true /* Report errors on unused locals. */,
+    "noUnusedParameters": true /* Report errors on unused parameters. */,
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "vite.config.js",
-    "src/utils/ellipseAddress.spec.tsx",
-    "src/utils/ellipseAddress.spec.tsx",
-    "src/main.tsx"
+    "src/core/util/wallet/ellipseAddress.spec.tsx",
+    "src/core/util/wallet/ellipseAddress.spec.tsx",
+    "src/main.tsx",
   ],
   "references": [
     {

@@ -1,7 +1,7 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { useMemo } from 'react'
-import { ellipseAddress } from '../../utils/ellipseAddress'
-import { getAlgodConfigFromViteEnvironment } from '../../utils/network/getAlgoClientConfigs'
+import { ellipseAddress } from '../../core/util/wallet/ellipseAddress'
+import { getAlgodConfigFromViteEnvironment } from '../../core/util/network/getAlgoClientConfigs'
 
 const Account = () => {
   const { activeAddress } = useWallet()
