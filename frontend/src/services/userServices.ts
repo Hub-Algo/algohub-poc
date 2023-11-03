@@ -1,6 +1,11 @@
 //Use axios to fetch data?
 
+import { Provider } from '@txnlab/use-wallet'
 import axios from 'axios'
+
+const connectWallet = async (provider: Provider) => {
+  provider.connect()
+}
 
 const fetchUserAssets = async (walletAddress: string) => {
   try {
@@ -23,4 +28,4 @@ const fetchUserNfd = async (walletAddress: string) => {
   }
 }
 
-export { fetchUserAssets, fetchUserNfd }
+export { fetchUserAssets, fetchUserNfd, connectWallet }
