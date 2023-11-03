@@ -14,8 +14,8 @@ const HeroSection = () => {
           CREATE CAMPAIGN
         </div>
       </div>
-      <div className="colspan-1 mt-10">
-        <div className="border-2 border-orange-500 rounded-xl md:rounded-xl md:border-t-0 rounded-tl-none md:rounded-t-none flex items-center justify-center h-full md:h-3/5">
+      <div className="colspan-1 md:mt-10">
+        <div className="border-2 border-orange-500 rounded-xl md:rounded-xl md:border-t-0 rounded-t-none md:rounded-tl-none md:rounded-t-none flex items-center justify-center h-full md:h-3/5">
           <div className="flex flex-col w-2/3 justify-center items-center h-full gap-6">
             <div className="font-oswald text-xl font-bold text-orange-500 border-b-2 border-t-2 border-transparent hover:border-orange-500 cursor-pointer transition-all py-2 flex items-center gap-2">
               <p>CONNECT WALLET</p> <BiWallet />
