@@ -6,7 +6,6 @@ import { UserInterface } from '../interfaces/userInterface'
 import ConnectDropdown from './ConnectDropdown'
 import Sidebar from './Sidebar'
 import WalletWidget from './WalletWidget'
-import PeraOnrampButton from '../core/pera-onramp/button/PeraOnrampButton'
 
 export interface UserDataOutletInterface {
   userData: UserInterface
