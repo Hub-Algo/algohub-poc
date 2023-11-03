@@ -36,7 +36,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
     )
   })
 
-  return <div className="flex gap-10">{campaignListRenderer}</div>
+  return <div className="flex gap-10 overflow-auto py-5">{campaignListRenderer}</div>
 }
 
 export default CampaignList
