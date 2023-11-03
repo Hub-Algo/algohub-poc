@@ -4,6 +4,7 @@ import Carousel from '../components/common/carousel/Carousel'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
 import { CampaignInterface } from '../interfaces/campaign-interface'
+import Modal from '../components/common/modal/Modal'
 
 export interface CampaignOutletInterface {
   campaignList: CampaignInterface[]
@@ -67,6 +68,16 @@ const CampaignDetails = () => {
                 <div className="w-1/6 border h-px border-dashed border-gray-600"></div>
                 <p className="w-1/6">${campaign.max_allocation}</p>
               </div>
+
+              <Modal id={'CampaignDetails.TxnModal'} modalButtonName={'Whitelist'}>
+                <h2>{'Transaction details'}</h2>
+
+                <p>{'Enter the amount you want to fund'}</p>
+              </Modal>
+
+              <a className="btn" href={'/'}>
+                {'Website'}
+              </a>
             </div>
           </div>
         </section>
