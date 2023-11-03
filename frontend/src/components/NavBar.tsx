@@ -24,12 +24,11 @@ const NavBar = ({ userData }: UserPropsInterface) => {
   ))
 
   return (
-    <div className="navbar bg-gray-950 top-0 z-10 text-gray-100">
+    <div className="navbar bg-gray-950 top-0 z-10 text-gray-100 shadow-sm">
       <div className="flex-1">
         <a href={routes.BASE} className="btn btn-ghost normal-case text-xl">
           AlgoHub
         </a>
-        <PeraOnrampButton />
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1 gap-3 flex items-center w-full">
