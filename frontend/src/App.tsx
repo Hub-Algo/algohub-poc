@@ -18,6 +18,7 @@ import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { fetchUserAssets, fetchUserNfd } from './services/userServices'
+import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
@@ -103,7 +104,9 @@ export default function App() {
 
   return (
     <WalletProvider value={walletProviders}>
-      <RouterProvider router={router} />
+      <WindowSizeContextProvider>
+        <RouterProvider router={router} />
+      </WindowSizeContextProvider>
     </WalletProvider>
   )
 }
