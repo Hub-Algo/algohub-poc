@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled' | 'className'> & {
+export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled' | 'className'> & {
   size?: 'sm' | 'md' | 'lg'
   isDisabled?: boolean
   shouldDisplaySpinner?: boolean
