@@ -7,20 +7,27 @@ interface DropdownProps<DropdownItem extends Option = Option> {
   options: DropdownItem[]
   onSelect: (option: DropdownItem) => void
   customClassName?: string
+  dropdownMenuAlignment?: 'start' | 'end'
 }
 
-function Dropdown<DropdownItem extends Option = Option>({ triggerProps, options, onSelect, customClassName }: DropdownProps<DropdownItem>) {
+function Dropdown<DropdownItem extends Option = Option>({
+  triggerProps,
+  options,
+  onSelect,
+  customClassName,
+  dropdownMenuAlignment = 'end',
+}: DropdownProps<DropdownItem>) {
   function renderContent() {
     return options.map((option) => <DropdownItem key={option.id} onSelect={onSelect} option={option} />)
   }
 
   return (
-    <details className={classNames('dropdown', customClassName)}>
+    <details className={classNames('dropdown w-full', { 'dropdown-end': dropdownMenuAlignment === 'end' }, customClassName)}>
       <summary className={classNames('btn btn-sm rounded-md content-center w-full border-none', triggerProps.customClassName)}>
         {triggerProps.title}
       </summary>
 
-      <ul className={'dropdown-content w-full bg-gray-950'}>{renderContent()}</ul>
+      <ul className={'dropdown-content w-full min-w-max bg-gray-950'}>{renderContent()}</ul>
     </details>
   )
 }
