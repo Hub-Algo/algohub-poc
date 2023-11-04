@@ -3,7 +3,7 @@ import { BiWallet } from 'react-icons/bi'
 const HeroSection = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-screen bg-gray-900">
-      <div className="colspan-1 mt-10">
+      <div className="colspan-1">
         <div className="h-3/5 rounded-md flex flex-col items-center justify-center ">
           <div className="w-2/3 flex flex-col items-center text-center md:text-start md:items-start">
             <p className="text-6xl font-oswald font-bold text-orange-500">ALGOHUB</p>
@@ -14,7 +14,7 @@ const HeroSection = () => {
           CREATE CAMPAIGN
         </div>
       </div>
-      <div className="colspan-1 md:mt-10">
+      <div className="colspan-1">
         <div className="border-2 border-orange-500 rounded-xl md:rounded-xl md:border-t-0 rounded-t-none md:rounded-tl-none md:rounded-t-none flex items-center justify-center h-full md:h-3/5">
           <div className="flex flex-col w-2/3 justify-center items-center h-full gap-6">
             <div className="font-oswald text-xl font-bold text-orange-500 border-b-2 border-t-2 border-transparent hover:border-orange-500 cursor-pointer transition-all py-2 flex items-center gap-2">
