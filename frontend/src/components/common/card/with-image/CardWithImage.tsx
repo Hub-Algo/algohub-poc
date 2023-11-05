@@ -8,7 +8,7 @@ interface CardWithImageProps {
 
 function CardWithImage({ imageProps, children }: CardWithImageProps) {
   return (
-    <div className="card shadow-xl bg-transparent">
+    <div className="card shadow-xl bg-transparent max-w-xs">
       <figure className={''}>
         <img src={imageProps.src} alt={imageProps.alt} />
       </figure>

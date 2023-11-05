@@ -1,0 +1,7 @@
+.campaign-list__next-button,
+.campaign-list__previous-button {
+  &.btn.btn-disabled {
+    background-color: transparent;
+    color: gray;
+  }
+}
