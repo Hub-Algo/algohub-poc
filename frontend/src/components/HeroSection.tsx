@@ -1,5 +1,6 @@
 import { BiWallet } from 'react-icons/bi'
 import HeroButton from './HeroButton'
+import Button from './common/button/Button'
 
 const HeroSection = () => {
   return (
@@ -12,11 +13,15 @@ const HeroSection = () => {
               <span>{'Powerful Projects. Vetted Quality.'}</span>
               <span>{'Investment, beyond funds'}</span>
             </p>
+            <div className="flex w-full gap-6 md:hidden mt-6">
+              <Button buttonColor="orange">CREATE CAMPAIGN</Button>
+              <Button buttonColor="orange">VIEW ALL CAMPAIGNS</Button>
+            </div>
           </div>
         </div>
 
-        <div className="border-2 border-orange-500 rounded-3xl flex items-center justify-center h-full ">
-          <div className="flex flex-col justify-center items-center h-full gap-6">
+        <div className="border-2 border-orange-500 rounded-3xl flex items-center justify-center h-64 md:h-full">
+          <div className="flex flex-col justify-center items-center gap-6">
             <div className="font-oswald text-xl font-bold text-orange-500 border-b-2 border-t-2 border-transparent hover:border-orange-500 cursor-pointer transition-all py-2 flex items-center gap-2">
               <p>CONNECT WALLET</p> <BiWallet />
             </div>
@@ -31,9 +36,8 @@ const HeroSection = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2">
-        <HeroButton customClassName={'w-full h-32 md:h-64'}>{'Create campaign'}</HeroButton>
-
-        <HeroButton customClassName={'w-full h-32 md:h-64'}>{'View campaigns'}</HeroButton>
+        <HeroButton customClassName={'hidden md:flex w-full h-32 md:h-64'}>{'Create campaign'}</HeroButton>
+        <HeroButton customClassName={'hidden md:flex w-full h-32 md:h-64'}>{'View campaigns'}</HeroButton>
       </div>
     </div>
   )
