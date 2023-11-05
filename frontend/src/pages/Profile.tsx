@@ -1,14 +1,25 @@
+import { Asset, useWallet } from '@txnlab/use-wallet'
+import { useEffect } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
-import Button from '../components/common/button/Button'
+import ProfileStatsWidget from '../components/ProfileStatsWidget'
+import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
 import useAsyncProcess from '../core/async-process/useAsyncProcess'
-import { Asset, useWallet } from '@txnlab/use-wallet'
-import { useEffect } from 'react'
+import { UserInterface } from '../interfaces/userInterface'
+
+export interface UserDataOutletInterface {
+  userData: UserInterface
+}
 
 function Profile() {
   const { getAssets, activeAddress } = useWallet()
   const { state, runAsyncProcess } = useAsyncProcess<Asset[]>()
+
+  const { userData } = useOutletContext() as UserDataOutletInterface
+
+  console.log('profile userData', userData)
 
   // TODO: This is an example usage of running async processes using useAsyncProcess hook.
   // Somehow it doesn't set the state and I don't understand why. Remove this useEffect
@@ -33,13 +44,14 @@ function Profile() {
 
   return (
     <PageContainer>
-      <div>Profile</div>
-
-      <Button shouldDisplaySpinner={state.isRequestPending}>{'profile button'}</Button>
+      <Breadcrumbs pathList={['Home', 'Profile']} />
+      <div className="flex flex-col">
+        <ProfileStatsWidget username={userData.username} usdc_balance={userData.usdc_balance} algo_balance={userData.algo_balance} />
+      </div>
       {
         // TODO: Remove this example
         <Tab items={tabItems}>
-          <div>{'Become VIP content'}</div>
+          <div className="">{'Become VIP content'}</div>
 
           <div>{'Voting History content'}</div>
 
