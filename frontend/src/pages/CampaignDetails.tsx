@@ -5,12 +5,14 @@ import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
 import { CampaignInterface } from '../interfaces/campaign-interface'
 import Modal from '../components/common/modal/Modal'
+import InvestModal from '../components/invest-modal/InvestModal'
 
 export interface CampaignOutletInterface {
   campaignList: CampaignInterface[]
 }
 
 const CampaignDetails = () => {
+  const hasVoted = true
   const { campaignList } = useOutletContext() as CampaignOutletInterface
 
   const { campaignId } = useParams()
@@ -55,25 +57,21 @@ const CampaignDetails = () => {
             <div className="w-full bg-gray-900 rounded-md p-6 gap-6 flex flex-col">
               <div className="">
                 <p className="text-sm md:text-lg text-gray-400">Fundraise goal</p>
-                <h2 className="text-3xl md:text-5xl font-bold text-gray-100 ">${campaign.hard_goal}</h2>
+                <h2 className="text-3xl md:text-5xl font-bold text-gray-100 ">${campaign?.hard_goal}</h2>
               </div>
+              <div className="text-gray-300 flex w-full items-center justify-between">
+                <p className="w-3/6">Price per token</p>
+                <div className="w-1/6 border h-px border-dashed border-gray-600"></div>
+                <p className="w-1/6">TBA</p>
+              </div>
+
               <div className="text-gray-300 flex w-full items-center justify-between">
                 <p className="w-3/6">Max allocation</p>
                 <div className="w-1/6 border h-px border-dashed border-gray-600"></div>
-                <p className="w-1/6">$500</p>
+                <p className="w-1/6">${campaign?.max_allocation}</p>
               </div>
 
-              <div className="text-gray-300 flex w-full items-center justify-between">
-                <p className="w-3/6">Max allocation</p>
-                <div className="w-1/6 border h-px border-dashed border-gray-600"></div>
-                <p className="w-1/6">${campaign.max_allocation}</p>
-              </div>
-
-              <Modal id={'CampaignDetails.TxnModal'} modalButtonName={'Whitelist'}>
-                <h2>{'Transaction details'}</h2>
-
-                <p>{'Enter the amount you want to fund'}</p>
-              </Modal>
+              {getTxnModal()}
 
               <a className="btn" href={'/'}>
                 {'Website'}
@@ -95,6 +93,20 @@ const CampaignDetails = () => {
       </div>
     </PageContainer>
   )
+
+  function getTxnModal() {
+    if ((campaign?.campaign_status === 'new' && hasVoted) || campaign?.campaign_status === 'pending') {
+      return <InvestModal campaignStatus={campaign.campaign_status} />
+    }
+
+    return (
+      <Modal id={'CampaignDetails.TxnModal'} modalButtonName={'Whitelist'}>
+        <h2>{'Transaction details'}</h2>
+
+        <p>{'Enter the amount you want to fund'}</p>
+      </Modal>
+    )
+  }
 }
 
 export default CampaignDetails

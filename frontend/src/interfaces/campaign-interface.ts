@@ -3,7 +3,7 @@ export interface CampaignInterface {
   campaign_title: string
   campaign_subtitle: string
   creator_address: string
-  campaign_status: string
+  campaign_status: 'new' | 'pending' | 'completed'
   campaign_category: string
   ido_token: number
   start_date: string

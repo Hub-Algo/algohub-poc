@@ -1,6 +1,6 @@
 import './_campaign-list.scss'
 
-import { useNavigate } from 'react-router-dom'
+import { generatePath, useNavigate } from 'react-router-dom'
 import { TiMediaPlayReverse, TiMediaPlay } from 'react-icons/ti'
 
 import { CampaignInterface } from '../../interfaces/campaign-interface'
@@ -8,6 +8,7 @@ import Button from '../common/button/Button'
 import CardWithImage from '../common/card/with-image/CardWithImage'
 import { useEffect, useState } from 'react'
 import { useWindowSizeContext } from '../../core/window-size/WindowSizeContext'
+import routes from '../../core/routes'
 
 interface CampaignsListPropsInterface {
   campaigns: CampaignInterface[]
@@ -41,15 +42,13 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
           <div className={'flex gap-4 w-max'}>
             <p>{'End date'}</p> <p>{'02/01/24'}</p>
           </div>
-
-          <p>{index}</p>
         </div>
 
         <Button
           buttonColor={'accent'}
           size={'lg'}
           customClassName={'rounded-2xl'}
-          onClick={() => navigate(`/campaign/${campaign.campaign_id}`)}
+          onClick={() => navigate(generatePath(routes.PROJECT_DETAIL.FULL_PATH, { campaignId: campaign.campaign_id }))}
         >
           {'view campaign'}
         </Button>
