@@ -17,11 +17,9 @@ export interface UserDataOutletInterface {
 
 function Profile() {
   const { getAssets, activeAddress } = useWallet()
-  const { state, runAsyncProcess } = useAsyncProcess<Asset[]>()
+  // const { state, runAsyncProcess } = useAsyncProcess<Asset[]>()
 
   const { userData } = useOutletContext() as UserDataOutletInterface
-
-  console.log('profile userData', userData)
 
   // TODO: This is an example usage of running async processes using useAsyncProcess hook.
   // Somehow it doesn't set the state and I don't understand why. Remove this useEffect

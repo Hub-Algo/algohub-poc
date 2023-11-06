@@ -4,8 +4,6 @@ import { UserDataOutletInterface } from './NavBar'
 import Button from './common/button/Button'
 
 const HeroSection = ({ userData }: UserDataOutletInterface) => {
-  console.log('Hero userData', userData)
-
   return (
     <div className="flex flex-col h-screen bg-gray-900">
       <div className="grid grid-cols-1 md:grid-cols-2 h-full">

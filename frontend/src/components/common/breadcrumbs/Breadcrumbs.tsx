@@ -1,6 +1,4 @@
 const Breadcrumbs = ({ pathList }) => {
-  console.log(pathList)
-
   return (
     <div className="text-sm breadcrumbs text-gray-300">
       <ul>
