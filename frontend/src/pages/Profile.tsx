@@ -1,5 +1,5 @@
 // import { Asset, useWallet } from '@txnlab/use-wallet'
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
 import ProfileStatsWidget from '../components/ProfileStatsWidget'
