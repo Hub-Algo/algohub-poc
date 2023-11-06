@@ -1,4 +1,4 @@
-import { Asset, useWallet } from '@txnlab/use-wallet'
+// import { Asset, useWallet } from '@txnlab/use-wallet'
 import { useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
@@ -16,7 +16,7 @@ export interface UserDataOutletInterface {
 }
 
 function Profile() {
-  const { getAssets, activeAddress } = useWallet()
+  // const { getAssets, activeAddress } = useWallet()
   // const { state, runAsyncProcess } = useAsyncProcess<Asset[]>()
 
   const { userData } = useOutletContext() as UserDataOutletInterface
