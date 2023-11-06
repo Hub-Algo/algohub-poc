@@ -10,6 +10,7 @@ import NavBar from './components/NavBar'
 import ROUTES from './core/routes'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { ellipseAddress } from './core/util/wallet/ellipseAddress'
+import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
 import { CampaignInterface } from './interfaces/campaign-interface'
 import { UserInterface } from './interfaces/userInterface'
 import About from './pages/About'
@@ -18,7 +19,6 @@ import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { fetchUserAssets, fetchUserNfd } from './services/userServices'
-import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
@@ -36,6 +36,10 @@ export default function App() {
       { id: PROVIDER_ID.PERA, clientStatic: PeraWalletConnect },
       { id: PROVIDER_ID.DAFFI, clientStatic: DaffiWalletConnect },
     ]
+  }
+
+  const resetUserData = () => {
+    setUserData(undefined)
   }
 
   const fetchCampaigns = async () => {
@@ -84,7 +88,7 @@ export default function App() {
     {
       element: (
         <>
-          <NavBar userData={userData} />
+          <NavBar userData={userData} resetUserData={resetUserData} />
           <Outlet context={{ activeAccount, campaignList, userData }} />
           <Footer />
         </>

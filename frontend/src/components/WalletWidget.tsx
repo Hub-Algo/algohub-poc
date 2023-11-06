@@ -1,23 +1,24 @@
+import { PeraOnramp } from '@perawallet/onramp'
 import { useWallet } from '@txnlab/use-wallet'
+import { useEffect, useRef } from 'react'
 import { generatePath, useNavigate } from 'react-router-dom'
+import usePeraOnrampAssetOptin from '../core/pera-onramp/hook/usePeraOnrampAssetOptIn'
 import routes from '../core/routes'
 import Dropdown from './common/dropdown/Dropdown'
 import { Option } from './common/dropdown/Dropdown.types'
-import { useEffect, useRef } from 'react'
 import Toast from './common/toast/Toast'
-import { PeraOnramp } from '@perawallet/onramp'
-import usePeraOnrampAssetOptin from '../core/pera-onramp/hook/usePeraOnrampAssetOptIn'
 
 interface WalletWidgetPropsInterface {
   username: string | undefined
   walletAddress: string
+  resetUserData: () => void
 }
 
 type WalletWidgetType = Option & {
   path: string
 }
 
-const WalletWidget = ({ username, walletAddress }: WalletWidgetPropsInterface) => {
+const WalletWidget = ({ username, walletAddress, resetUserData }: WalletWidgetPropsInterface) => {
   const { providers, activeAccount } = useWallet()
   const navigate = useNavigate()
 
@@ -77,7 +78,7 @@ const WalletWidget = ({ username, walletAddress }: WalletWidgetPropsInterface) =
     if (!provider) {
       return
     }
-
+    resetUserData()
     provider[0].disconnect()
   }
 
