@@ -7,7 +7,7 @@ import CampaignList from '../components/campaign-list/CampaignList'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
-import useAsyncProcess from '../core/async-process/useAsyncProcess'
+// import useAsyncProcess from '../core/async-process/useAsyncProcess'
 import { UserInterface } from '../interfaces/userInterface'
 import { CampaignOutletInterface } from './CampaignDetails'
 
@@ -23,11 +23,11 @@ function Profile() {
 
   // TODO: This is an example usage of running async processes using useAsyncProcess hook.
   // Somehow it doesn't set the state and I don't understand why. Remove this useEffect
-  useEffect(() => {
-    if (activeAddress) {
-      runAsyncProcess(getAssets())
-    }
-  }, [getAssets, runAsyncProcess, activeAddress])
+  // useEffect(() => {
+  //   if (activeAddress) {
+  //     runAsyncProcess(getAssets())
+  //   }
+  // }, [getAssets, runAsyncProcess, activeAddress])
 
   const { campaignList } = useOutletContext() as CampaignOutletInterface
 
