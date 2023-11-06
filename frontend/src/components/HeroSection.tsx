@@ -16,20 +16,22 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
             </p>
             <div className="flex w-full gap-6 md:hidden mt-6">
               <Button buttonColor="orange">CREATE CAMPAIGN</Button>
-              <Button buttonColor="orange">VIEW ALL CAMPAIGNS</Button>
+              <Button buttonColor="orange">
+                <a href="#campaigns">VIEW ALL CAMPAIGNS</a>
+              </Button>
             </div>
           </div>
         </div>
 
-        <div className="border-2 border-orange-500 rounded-3xl flex items-center justify-center h-64 md:h-full">
+        <div className="border-2 border-orange-500 rounded-3xl flex items-center justify-center h-full md:h-full rounded-b-none">
           <div className="flex flex-col justify-center items-center gap-6">
             <div className="font-oswald text-xl font-bold text-orange-500 border-b-2 border-t-2 border-transparent hover:border-orange-500 cursor-pointer transition-all py-2 flex items-center gap-2">
               {userData ? (
                 <div className="flex flex-col items-center justify-center">
-                  <p>{userData.username}</p>
+                  <p>{userData.username.toUpperCase()}</p>
                   <div className="flex">
                     <BiDollarCircle className="h-8" />
-                    <p>{userData.usdc_balance} USDC</p>
+                    <p className="font-normal">{userData.usdc_balance} USDC</p>
                   </div>
                 </div>
               ) : (
@@ -38,10 +40,10 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
                 </div>
               )}
             </div>
-            <div className="font-oswald text-xl text-orange-500 border-b border-t border-transparent hover:border-orange-500 cursor-pointer transition-all py-2">
+            <div className="font-oswald text-xl text-orange-800 border-b border-t border-transparent hover:border-orange-500 cursor-pointer transition-all py-2">
               ABOUT US
             </div>
-            <div className="font-oswald text-xl text-orange-500 border-b border-t border-transparent hover:border-orange-500 cursor-pointer transition-all py-2">
+            <div className="font-oswald text-xl text-orange-800 border-b border-t border-transparent hover:border-orange-500 cursor-pointer transition-all py-2">
               ABOUT ALGOHUB
             </div>
           </div>
