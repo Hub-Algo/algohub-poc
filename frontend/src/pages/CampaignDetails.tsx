@@ -14,7 +14,7 @@ export interface CampaignOutletInterface {
 }
 
 const CampaignDetails = () => {
-  const hasVoted = true
+  const hasVoted = false
   const { campaignList } = useOutletContext() as CampaignOutletInterface
 
   const { campaignId } = useParams()
@@ -36,7 +36,7 @@ const CampaignDetails = () => {
 
   return (
     <PageContainer>
-      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign.campaign_title}`]} />
+      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.campaign_title}`]} />
       <section>
         <div className="flex gap-5">
           <div className="w-16 h-16 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">
@@ -97,7 +97,7 @@ const CampaignDetails = () => {
   function getTxnModal() {
     if ((campaign?.campaign_status === 'new' && hasVoted) || campaign?.campaign_status === 'pending') {
       return <InvestModal campaignStatus={campaign.campaign_status} />
-    } else if (campaign.campaign_status === 'new' && !hasVoted) {
+    } else if (campaign?.campaign_status === 'new' && !hasVoted) {
       return <VoteModal />
     }
 
