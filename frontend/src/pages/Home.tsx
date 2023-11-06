@@ -27,9 +27,8 @@ export default function Home() {
           <CampaignList campaigns={communityCampaigns} />
         </div>
 
-        <div className="flex flex-col gap-6 mb-20">
-          <h3 className="text-2xl font-bold text-gray-100">{'Completed campaigns'}</h3>
-
+        <div id="campaigns" className="flex flex-col gap-6 mb-20">
+          <h3 className="text-2xl font-bold text-gray-100">{'All campaigns'}</h3>
           <CampaignList campaigns={communityCampaigns} />
         </div>
       </section>
