@@ -1,13 +1,13 @@
 import './_campaign-list.scss'
 
+import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti'
 import { useNavigate } from 'react-router-dom'
-import { TiMediaPlayReverse, TiMediaPlay } from 'react-icons/ti'
 
+import { useEffect, useState } from 'react'
+import { useWindowSizeContext } from '../../core/window-size/WindowSizeContext'
 import { CampaignInterface } from '../../interfaces/campaign-interface'
 import Button from '../common/button/Button'
 import CardWithImage from '../common/card/with-image/CardWithImage'
-import { useEffect, useState } from 'react'
-import { useWindowSizeContext } from '../../core/window-size/WindowSizeContext'
 
 interface CampaignsListPropsInterface {
   campaigns: CampaignInterface[]
@@ -66,10 +66,10 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         customClassName={'btn-round text-orange-500 campaign-list__previous-button'}
         isDisabled={!displayedCampaignsOffset}
       >
-        <TiMediaPlayReverse />
+        <TiMediaPlayReverse className="" />
       </Button>
 
-      <div className="flex gap-10 py-5">{campaignListRenderer}</div>
+      <div className="flex gap-10 py-5 w-full justify-center">{campaignListRenderer}</div>
 
       <Button
         aria-label={'next-button'}
