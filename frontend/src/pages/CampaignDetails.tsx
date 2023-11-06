@@ -52,7 +52,7 @@ const CampaignDetails = () => {
       <section>
         <div className="flex flex-col md:flex-row md:gap-10">
           <Carousel />
-          <div className="w-full bg-gray-900 rounded-md p-6 gap-6 flex flex-col">
+          <div className="w-full bg-gray-950 rounded-md p-6 gap-6 flex flex-col">
             <div className="">
               <p className="text-sm md:text-lg text-gray-400">Fundraise goal</p>
               <h2 className="text-3xl md:text-5xl font-bold text-gray-100 ">${campaign?.hard_goal}</h2>
