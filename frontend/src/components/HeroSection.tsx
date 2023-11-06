@@ -29,7 +29,7 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
                   <p>{userData.username}</p>
                   <div className="flex">
                     <BiDollarCircle className="h-8" />
-                    <p>{userData.usdc_balance}</p>
+                    <p>{userData.usdc_balance} USDC</p>
                   </div>
                 </div>
               ) : (
