@@ -3,11 +3,13 @@ import { useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
 import ProfileStatsWidget from '../components/ProfileStatsWidget'
+import CampaignList from '../components/campaign-list/CampaignList'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
 import useAsyncProcess from '../core/async-process/useAsyncProcess'
 import { UserInterface } from '../interfaces/userInterface'
+import { CampaignOutletInterface } from './CampaignDetails'
 
 export interface UserDataOutletInterface {
   userData: UserInterface
@@ -29,8 +31,10 @@ function Profile() {
     }
   }, [getAssets, runAsyncProcess, activeAddress])
 
+  const { campaignList } = useOutletContext() as CampaignOutletInterface
+
   const tabItems: TabItem[] = [
-    { id: 'become-vip', content: 'Become VIP' },
+    { id: 'Invested campaigns', content: 'Invested campaigns' },
     {
       id: 'voting-history',
       content: 'Voting History',
@@ -51,7 +55,7 @@ function Profile() {
       {
         // TODO: Remove this example
         <Tab items={tabItems}>
-          <div className="">{'Become VIP content'}</div>
+          <CampaignList campaigns={campaignList} />
 
           <div>{'Voting History content'}</div>
 
