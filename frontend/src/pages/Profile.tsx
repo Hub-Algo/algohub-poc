@@ -53,7 +53,6 @@ function Profile() {
         <ProfileStatsWidget username={userData.username} usdc_balance={userData.usdc_balance} algo_balance={userData.algo_balance} />
       </div>
       {
-        // TODO: Remove this example
         <Tab items={tabItems}>
           <CampaignList campaigns={campaignList} />
 
