@@ -10,7 +10,12 @@ type TabHeaderItemProps = {
 
 function TabHeaderItem({ tab, isActive, index, onClick }: TabHeaderItemProps) {
   return (
-    <a id={tab.id} tabIndex={index} className={classNames('tab', { 'tab-bordered tab-active': isActive })} onClick={handleClick}>
+    <a
+      id={tab.id}
+      tabIndex={index}
+      className={classNames('tab', { 'tab-bordered tab-active text-gray-100': isActive })}
+      onClick={handleClick}
+    >
       {tab.content}
     </a>
   )

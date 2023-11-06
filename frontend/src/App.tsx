@@ -9,7 +9,7 @@ import Footer from './components/Footer'
 import NavBar from './components/NavBar'
 import ROUTES from './core/routes'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
-import { ellipseAddress } from './core/util/wallet/ellipseAddress'
+import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
 import { CampaignInterface } from './interfaces/campaign-interface'
 import { UserInterface } from './interfaces/userInterface'
 import About from './pages/About'
@@ -18,7 +18,6 @@ import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { fetchUserAssets, fetchUserNfd } from './services/userServices'
-import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
@@ -38,6 +37,10 @@ export default function App() {
     ]
   }
 
+  const resetUserData = () => {
+    setUserData(undefined)
+  }
+
   const fetchCampaigns = async () => {
     const allCampaigns = await fetchAllCampaigns()
     setCampaignList(allCampaigns)
@@ -53,7 +56,7 @@ export default function App() {
 
     //Algo decimals is being used just as dummy for now
     const algoDecimals = 6
-    const username = userNfd || ellipseAddress(walletAddress)
+    const username = userNfd
     setUserData({ wallet_address: walletAddress, username, usdc_balance: usdcBalance, algo_balance: 1 * algoDecimals })
   }
 
@@ -84,7 +87,7 @@ export default function App() {
     {
       element: (
         <>
-          <NavBar userData={userData} />
+          <NavBar userData={userData} resetUserData={resetUserData} />
           <Outlet context={{ activeAccount, campaignList, userData }} />
           <Footer />
         </>

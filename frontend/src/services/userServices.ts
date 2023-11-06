@@ -2,6 +2,7 @@
 
 import { Provider } from '@txnlab/use-wallet'
 import axios from 'axios'
+import { ellipseAddress } from '../core/util/wallet/ellipseAddress'
 
 const connectWallet = async (provider: Provider) => {
   provider.connect()
@@ -24,8 +25,8 @@ const fetchUserNfd = async (walletAddress: string) => {
     const { data } = response
     return data[walletAddress][0].name
   } catch (error) {
-    throw new Error('error fetchin user nfd')
+    return ellipseAddress(walletAddress)
   }
 }
 
-export { fetchUserAssets, fetchUserNfd, connectWallet }
+export { connectWallet, fetchUserAssets, fetchUserNfd }

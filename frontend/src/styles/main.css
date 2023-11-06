@@ -11,6 +11,10 @@
   width: 15px;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 *::-webkit-scrollbar-track {
   background: var(--primary);
   border-radius: 5px;
