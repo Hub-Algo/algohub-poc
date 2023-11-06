@@ -23,7 +23,7 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
           </div>
         </div>
 
-        <div className="border-2 border-orange-500 rounded-3xl flex items-center justify-center h-full md:h-full rounded-b-none">
+        <div className="border-2 border-orange-500 rounded-3xl flex items-center justify-center h-full md:h-full rounded-b-none md:rounded-b-3xl">
           <div className="flex flex-col justify-center items-center gap-6">
             <div className="font-oswald text-xl font-bold text-orange-500 border-b-2 border-t-2 border-transparent hover:border-orange-500 cursor-pointer transition-all py-2 flex items-center gap-2">
               {userData ? (
