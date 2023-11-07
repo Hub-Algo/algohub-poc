@@ -23,7 +23,7 @@ import { CampaignClient } from '../../contracts/CampaignClient'
 />
 */
 type CampaignCreateApplicationArgs =
-  Dao['methods']['createApplication(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
+  Campaign['methods']['createApplication(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
 
 type Props = {
   buttonClass: string
