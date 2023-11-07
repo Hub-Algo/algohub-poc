@@ -2,13 +2,8 @@ name: Release
 
 on:
   push:
-    branches:
-      - main
-    paths-ignore:
-      - "docs/**"
-      - "**.md"
-      - ".vscode/**"
-      - ".idea/**"
+    tags:
+      - "v*"
 
 permissions:
   contents: read
@@ -19,6 +14,7 @@ jobs:
     name: Backend Release
     secrets: inherit
     uses: ./.github/workflows/smart-contracts-cd.yaml
+
   frontend-release:
     name: Frontend Release
     secrets: inherit
