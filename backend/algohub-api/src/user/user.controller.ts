@@ -1,8 +1,19 @@
-import { Body, Controller, Get, Post, Session } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Session,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthService } from 'src/auth/auth.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { SigninUserDto } from './dtos/SigninUserDto';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { User } from 'prisma/prisma-client';
 
 @Controller('/auth')
 export class UserController {
@@ -26,8 +37,6 @@ export class UserController {
 
     session.user = user;
 
-    console.log(session);
-
     return user;
   }
 
@@ -36,6 +45,7 @@ export class UserController {
     @Body() signinUserDto: SigninUserDto,
     @Session() session: any,
   ) {
+    console.log('signin in user');
     const user = await this.authServices.signin(signinUserDto.wallet_address);
 
     session.user = user;
@@ -44,6 +54,25 @@ export class UserController {
     return user;
   }
 
+  @Post('/signout')
+  signoutUser(@Session() session: any) {
+    console.log('Signing out user');
+    session.user = null;
+    return session;
+  }
+
+  @UseGuards(AuthGuard)
   @Get('/session')
-  async getUserSession() {}
+  async getUserSession(@CurrentUser() currentUser: User) {
+    console.log('Session current user', currentUser);
+    return currentUser;
+  }
+
+  @Get('/:wallet_address')
+  async getUserByWalletAddress(
+    @Param('wallet_address') wallet_address: string,
+  ) {
+    const user = await this.usersService.findOne(wallet_address);
+    return user;
+  }
 }

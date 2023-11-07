@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from 'prisma/prisma-client';
 import { PrismaService } from 'src/database/PrismaService';
 import { UserService } from 'src/user/user.service';
@@ -32,6 +36,10 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: { wallet_address },
     });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     return user;
   }
