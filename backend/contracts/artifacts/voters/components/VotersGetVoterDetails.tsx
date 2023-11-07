@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Voters, VotersClient } from '../contracts/DaoClient'
-import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react';
+import { useWallet } from '@txnlab/use-wallet';
+import { VotersClient } from '../../contracts/VotersClient';
 
 /* Example usage
 <VotersGetVoterDetails
@@ -12,32 +12,29 @@ import { useWallet } from '@txnlab/use-wallet'
 />
 */
 type Props = {
-  buttonClass: string
-  buttonLoadingNode?: ReactNode
-  buttonNode: ReactNode
-  typedClient: VotersClient
-}
+  buttonClass: string;
+  buttonLoadingNode?: ReactNode;
+  buttonNode: ReactNode;
+  typedClient: VotersClient;
+};
 
 const VotersGetVoterDetails = (props: Props) => {
-  const [loading, setLoading] = useState<boolean>(false)
-  const { activeAddress, signer } = useWallet()
-  const sender = { signer, addr: activeAddress! }
+  const [loading, setLoading] = useState<boolean>(false);
+  const { activeAddress, signer } = useWallet();
+  const sender = { signer, addr: activeAddress! };
 
   const callMethod = async () => {
-    setLoading(true)
-    console.log(`Calling getVoterDetails`)
-    await props.typedClient.getVoterDetails(
-      {},
-      { sender },
-    )
-    setLoading(false)
-  }
+    setLoading(true);
+    console.log(`Calling getVoterDetails`);
+    await props.typedClient.getVoterDetails({}, { sender });
+    setLoading(false);
+  };
 
   return (
     <button className={props.buttonClass} onClick={callMethod}>
       {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
     </button>
-  )
-}
+  );
+};
 
-export default VotersGetVoterDetails
+export default VotersGetVoterDetails;

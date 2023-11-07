@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
 <CampaignWithdrawIdoAsa
@@ -26,10 +26,7 @@ const CampaignWithdrawIdoAsa = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling withdrawIdoAsa`)
-    await props.typedClient.withdrawIdoAsa(
-      {},
-      { sender },
-    )
+    await props.typedClient.withdrawIdoAsa({}, { sender })
     setLoading(false)
   }
 

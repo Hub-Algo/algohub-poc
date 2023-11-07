@@ -71,7 +71,14 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
       return
     })
 
-    enqueueSnackbar(`Response from the campaign contract: ${response?.return}`, { variant: 'success' })
+    const votersResponse = await votersClient.getTotalVoters({}).catch((e: Error) => {
+      enqueueSnackbar(`Error calling the contract: ${e.message}`, { variant: 'error' })
+      setLoading(false)
+      return
+    })
+
+    enqueueSnackbar(`Response from the campaign contract. Campaign Details: ${campaignResponse?.return}`, { variant: 'success' })
+    enqueueSnackbar(`Response from the voters contract. Total Voters: ${votersResponse?.return}`, { variant: 'success' })
     setLoading(false)
   }
 

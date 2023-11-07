@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Voters, VotersClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { VotersClient } from '../../contracts/VotersClient'
 
 /* Example usage
 <VotersGetVoterDetails
@@ -26,10 +26,7 @@ const VotersGetVoterDetails = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling getVoterDetails`)
-    await props.typedClient.getVoterDetails(
-      {},
-      { sender },
-    )
+    await props.typedClient.getVoterDetails({}, { sender })
     setLoading(false)
   }
 
