@@ -11,16 +11,26 @@ datasource db {
 }
 
 model User {
-  id             Int        @id @unique @default(autoincrement())
-  wallet_address String     @unique
-  username String
-  Campaign       Campaign[]
+  id                Int        @id @unique @default(autoincrement())
+  wallet_address    String     @unique
+  username          String
+  is_vip            Boolean
+  created_campaigns Campaign[]
 }
 
 model Campaign {
-  id       Int    @id @unique @default(autoincrement())
-  title    String
-  creator  String
+  id          Int           @id @unique @default(autoincrement())
+  title       String
+  description String
+  creator     String
+  website     String
+  media_id    Int
+  media       CampaignMedia @relation(fields: [media_id], references: [id])
+  user        User          @relation(fields: [creator], references: [wallet_address])
+}
 
-  user     User   @relation(fields: [creator], references: [wallet_address])
+model CampaignMedia {
+  id       Int        @id @unique @default(autoincrement())
+  url      String
+  Campaign Campaign[]
 }
