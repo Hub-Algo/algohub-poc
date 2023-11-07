@@ -2,7 +2,7 @@ import campaigns from '../dummy-data/campaigns.json'
 import { CampaignInterface } from '../interfaces/campaign-interface'
 
 const fetchAllCampaigns = async () => {
-  return campaigns
+  return campaigns as CampaignInterface[]
 }
 
 const filterCampaignByCategory = (campaigns: CampaignInterface[], category: string) => {
@@ -10,4 +10,9 @@ const filterCampaignByCategory = (campaigns: CampaignInterface[], category: stri
   return filteredCampaigns
 }
 
-export { fetchAllCampaigns, filterCampaignByCategory }
+const filterCampaignsByStatus = (campaigns: CampaignInterface[], status: CampaignInterface['campaign_status']) => {
+  const filteredCampaigns = campaigns.filter((campaign) => campaign.campaign_status === status)
+  return filteredCampaigns
+}
+
+export { fetchAllCampaigns, filterCampaignByCategory, filterCampaignsByStatus }

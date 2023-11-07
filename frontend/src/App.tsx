@@ -25,7 +25,7 @@ export default function App() {
 
   const userService = new userServices()
 
-  const { activeAccount } = useWallet()
+  const { activeAccount, getAssets } = useWallet()
 
   let providersArray: ProvidersArray
 
@@ -50,15 +50,19 @@ export default function App() {
 
   const fetchAndAppendUserData = async (walletAddress: string) => {
     const userAssets = await userService.fetchUserAssets(walletAddress)
-    const user = await userService.signupUser(walletAddress)
+
+    // const user = await userService.signupUser(walletAddress)
     const usdcDecimals = 6
     //Asset needs type
     const usdcBalance = userAssets.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0].amount / 10 ** usdcDecimals
 
+    const username = await userService.fetchUserNfd(walletAddress)
+    console.log(username)
+
     //Algo decimals is being used just as dummy for now
     const algoDecimals = 6
 
-    setUserData({ wallet_address: user.wallet_address, username: user.username, usdc_balance: usdcBalance, algo_balance: 1 * algoDecimals })
+    setUserData({ wallet_address: walletAddress, username, usdc_balance: usdcBalance, algo_balance: 1 * algoDecimals })
   }
 
   useEffect(() => {

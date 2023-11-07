@@ -6,12 +6,15 @@ import Carousel from '../components/common/carousel/Carousel'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
 import { CampaignInterface } from '../interfaces/campaign-interface'
+import Modal from '../components/common/modal/Modal'
+import InvestModal from '../components/invest-modal/InvestModal'
 
 export interface CampaignOutletInterface {
   campaignList: CampaignInterface[]
 }
 
 const CampaignDetails = () => {
+  const hasVoted = false
   const { campaignList } = useOutletContext() as CampaignOutletInterface
 
   const { campaignId } = useParams()
@@ -33,7 +36,7 @@ const CampaignDetails = () => {
 
   return (
     <PageContainer>
-      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign.campaign_title}`]} />
+      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.campaign_title}`]} />
       <section>
         <div className="flex gap-5">
           <div className="w-16 h-16 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">
@@ -69,7 +72,7 @@ const CampaignDetails = () => {
               <p className="w-1/6">${campaign?.max_allocation}</p>
             </div>
 
-            <VoteModal />
+            {getTxnModal()}
 
             <a className="btn" href={'/'}>
               {'Website'}
@@ -90,6 +93,22 @@ const CampaignDetails = () => {
       </section>
     </PageContainer>
   )
+
+  function getTxnModal() {
+    if ((campaign?.campaign_status === 'new' && hasVoted) || campaign?.campaign_status === 'pending') {
+      return <InvestModal campaignStatus={campaign.campaign_status} />
+    } else if (campaign?.campaign_status === 'new' && !hasVoted) {
+      return <VoteModal />
+    }
+
+    return (
+      <Modal id={'CampaignDetails.TxnModal'} modalButtonName={'Whitelist'}>
+        <h2>{'Transaction details'}</h2>
+
+        <p>{'Enter the amount you want to fund'}</p>
+      </Modal>
+    )
+  }
 }
 
 export default CampaignDetails

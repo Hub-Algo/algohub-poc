@@ -37,4 +37,15 @@ export class userServices {
       throw new Error('Error signing up user')
     }
   }
+
+  async fetchUserNfd(walletAddress: string) {
+    try {
+      const { data } = await axios.get(`https://api.nf.domains/nfd/v2/address?address=${walletAddress}`)
+      console.log('Fetching user NFD')
+      console.log(data)
+      return data[walletAddress][0].name
+    } catch (error) {
+      return walletAddress
+    }
+  }
 }
