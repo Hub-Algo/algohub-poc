@@ -33,6 +33,7 @@ export class AuthService {
   }
 
   async signin(wallet_address: string): Promise<User> {
+    console.log('signing in user');
     const user = await this.prismaService.user.findUnique({
       where: { wallet_address },
     });

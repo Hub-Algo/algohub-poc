@@ -33,6 +33,8 @@ export class UserController {
     @Body() createUserDto: CreateUserDto,
     @Session() session: any,
   ) {
+    console.log('dto:', createUserDto);
+
     const user = await this.authServices.signup(createUserDto.wallet_address);
 
     session.user = user;
@@ -49,6 +51,8 @@ export class UserController {
     const user = await this.authServices.signin(signinUserDto.wallet_address);
 
     session.user = user;
+
+    console.log(session);
 
     console.log('signing', user);
     return user;

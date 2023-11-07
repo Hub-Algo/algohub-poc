@@ -1,7 +1,7 @@
 import { useWallet } from '@txnlab/use-wallet'
+import { userServices } from '../services/userServices'
 import Dropdown from './common/dropdown/Dropdown'
 import { Option } from './common/dropdown/Dropdown.types'
-import { connectWallet } from '../services/userServices'
 
 type WalletProfileMenuItem = Option & {
   onSelect: VoidFunction
@@ -9,6 +9,7 @@ type WalletProfileMenuItem = Option & {
 
 const ConnectDropdown = () => {
   const { providers } = useWallet()
+  const userService = new userServices()
 
   const walletProfileMenuItems: WalletProfileMenuItem[] =
     providers?.map((provider) => {
@@ -21,7 +22,7 @@ const ConnectDropdown = () => {
             <img className="w-6 ronded-full" src={provider.metadata.icon} />
           </div>
         ),
-        onSelect: () => connectWallet(provider),
+        onSelect: () => userService.connectWallet(provider),
       }
     }) ?? []
 
