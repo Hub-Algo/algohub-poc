@@ -1,6 +1,6 @@
-import { Contract } from '../../src/lib/index';
+import { Contract } from '@algorandfoundation/tealscript';
 
-export default class "{{ contract_name }}" extends Contract {
+export default class {{ contract_name }} extends Contract {
   counter = GlobalStateKey<uint64>({ key: 'counter' });
 
   private incrementCounter(i: uint64): void {
