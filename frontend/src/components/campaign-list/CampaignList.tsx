@@ -68,7 +68,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         <TiMediaPlayReverse className="" />
       </Button>
 
-      <div className="flex gap-10 py-5 w-full justify-start">{campaignListRenderer}</div>
+      <div className="flex gap-10 py-5 w-full justify-center md:justify-start">{campaignListRenderer}</div>
 
       <Button
         aria-label={'next-button'}
