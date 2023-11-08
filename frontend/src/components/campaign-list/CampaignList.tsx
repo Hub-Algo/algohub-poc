@@ -4,11 +4,11 @@ import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti'
 import { generatePath, useNavigate } from 'react-router-dom'
 
 import { useEffect, useState } from 'react'
+import routes from '../../core/routes'
 import { useWindowSizeContext } from '../../core/window-size/WindowSizeContext'
 import { CampaignInterface } from '../../interfaces/campaign-interface'
 import Button from '../common/button/Button'
 import CardWithImage from '../common/card/with-image/CardWithImage'
-import routes from '../../core/routes'
 
 interface CampaignsListPropsInterface {
   campaigns: CampaignInterface[]
@@ -68,7 +68,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         <TiMediaPlayReverse className="" />
       </Button>
 
-      <div className="flex gap-10 py-5 w-full justify-center">{campaignListRenderer}</div>
+      <div className="flex gap-10 py-5 w-full justify-start">{campaignListRenderer}</div>
 
       <Button
         aria-label={'next-button'}

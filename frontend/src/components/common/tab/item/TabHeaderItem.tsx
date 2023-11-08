@@ -13,7 +13,7 @@ function TabHeaderItem({ tab, isActive, index, onClick }: TabHeaderItemProps) {
     <a
       id={tab.id}
       tabIndex={index}
-      className={classNames('tab', { 'tab-bordered tab-active text-gray-100': isActive })}
+      className={classNames('tab text-gray-200', { 'tab-bordered tab-active text-gray-100': isActive })}
       onClick={handleClick}
     >
       {tab.content}
