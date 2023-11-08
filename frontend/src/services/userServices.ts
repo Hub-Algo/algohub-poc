@@ -1,6 +1,7 @@
 //Use axios to fetch data?
 import { Provider } from '@txnlab/use-wallet'
 import axios from 'axios'
+import { ellipseAddress } from '../core/util/wallet/ellipseAddress'
 
 const API_URL = import.meta.env.API_URL
 
@@ -45,7 +46,7 @@ export class userServices {
       console.log(data)
       return data[walletAddress][0].name
     } catch (error) {
-      return walletAddress
+      return ellipseAddress(walletAddress)
     }
   }
 }
