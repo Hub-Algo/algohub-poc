@@ -19,7 +19,6 @@ jobs:
     name: Backend Release
     secrets: inherit
     uses: ./.github/workflows/smart-contracts-cd.yaml
-
   frontend-release:
     name: Frontend Release
     secrets: inherit
