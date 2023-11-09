@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
 <CampaignCreateCampaign
@@ -18,7 +18,7 @@ import { useWallet } from '@txnlab/use-wallet'
   metadataUrl={metadataUrl}
 />
 */
-type CampaignCreateCampaignArgs = Dao['methods']['createCampaign(uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
+type CampaignCreateCampaignArgs = Campaign['methods']['createCampaign(uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
 
 type Props = {
   buttonClass: string
