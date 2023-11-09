@@ -3,7 +3,7 @@ const Breadcrumbs = ({ pathList }) => {
     <div className="text-sm breadcrumbs text-gray-300">
       <ul>
         {pathList.map((path) => (
-          <li>
+          <li key={path}>
             <p>{path}</p>
           </li>
         ))}

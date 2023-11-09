@@ -1,0 +1,42 @@
+@base_url = "http://localhost:3000/"
+
+### Get a list with all users
+GET  http://localhost:3000/auth
+###
+
+### Get an user by it's wallet address as param
+GET  http://localhost:3000/auth/AENCK6AVVGCOQM6XGSGTSMZXVHV34QDAHH7RDH226GLD55U34BLT6YP5L4
+###
+
+
+### Get a list with all users
+POST  http://localhost:3000/auth
+Content-Type: application/json
+{
+"wallet_address": "AENCK6AVVGCOQM6XGSGTSMZXVHV34QDAHH7RDH226GLD55U34BLT6YP5L4"
+}
+
+###
+
+###Signup user
+POST  http://localhost:3000/auth/signup
+Content-Type: application/json
+{
+"wallet_address": "AENCK6AVVGCOQM6XGSGTSMZXVHV34QDAHH7RDH226GLD55U34BLT6YP5L4"
+}
+
+
+###
+
+###Signin user session
+
+POST  http://localhost:3000/auth/signin
+Content-Type: application/json
+{
+"wallet_address": "AENCK6AVVGCOQM6XGSGTSMZXVHV34QDAHH7RDH226GLD55U34BLT6YP5L4"
+}
+
+###
+
+###Signout user session
+POST http://localhost:3000/auth/signout

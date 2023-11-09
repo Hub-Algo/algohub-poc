@@ -12,7 +12,7 @@ function Tab({ items, children }: TabProps) {
   const [activeTabIndex, setActiveTabIndex] = useState(0)
 
   return (
-    <div className={'w-full'}>
+    <div className={'w-full bg-gray-950'}>
       <div className={'w-full overflow-x-auto'}>
         <div className={'tabs flex-nowrap'}>
           {items.map((item, index) => (
