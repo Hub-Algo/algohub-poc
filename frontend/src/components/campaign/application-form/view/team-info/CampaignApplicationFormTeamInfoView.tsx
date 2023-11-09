@@ -85,7 +85,8 @@ function CampaignApplicatioFormTeamInfoView({ onClickNextButton, onClickPrevButt
     })
   }
 
-  function handleClickNextButton() {
+  function handleClickNextButton(event: React.SyntheticEvent<HTMLFormElement, Event>) {
+    event.preventDefault()
     onClickNextButton({ ...state!, type: CampaignApplicationFormView.TeamInfo })
   }
 

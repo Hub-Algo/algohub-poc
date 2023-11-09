@@ -110,7 +110,8 @@ function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState 
     })
   }
 
-  function handleClickNextButton() {
+  function handleClickNextButton(event: React.SyntheticEvent<HTMLFormElement, Event>) {
+    event.preventDefault()
     onClickNextButton({ ...state!, type: CampaignApplicationFormView.ContactInfo })
   }
 }

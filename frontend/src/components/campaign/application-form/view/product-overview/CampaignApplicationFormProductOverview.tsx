@@ -166,7 +166,8 @@ function CampaignApplicationFormProductOverview({
     })
   }
 
-  function handleClickNextButton() {
+  function handleClickNextButton(event: React.SyntheticEvent<HTMLFormElement, Event>) {
+    event.preventDefault()
     onClickNextButton({ ...state!, type: CampaignApplicationFormView.ProductOverview })
   }
 
