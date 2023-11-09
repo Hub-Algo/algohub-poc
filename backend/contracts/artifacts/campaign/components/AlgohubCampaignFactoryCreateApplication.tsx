@@ -1,39 +1,33 @@
 /* eslint-disable no-console */
 import { ReactNode, useState } from 'react'
-import { Voters, VotersClient } from '../contracts/DaoClient'
+import { AlgohubCampaignFactory, AlgohubCampaignFactoryClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<VotersGetVIPStatus
+<AlgohubCampaignFactoryCreateApplication
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getVIPStatus"
+  buttonNode="Call createApplication"
   typedClient={typedClient}
-  account={account}
 />
 */
-type VotersGetVIPStatusArgs = Dao['methods']['getVIPStatus(address)bool']['argsObj']
-
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: VotersClient
-  account: VotersGetVIPStatusArgs['account']
+  typedClient: AlgohubCampaignFactoryClient
 }
 
-const VotersGetVIPStatus = (props: Props) => {
+const AlgohubCampaignFactoryCreateApplication = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getVIPStatus`)
-    await props.typedClient.getVIPStatus(
-      {
-        account: props.account,
-      },
+    console.log(`Calling createApplication`)
+    await props.typedClient.create.createApplication(
+      {},
       { sender },
     )
     setLoading(false)
@@ -46,4 +40,4 @@ const VotersGetVIPStatus = (props: Props) => {
   )
 }
 
-export default VotersGetVIPStatus
+export default AlgohubCampaignFactoryCreateApplication

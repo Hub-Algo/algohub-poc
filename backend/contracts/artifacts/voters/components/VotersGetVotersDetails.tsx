@@ -4,36 +4,30 @@ import { Voters, VotersClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<VotersGetVIPStatus
+<VotersGetVotersDetails
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getVIPStatus"
+  buttonNode="Call getVotersDetails"
   typedClient={typedClient}
-  account={account}
 />
 */
-type VotersGetVIPStatusArgs = Dao['methods']['getVIPStatus(address)bool']['argsObj']
-
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: VotersClient
-  account: VotersGetVIPStatusArgs['account']
 }
 
-const VotersGetVIPStatus = (props: Props) => {
+const VotersGetVotersDetails = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getVIPStatus`)
-    await props.typedClient.getVIPStatus(
-      {
-        account: props.account,
-      },
+    console.log(`Calling getVotersDetails`)
+    await props.typedClient.getVotersDetails(
+      {},
       { sender },
     )
     setLoading(false)
@@ -46,4 +40,4 @@ const VotersGetVIPStatus = (props: Props) => {
   )
 }
 
-export default VotersGetVIPStatus
+export default VotersGetVotersDetails

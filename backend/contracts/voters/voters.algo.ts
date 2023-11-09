@@ -6,13 +6,8 @@ type AlgohubVotes = {
   totalVotes: number;
 };
 
-// type VoteDetails = {
-//   amount: number;
-//   isVip: boolean;
-// }
-
 // eslint-disable-next-line no-unused-vars
-class Voters extends Contract {
+export default class Voters extends Contract {
   votersAsaId = GlobalStateKey<Asset>();
 
   algoToVoteRation = GlobalStateKey<number>();
@@ -21,8 +16,10 @@ class Voters extends Contract {
 
   totalVotes = GlobalStateKey<number>();
 
-  vipVoters = GlobalStateMap<Address, boolean>({ maxKeys: 10 });
+  vipVoters = GlobalStateMap<Address, boolean>({ maxKeys: 50 });
+  // vipVoters = BoxMap<Address, boolean>();
 
+  @allow.create('OptIn')
   // eslint-disable-next-line no-unused-vars
   createApplication(algoToVoteRatio: number, vipVoteWeight: number): void {
     this.algoToVoteRation.value = algoToVoteRatio;
@@ -79,7 +76,8 @@ class Voters extends Contract {
     this.totalVotes.value = this.totalVotes.value + 1;
   }
 
-  closeOutOfApplication(): void {
+  // eslint-disable-next-line no-unused-vars
+  closeOutOfApplication(votersAsa: Asset): void {
     /// Verify a ASA has already been opted into
     assert(this.txn.sender.assetBalance(this.votersAsaId.value) === 1);
     // unfreeze the asset for the sender
@@ -98,7 +96,7 @@ class Voters extends Contract {
     this.totalVotes.value = this.totalVotes.value - 1;
   }
 
-  getVoterssDetails(): AlgohubVotes {
+  getVotersDetails(): AlgohubVotes {
     return {
       algoToVoteRation: this.algoToVoteRation.value,
       vipVoteWeight: this.vipVoteWeight.value,
@@ -106,8 +104,10 @@ class Voters extends Contract {
     };
   }
 
-  getVotePower(account: Address): number {
+  // eslint-disable-next-line no-unused-vars
+  getVotePower(account: Address, votersAsa: Asset): number {
     // TODO: something seems off with getting the asset balance on-chain ....
+    // if (account.hasAsset(this.votersAsaId.value) === 0) return 0;
     // if (account.assetBalance(this.votersAsaId.value) === 0) return 0;
     if (this.vipVoters(account).value) return 125;
     return 100;
@@ -127,8 +127,9 @@ class Voters extends Contract {
     verifyTxn(this.txn, { sender: globals.creatorAddress });
     // TODO: Add check to make sure that account is already opted-in
     // assert(account.assetBalance(this.votersAsaId.value) === 1);
-    if (isVIP) {
-      this.vipVoters(account).value = isVIP;
-    }
+    this.vipVoters(account).value = isVIP;
+    // if (isVIP) {
+    //   this.vipVoters(account).value = isVIP;
+    // }
   }
 }
