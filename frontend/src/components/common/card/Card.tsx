@@ -7,7 +7,7 @@ interface CardProps {
 
 function Card({ children, customClassName }: CardProps) {
   return (
-    <div className={classNames('card w-96 bg-card-bg shadow-xl px-6 py-5 border border-yellow-200', customClassName)}>
+    <div className={classNames('card bg-card-bg shadow-xl px-6 py-5 border border-yellow-200', customClassName)}>
       <div className={'card-body'}>{children}</div>
     </div>
   )

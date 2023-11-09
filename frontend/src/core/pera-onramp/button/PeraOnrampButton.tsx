@@ -14,6 +14,18 @@ function PeraOnrampButton() {
   const peraOnrampRef = useRef<null | PeraOnramp>(null)
   const { executeAssetOptin, toastMessage } = usePeraOnrampAssetOptin()
 
+  function handleClick() {
+    if (peraOnrampRef.current) {
+      peraOnrampRef.current.addFunds({ accountAddress: activeAddress ?? '' }).then(closeModal)
+    }
+  }
+
+  function closeModal() {
+    if (peraOnrampRef.current) {
+      peraOnrampRef.current.close()
+    }
+  }
+
   useEffect(() => {
     const onramp = new PeraOnramp({
       optInEnabled: Boolean(activeAddress),
@@ -35,18 +47,6 @@ function PeraOnrampButton() {
       {toastMessage && <Toast>{toastMessage}</Toast>}
     </>
   )
-
-  function handleClick() {
-    if (peraOnrampRef.current) {
-      peraOnrampRef.current.addFunds({ accountAddress: activeAddress ?? '' }).then(closeModal)
-    }
-  }
-
-  function closeModal() {
-    if (peraOnrampRef.current) {
-      peraOnrampRef.current.close()
-    }
-  }
 }
 
 export default PeraOnrampButton

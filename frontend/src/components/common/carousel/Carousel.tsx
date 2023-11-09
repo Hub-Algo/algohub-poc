@@ -8,7 +8,7 @@ const images = [
 const Carousel = () => {
   const renderedImages = images.map((image, index) => {
     return (
-      <div id={`item${index}`} className="carousel-item w-full">
+      <div key={index} id={`item${index}`} className="carousel-item w-full">
         <img src={image} className="w-full" />
       </div>
     )

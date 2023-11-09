@@ -3,13 +3,14 @@ import { DaffiWalletConnect } from '@daffiwallet/connect'
 import { PeraWalletConnect } from '@perawallet/connect'
 import { PROVIDER_ID, ProvidersArray, WalletProvider, useInitializeProviders, useWallet } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
 import ROUTES from './core/routes'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
-import { ellipseAddress } from './core/util/wallet/ellipseAddress'
+import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
 import { CampaignInterface } from './interfaces/campaign-interface'
 import { UserInterface } from './interfaces/userInterface'
 import About from './pages/About'
@@ -17,11 +18,14 @@ import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
-import { fetchUserAssets, fetchUserNfd } from './services/userServices'
+import CampaignApplicationForm from './components/campaign/application-form/CampaignApplicationForm'
+import { userServices } from './services/userServices'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
   const [userData, setUserData] = useState<UserInterface>()
+
+  const userService = new userServices()
 
   const { activeAccount } = useWallet()
 
@@ -37,23 +41,38 @@ export default function App() {
     ]
   }
 
+  const resetUserData = () => {
+    setUserData(undefined)
+  }
+
   const fetchCampaigns = async () => {
     const allCampaigns = await fetchAllCampaigns()
     setCampaignList(allCampaigns)
   }
 
   const fetchAndAppendUserData = async (walletAddress: string) => {
-    const userAssets = await fetchUserAssets(walletAddress)
-    const userNfd = await fetchUserNfd(walletAddress)
+    const userAssets = await userService.fetchUserAssets(walletAddress)
 
+    // const user = await userService.signupUser(walletAddress)
     const usdcDecimals = 6
     //Asset needs type
     const usdcBalance = userAssets.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0].amount / 10 ** usdcDecimals
 
+    const { data } = await axios.get(`https://mainnet-api.algonode.cloud/v2/accounts/${walletAddress}`)
+
+    const username = await userService.fetchUserNfd(walletAddress)
+
     //Algo decimals is being used just as dummy for now
     const algoDecimals = 6
-    const username = userNfd || ellipseAddress(walletAddress)
-    setUserData({ wallet_address: walletAddress, username, usdc_balance: usdcBalance, algo_balance: 1 * algoDecimals })
+
+    const algoBalance = (data.amount / 10 ** algoDecimals).toFixed(2)
+
+    setUserData({
+      wallet_address: walletAddress,
+      username,
+      usdc_balance: Number(usdcBalance.toFixed(2)),
+      algo_balance: Number(algoBalance),
+    })
   }
 
   useEffect(() => {
@@ -64,6 +83,8 @@ export default function App() {
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
     }
+    // TODO: Remove this hook once we set fetchAndAppendUserData inside a useCallback
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeAccount])
 
   const algodConfig = getAlgodConfigFromViteEnvironment()
@@ -83,7 +104,7 @@ export default function App() {
     {
       element: (
         <>
-          <NavBar userData={userData} />
+          <NavBar userData={userData} resetUserData={resetUserData} />
           <Outlet context={{ activeAccount, campaignList, userData }} />
           <Footer />
         </>
@@ -97,13 +118,16 @@ export default function App() {
         },
         { path: ROUTES.PROJECT_DETAIL.FULL_PATH, element: <CampaignDetails /> },
         { path: ROUTES.ABOUT.FULL_PATH, element: <About /> },
+        { path: ROUTES.CAMPAIGN_APPLICATION_FORM.FULL_PATH, element: <CampaignApplicationForm /> },
       ],
     },
   ])
 
   return (
     <WalletProvider value={walletProviders}>
-      <RouterProvider router={router} />
+      <WindowSizeContextProvider>
+        <RouterProvider router={router} />
+      </WindowSizeContextProvider>
     </WalletProvider>
   )
 }
