@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
 import { VotersClient } from '../../contracts/VotersClient'
 
 /* Example usage
-<VotersGetVoterDetails
+<VotersGetTotalVoters
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getVoterDetails"
+  buttonNode="Call getTotalVoters"
   typedClient={typedClient}
 />
 */
@@ -18,15 +18,15 @@ type Props = {
   typedClient: VotersClient
 }
 
-const VotersGetVoterDetails = (props: Props) => {
+const VotersGetTotalVoters = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getVoterDetails`)
-    await props.typedClient.getVoterDetails({}, { sender })
+    console.log(`Calling getTotalVoters`)
+    await props.typedClient.getTotalVoters({}, { sender })
     setLoading(false)
   }
 
@@ -37,4 +37,4 @@ const VotersGetVoterDetails = (props: Props) => {
   )
 }
 
-export default VotersGetVoterDetails
+export default VotersGetTotalVoters

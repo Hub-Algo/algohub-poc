@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { AlgohubCampaignFactory, AlgohubCampaignFactoryClient } from '../contracts/DaoClient'
-import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react';
+import { useWallet } from '@txnlab/use-wallet';
+import { AlgohubCampaignFactoryClient } from '../contracts/DaoClient';
 
 /* Example usage
 <AlgohubCampaignFactoryCreateApplication
@@ -12,32 +12,29 @@ import { useWallet } from '@txnlab/use-wallet'
 />
 */
 type Props = {
-  buttonClass: string
-  buttonLoadingNode?: ReactNode
-  buttonNode: ReactNode
-  typedClient: AlgohubCampaignFactoryClient
-}
+  buttonClass: string;
+  buttonLoadingNode?: ReactNode;
+  buttonNode: ReactNode;
+  typedClient: AlgohubCampaignFactoryClient;
+};
 
 const AlgohubCampaignFactoryCreateApplication = (props: Props) => {
-  const [loading, setLoading] = useState<boolean>(false)
-  const { activeAddress, signer } = useWallet()
-  const sender = { signer, addr: activeAddress! }
+  const [loading, setLoading] = useState<boolean>(false);
+  const { activeAddress, signer } = useWallet();
+  const sender = { signer, addr: activeAddress! };
 
   const callMethod = async () => {
-    setLoading(true)
-    console.log(`Calling createApplication`)
-    await props.typedClient.create.createApplication(
-      {},
-      { sender },
-    )
-    setLoading(false)
-  }
+    setLoading(true);
+    console.log(`Calling createApplication`);
+    await props.typedClient.create.createApplication({}, { sender });
+    setLoading(false);
+  };
 
   return (
     <button className={props.buttonClass} onClick={callMethod}>
       {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
     </button>
-  )
-}
+  );
+};
 
-export default AlgohubCampaignFactoryCreateApplication
+export default AlgohubCampaignFactoryCreateApplication;

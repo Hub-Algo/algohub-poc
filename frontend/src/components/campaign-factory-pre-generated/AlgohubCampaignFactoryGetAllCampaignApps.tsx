@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Voters, VotersClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { AlgohubCampaignFactoryClient } from '../../contracts/AlgohubCampaignFactory'
 
 /* Example usage
-<VotersGetVotersDetails
+<AlgohubCampaignFactoryGetAllCampaignApps
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getVotersDetails"
+  buttonNode="Call getAllCampaignApps"
   typedClient={typedClient}
 />
 */
@@ -15,18 +15,18 @@ type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: VotersClient
+  typedClient: AlgohubCampaignFactoryClient
 }
 
-const VotersGetVotersDetails = (props: Props) => {
+const AlgohubCampaignFactoryGetAllCampaignApps = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getVotersDetails`)
-    await props.typedClient.getVotersDetails({}, { sender })
+    console.log(`Calling getAllCampaignApps`)
+    await props.typedClient.getAllCampaignApps({}, { sender })
     setLoading(false)
   }
 
@@ -37,4 +37,4 @@ const VotersGetVotersDetails = (props: Props) => {
   )
 }
 
-export default VotersGetVotersDetails
+export default AlgohubCampaignFactoryGetAllCampaignApps

@@ -13,7 +13,7 @@
     "generate-components": "npm run generate-campaign-comp && npm run generate-factory-comp && npm run generate-voters-comp",
     "compile-campaign": "tealscript contracts/campaign/campaign.algo.ts contracts/artifacts/campaign",
     "compile-voters": "tealscript contracts/voters/voters.algo.ts contracts/artifacts/voters",
-    "build": "npm run compile-campaign && npm run compile-voters && npm run generate-clients && npm run generate-components",
+    "build": "npm run compile-campaign && npm run compile-voters && npm run generate-clients",
     "test": "npm run build && jest",
     "lint": "eslint . --ext .ts",
     "fix": "eslint . --ext .ts --fix",

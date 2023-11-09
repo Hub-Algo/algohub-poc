@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
 <CampaignVote
@@ -13,7 +13,7 @@ import { useWallet } from '@txnlab/use-wallet'
   votersAsa={votersAsa}
 />
 */
-type CampaignVoteArgs = Dao['methods']['vote(bool,asset)void']['argsObj']
+type CampaignVoteArgs = Campaign['methods']['vote(bool,asset)void']['argsObj']
 
 type Props = {
   buttonClass: string

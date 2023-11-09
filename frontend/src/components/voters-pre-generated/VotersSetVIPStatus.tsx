@@ -1,32 +1,47 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
 import { useWallet } from '@txnlab/use-wallet'
-import { VotersClient } from '../../contracts/VotersClient'
+import { ReactNode, useState } from 'react'
+import { Voters, VotersClient } from '../../contracts/VotersClient'
 
 /* Example usage
-<VotersGetVoterssDetails
+<VotersSetVIPStatus
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getVotersDetails"
+  buttonNode="Call setVIPStatus"
   typedClient={typedClient}
+  account={account}
+  isVIP={isVIP}
+  votersAsa={votersAsa}
 />
 */
+type VotersSetVIPStatusArgs = Voters['methods']['setVIPStatus(address,bool,asset)void']['argsObj']
+
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: VotersClient
+  account: VotersSetVIPStatusArgs['account']
+  isVIP: VotersSetVIPStatusArgs['isVIP']
+  votersAsa: VotersSetVIPStatusArgs['votersAsa']
 }
 
-const VotersGetVoterssDetails = (props: Props) => {
+const VotersSetVIPStatus = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getVotersDetails`)
-    await props.typedClient.getVotersDetails({}, { sender })
+    console.log(`Calling setVIPStatus`)
+    await props.typedClient.setVipStatus(
+      {
+        account: props.account,
+        isVIP: props.isVIP,
+        votersAsa: props.votersAsa,
+      },
+      { sender },
+    )
     setLoading(false)
   }
 
@@ -37,4 +52,4 @@ const VotersGetVoterssDetails = (props: Props) => {
   )
 }
 
-export default VotersGetVoterssDetails
+export default VotersSetVIPStatus

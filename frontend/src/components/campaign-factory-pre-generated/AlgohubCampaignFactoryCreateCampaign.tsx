@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { AlgohubCampaignFactory, AlgohubCampaignFactoryClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { AlgohubCampaignFactory, AlgohubCampaignFactoryClient } from '../../contracts/AlgohubCampaignFactory'
 
 /* Example usage
 <AlgohubCampaignFactoryCreateCampaign
@@ -19,7 +19,7 @@ import { useWallet } from '@txnlab/use-wallet'
 />
 */
 type AlgohubCampaignFactoryCreateCampaignArgs =
-  Dao['methods']['createCampaign(uint64,uint64,uint64,uint64,uint64,uint64,string)uint64']['argsObj']
+  AlgohubCampaignFactory['methods']['createCampaign(uint64,uint64,uint64,uint64,uint64,uint64,string)uint64']['argsObj']
 
 type Props = {
   buttonClass: string

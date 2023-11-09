@@ -1,47 +1,32 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Voters, VotersClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { VotersClient } from '../../contracts/VotersClient'
 
 /* Example usage
-<VotersSetVIPStatus
+<VotersGetVoterDetails
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call setVIPStatus"
+  buttonNode="Call getVoterDetails"
   typedClient={typedClient}
-  account={account}
-  isVIP={isVIP}
-  votersAsa={votersAsa}
 />
 */
-type VotersSetVIPStatusArgs = Dao['methods']['setVIPStatus(address,bool,asset)void']['argsObj']
-
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: VotersClient
-  account: VotersSetVIPStatusArgs['account']
-  isVIP: VotersSetVIPStatusArgs['isVIP']
-  votersAsa: VotersSetVIPStatusArgs['votersAsa']
 }
 
-const VotersSetVIPStatus = (props: Props) => {
+const VotersGetVoterDetails = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling setVIPStatus`)
-    await props.typedClient.setVIPStatus(
-      {
-        account: props.account,
-        isVIP: props.isVIP,
-        votersAsa: props.votersAsa,
-      },
-      { sender },
-    )
+    console.log(`Calling getVoterDetails`)
+    await props.typedClient.getVotersDetails({}, { sender })
     setLoading(false)
   }
 
@@ -52,4 +37,4 @@ const VotersSetVIPStatus = (props: Props) => {
   )
 }
 
-export default VotersSetVIPStatus
+export default VotersGetVoterDetails

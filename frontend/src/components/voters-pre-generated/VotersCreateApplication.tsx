@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Voters, VotersClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { Voters, VotersClient } from '../../contracts/VotersClient'
 
 /* Example usage
 <VotersCreateApplication
@@ -13,7 +13,7 @@ import { useWallet } from '@txnlab/use-wallet'
   vipVoteWeight={vipVoteWeight}
 />
 */
-type VotersCreateApplicationArgs = Dao['methods']['createApplication(uint64,uint64)void']['argsObj']
+type VotersCreateApplicationArgs = Voters['methods']['createApplication(uint64,uint64)void']['argsObj']
 
 type Props = {
   buttonClass: string

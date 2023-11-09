@@ -1,41 +1,38 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Voters, VotersClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { Voters, VotersClient } from '../../contracts/VotersClient'
 
 /* Example usage
-<VotersGetVotePower
+<VotersGetVIPStatus
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getVotePower"
+  buttonNode="Call getVIPStatus"
   typedClient={typedClient}
   account={account}
-  votersAsa={votersAsa}
 />
 */
-type VotersGetVotePowerArgs = Dao['methods']['getVotePower(address,asset)uint64']['argsObj']
+type VotersGetVIPStatusArgs = Voters['methods']['getVIPStatus(address)bool']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: VotersClient
-  account: VotersGetVotePowerArgs['account']
-  votersAsa: VotersGetVotePowerArgs['votersAsa']
+  account: VotersGetVIPStatusArgs['account']
 }
 
-const VotersGetVotePower = (props: Props) => {
+const VotersGetVIPStatus = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getVotePower`)
-    await props.typedClient.getVotePower(
+    console.log(`Calling getVIPStatus`)
+    await props.typedClient.getVipStatus(
       {
         account: props.account,
-        votersAsa: props.votersAsa,
       },
       { sender },
     )
@@ -49,4 +46,4 @@ const VotersGetVotePower = (props: Props) => {
   )
 }
 
-export default VotersGetVotePower
+export default VotersGetVIPStatus

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Voters, VotersClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { Voters, VotersClient } from '../../contracts/VotersClient'
 
 /* Example usage
 <VotersRegister
@@ -12,7 +12,7 @@ import { useWallet } from '@txnlab/use-wallet'
   votersAsa={votersAsa}
 />
 */
-type VotersRegisterArgs = Dao['methods']['register(asset)void']['argsObj']
+type VotersRegisterArgs = Voters['methods']['register(asset)void']['argsObj']
 
 type Props = {
   buttonClass: string
