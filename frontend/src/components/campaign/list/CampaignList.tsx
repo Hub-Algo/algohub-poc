@@ -4,11 +4,11 @@ import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti'
 import { generatePath, useNavigate } from 'react-router-dom'
 
 import { useEffect, useState } from 'react'
+import routes from '../../../core/routes'
 import { useWindowSizeContext } from '../../../core/window-size/WindowSizeContext'
 import { CampaignInterface } from '../../../interfaces/campaign-interface'
 import Button from '../../common/button/Button'
 import CardWithImage from '../../common/card/with-image/CardWithImage'
-import routes from '../../../core/routes'
 
 interface CampaignsListPropsInterface {
   campaigns: CampaignInterface[]
@@ -32,7 +32,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
 
   const campaignListRenderer = displayedCampaigns.map((campaign, index) => {
     return (
-      <CardWithImage key={index} imageProps={{ src: 'src/core/images/the-recoop.png', alt: 'gunny-tps' }}>
+      <CardWithImage key={index} imageProps={{ src: 'images/the-recoop.png', alt: 'gunny-tps' }}>
         <h2 className={'card-title'}>{campaign.campaign_title}</h2>
         <div className={'mb-8'}>
           <div className={'flex gap-4 w-max'}>
