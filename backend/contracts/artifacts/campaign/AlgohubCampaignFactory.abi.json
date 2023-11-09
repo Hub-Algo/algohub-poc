@@ -3,15 +3,6 @@
   "desc": "",
   "methods": [
     {
-      "name": "createApplication",
-      "args": [],
-      "desc": "",
-      "returns": {
-        "type": "void",
-        "desc": ""
-      }
-    },
-    {
       "name": "createCampaign",
       "args": [
         {
@@ -64,6 +55,15 @@
         "type": "uint64[]",
         "desc": ""
       }
+    },
+    {
+      "name": "createApplication",
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      },
+      "args": []
     }
   ]
 }

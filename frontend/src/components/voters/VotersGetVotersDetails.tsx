@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
+import { Voters, VotersClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignWithdrawIdoAsa
+<VotersGetVotersDetails
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call withdrawIdoAsa"
+  buttonNode="Call getVotersDetails"
   typedClient={typedClient}
 />
 */
@@ -15,18 +15,18 @@ type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
+  typedClient: VotersClient
 }
 
-const CampaignWithdrawIdoAsa = (props: Props) => {
+const VotersGetVotersDetails = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling withdrawIdoAsa`)
-    await props.typedClient.withdrawIdoAsa({}, { sender })
+    console.log(`Calling getVotersDetails`)
+    await props.typedClient.getVotersDetails({}, { sender })
     setLoading(false)
   }
 
@@ -37,4 +37,4 @@ const CampaignWithdrawIdoAsa = (props: Props) => {
   )
 }
 
-export default CampaignWithdrawIdoAsa
+export default VotersGetVotersDetails

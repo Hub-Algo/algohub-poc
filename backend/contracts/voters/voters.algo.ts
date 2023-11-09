@@ -61,7 +61,6 @@ export default class Voters extends Contract {
     assert(this.txn.sender.assetBalance(this.votersAsaId.value) === 0);
     /// Verify that the balance is higher than the minimum algo to vote ratio
     assert(this.txn.sender.balance >= this.algoToVoteRation.value);
-
     sendAssetTransfer({
       xferAsset: this.votersAsaId.value,
       assetReceiver: this.txn.sender,

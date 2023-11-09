@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
+import { AlgohubCampaignFactory, AlgohubCampaignFactoryClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignWithdrawIdoAsa
+<AlgohubCampaignFactoryCreateApplication
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call withdrawIdoAsa"
+  buttonNode="Call createApplication"
   typedClient={typedClient}
 />
 */
@@ -15,18 +15,18 @@ type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
+  typedClient: AlgohubCampaignFactoryClient
 }
 
-const CampaignWithdrawIdoAsa = (props: Props) => {
+const AlgohubCampaignFactoryCreateApplication = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling withdrawIdoAsa`)
-    await props.typedClient.withdrawIdoAsa({}, { sender })
+    console.log(`Calling createApplication`)
+    await props.typedClient.create.createApplication({}, { sender })
     setLoading(false)
   }
 
@@ -37,4 +37,4 @@ const CampaignWithdrawIdoAsa = (props: Props) => {
   )
 }
 
-export default CampaignWithdrawIdoAsa
+export default AlgohubCampaignFactoryCreateApplication

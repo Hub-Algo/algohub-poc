@@ -21,11 +21,19 @@ export async function deploy() {
     algod
   );
   const campaignFactory = new AlgohubCampaignFactoryClient(
-    { resolveBy: 'creatorAndName', findExistingUsing: indexer, sender: deployer, creatorAddress: deployer.addr },
+    {
+      resolveBy: 'creatorAndName',
+      findExistingUsing: indexer,
+      sender: deployer,
+      creatorAddress: deployer.addr,
+    },
     algod
   );
 
-  const factory = await campaignFactory.deploy();
+  const factory = await campaignFactory.deploy({
+    onUpdate: 'append',
+    createCall: (calls) => calls.createApplication({}),
+  });
   // If app was just created fund the app account
   if (['create', 'replace'].includes(factory.operationPerformed)) {
     algokit.transferAlgos(
@@ -37,40 +45,6 @@ export async function deploy() {
       algod
     );
   }
-
-  // console.log('=== Deploying Campaign Contract ===');
-  // const appClient = new CampaignClient(
-  //   {
-  //     resolveBy: 'creatorAndName',
-  //     findExistingUsing: indexer,
-  //     sender: deployer,
-  //     creatorAddress: deployer.addr,
-  //   },
-  //   algod
-  // );
-  // // const isMainNet = await algokit.isMainNet(algod);
-  // const app = await appClient.deploy({
-  //   // allowDelete: !isMainNet,
-  //   // allowUpdate: !isMainNet,
-  //   // onSchemaBreak: isMainNet ? 'append' : 'replace',
-  //   // onUpdate: isMainNet ? 'append' : 'update',
-  //   // version: '0.0.1',
-  //   // createCall(callFactory) {
-  //   //   callFactory.createApplication({});
-  //   // },
-  // });
-
-  // // If app was just created fund the app account
-  // if (['create', 'replace'].includes(app.operationPerformed)) {
-  //   algokit.transferAlgos(
-  //     {
-  //       amount: algokit.algos(1),
-  //       from: deployer,
-  //       to: app.appAddress,
-  //     },
-  //     algod
-  //   );
-  // }
 
   const method = 'getAllCampaignApps';
   const response = await campaignFactory.getAllCampaignApps({});

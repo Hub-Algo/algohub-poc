@@ -33,21 +33,19 @@ export async function deploy() {
   const algoToVoteRatio: number = 10;
   const vipVoteWeight: number = 125;
 
-  // const app = await appClient.create.createApplication({ algoToVoteRatio, vipVoteWeight });
   // const isMainNet = await algokit.isMainNet(algod);
   const app = await appClient.deploy({
-    sendParams: {},
-    //   // allowDelete: !isMainNet,
-    //   // allowUpdate: !isMainNet,
-    //   // onSchemaBreak: isMainNet ? 'append' : 'replace',
-    //   // onUpdate: isMainNet ? 'append' : 'update',
-    version: '0.0.1',
+    createCall: (calls) => calls.createApplication({ algoToVoteRatio, vipVoteWeight }),
     deployTimeParams: {
       algoToVoteRatio,
       vipVoteWeight,
     },
   });
   // const app = await appClient.deploy({
+  // allowDelete: !isMainNet,
+  // allowUpdate: !isMainNet,
+  // onSchemaBreak: isMainNet ? 'append' : 'replace',
+  // onUpdate: isMainNet ? 'append' : 'update',
   //   deployTimeParams: {
   //     algoToVoteRatio,
   //     vipVoteWeight,

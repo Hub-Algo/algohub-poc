@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { CampaignClient } from '../../contracts/CampaignClient'
+import { Campaign, CampaignClient } from '../contracts/DaoClient'
+import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
 <CampaignCreateApplication
@@ -9,38 +9,13 @@ import { CampaignClient } from '../../contracts/CampaignClient'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call createApplication"
   typedClient={typedClient}
-  votersAsa={votersAsa}
-  idoAsa={idoAsa}
-  buyAsa={buyAsa}
-  price={price}
-  maxBuyCap={maxBuyCap}
-  softCap={softCap}
-  hardCap={hardCap}
-  startTime={startTime}
-  endTime={endTime}
-  vestingSchedule={vestingSchedule}
-  metadataUrl={metadataUrl}
 />
 */
-type CampaignCreateApplicationArgs =
-  Campaign['methods']['createApplication(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
-
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  votersAsa: CampaignCreateApplicationArgs['votersAsa']
-  idoAsa: CampaignCreateApplicationArgs['idoAsa']
-  buyAsa: CampaignCreateApplicationArgs['buyAsa']
-  price: CampaignCreateApplicationArgs['price']
-  maxBuyCap: CampaignCreateApplicationArgs['maxBuyCap']
-  softCap: CampaignCreateApplicationArgs['softCap']
-  hardCap: CampaignCreateApplicationArgs['hardCap']
-  startTime: CampaignCreateApplicationArgs['startTime']
-  endTime: CampaignCreateApplicationArgs['endTime']
-  vestingSchedule: CampaignCreateApplicationArgs['vestingSchedule']
-  metadataUrl: CampaignCreateApplicationArgs['metadataUrl']
 }
 
 const CampaignCreateApplication = (props: Props) => {
@@ -51,22 +26,7 @@ const CampaignCreateApplication = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling createApplication`)
-    await props.typedClient.create.createApplication(
-      {
-        votersAsa: props.votersAsa,
-        idoAsa: props.idoAsa,
-        buyAsa: props.buyAsa,
-        price: props.price,
-        maxBuyCap: props.maxBuyCap,
-        softCap: props.softCap,
-        hardCap: props.hardCap,
-        startTime: props.startTime,
-        endTime: props.endTime,
-        vestingSchedule: props.vestingSchedule,
-        metadataUrl: props.metadataUrl,
-      },
-      { sender },
-    )
+    await props.typedClient.create.createApplication({}, { sender })
     setLoading(false)
   }
 

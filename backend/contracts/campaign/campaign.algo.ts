@@ -30,38 +30,35 @@ export default class Campaign extends Contract {
 
   vestingSchedule = GlobalStateKey<VestingSchedule>();
 
-  @allow.bareCreate()
-  createApplication(): void {}
-
   // eslint-disable-next-line no-unused-vars
-  // createApplication() // votersAsa: Asset,
-  // // idoAsa: Asset,
-  // // buyAsa: Asset,
-  // // price: number,
-  // // maxBuyCap: number,
-  // // softCap: number,
-  // // hardCap: number,
-  // // startTime: number,
-  // // endTime: number,
-  // // vestingSchedule: number,
-  // // metadataUrl: string
-  // : void {
-  //   // this.votersAsaId.value = votersAsa;
-  //   // this.idoAsaId.value = idoAsa;
-  //   // this.buyAsaId.value = buyAsa;
-  //   // this.campaign.value = {
-  //   //   price: price,
-  //   //   maxBuyCap: maxBuyCap,
-  //   //   softCap: softCap,
-  //   //   hardCap: hardCap,
-  //   //   startTime: startTime,
-  //   //   endTime: endTime,
-  //   //   metadataUrl: metadataUrl,
-  //   // };
-  //   // this.vestingSchedule.value = {
-  //   //   x: vestingSchedule,
-  //   // };
-  // }
+  createApplication() // votersAsa: Asset,
+  // idoAsa: Asset,
+  // buyAsa: Asset,
+  // price: number,
+  // maxBuyCap: number,
+  // softCap: number,
+  // hardCap: number,
+  // startTime: number,
+  // endTime: number,
+  // vestingSchedule: number,
+  // metadataUrl: string
+  : void {
+    // this.votersAsaId.value = votersAsa;
+    // this.idoAsaId.value = idoAsa;
+    // this.buyAsaId.value = buyAsa;
+    // this.campaign.value = {
+    //   price: price,
+    //   maxBuyCap: maxBuyCap,
+    //   softCap: softCap,
+    //   hardCap: hardCap,
+    //   startTime: startTime,
+    //   endTime: endTime,
+    //   metadataUrl: metadataUrl,
+    // };
+    // this.vestingSchedule.value = {
+    //   x: vestingSchedule,
+    // };
+  }
 
   createCampaign(
     // votersAsa: Asset,
@@ -156,9 +153,6 @@ export default class Campaign extends Contract {
 export class AlgohubCampaignFactory extends Contract {
   algohubCampaigns = GlobalStateKey<Application[]>();
 
-  @allow.bareCreate('OptIn')
-  createApplication(): void {}
-
   createCampaign(
     price: number,
     maxBuyCap: number,
@@ -199,6 +193,6 @@ export class AlgohubCampaignFactory extends Contract {
   }
 
   getAllCampaignApps(): Application[] {
-    return this.algohubCampaigns.value;
+    return this.algohubCampaigns.exists ? this.algohubCampaigns.value : [];
   }
 }
