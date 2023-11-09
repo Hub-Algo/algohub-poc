@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { VotersClient } from '../../contracts/VotersClient'
+import { Voters, VotersClient } from '../contracts/DaoClient'
+import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
 <VotersGetVotePower
@@ -10,9 +10,10 @@ import { VotersClient } from '../../contracts/VotersClient'
   buttonNode="Call getVotePower"
   typedClient={typedClient}
   account={account}
+  votersAsa={votersAsa}
 />
 */
-type VotersGetVotePowerArgs = Dao['methods']['getVotePower(address)uint64']['argsObj']
+type VotersGetVotePowerArgs = Dao['methods']['getVotePower(address,asset)uint64']['argsObj']
 
 type Props = {
   buttonClass: string
@@ -20,6 +21,7 @@ type Props = {
   buttonNode: ReactNode
   typedClient: VotersClient
   account: VotersGetVotePowerArgs['account']
+  votersAsa: VotersGetVotePowerArgs['votersAsa']
 }
 
 const VotersGetVotePower = (props: Props) => {
@@ -33,6 +35,7 @@ const VotersGetVotePower = (props: Props) => {
     await props.typedClient.getVotePower(
       {
         account: props.account,
+        votersAsa: props.votersAsa,
       },
       { sender },
     )

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react';
-import { useWallet } from '@txnlab/use-wallet';
-import { VotersClient } from '../../contracts/VotersClient';
+import { ReactNode, useState } from 'react'
+import { Voters, VotersClient } from '../contracts/DaoClient'
+import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
 <VotersGetVotePower
@@ -10,40 +10,43 @@ import { VotersClient } from '../../contracts/VotersClient';
   buttonNode="Call getVotePower"
   typedClient={typedClient}
   account={account}
+  votersAsa={votersAsa}
 />
 */
-type VotersGetVotePowerArgs = Dao['methods']['getVotePower(address)uint64']['argsObj'];
+type VotersGetVotePowerArgs = Dao['methods']['getVotePower(address,asset)uint64']['argsObj']
 
 type Props = {
-  buttonClass: string;
-  buttonLoadingNode?: ReactNode;
-  buttonNode: ReactNode;
-  typedClient: VotersClient;
-  account: VotersGetVotePowerArgs['account'];
-};
+  buttonClass: string
+  buttonLoadingNode?: ReactNode
+  buttonNode: ReactNode
+  typedClient: VotersClient
+  account: VotersGetVotePowerArgs['account']
+  votersAsa: VotersGetVotePowerArgs['votersAsa']
+}
 
 const VotersGetVotePower = (props: Props) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { activeAddress, signer } = useWallet();
-  const sender = { signer, addr: activeAddress! };
+  const [loading, setLoading] = useState<boolean>(false)
+  const { activeAddress, signer } = useWallet()
+  const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
-    setLoading(true);
-    console.log(`Calling getVotePower`);
+    setLoading(true)
+    console.log(`Calling getVotePower`)
     await props.typedClient.getVotePower(
       {
         account: props.account,
+        votersAsa: props.votersAsa,
       },
-      { sender }
-    );
-    setLoading(false);
-  };
+      { sender },
+    )
+    setLoading(false)
+  }
 
   return (
     <button className={props.buttonClass} onClick={callMethod}>
       {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
     </button>
-  );
-};
+  )
+}
 
-export default VotersGetVotePower;
+export default VotersGetVotePower

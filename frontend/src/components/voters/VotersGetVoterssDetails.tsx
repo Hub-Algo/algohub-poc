@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
+import { useWallet } from '@txnlab/use-wallet'
 import { VotersClient } from '../../contracts/VotersClient'
 
 /* Example usage
 <VotersGetVoterssDetails
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getVoterssDetails"
+  buttonNode="Call getVotersDetails"
   typedClient={typedClient}
 />
 */
@@ -25,8 +25,8 @@ const VotersGetVoterssDetails = (props: Props) => {
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getVoterssDetails`)
-    await props.typedClient.getVoterssDetails({}, { sender })
+    console.log(`Calling getVotersDetails`)
+    await props.typedClient.getVotersDetails({}, { sender })
     setLoading(false)
   }
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react';
-import { useWallet } from '@txnlab/use-wallet';
-import { VotersClient } from '../../contracts/VotersClient';
+import { ReactNode, useState } from 'react'
+import { Voters, VotersClient } from '../contracts/DaoClient'
+import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
 <VotersCreateApplication
@@ -13,40 +13,40 @@ import { VotersClient } from '../../contracts/VotersClient';
   vipVoteWeight={vipVoteWeight}
 />
 */
-type VotersCreateApplicationArgs = Dao['methods']['createApplication(uint64,uint64)void']['argsObj'];
+type VotersCreateApplicationArgs = Dao['methods']['createApplication(uint64,uint64)void']['argsObj']
 
 type Props = {
-  buttonClass: string;
-  buttonLoadingNode?: ReactNode;
-  buttonNode: ReactNode;
-  typedClient: VotersClient;
-  algoToVoteRatio: VotersCreateApplicationArgs['algoToVoteRatio'];
-  vipVoteWeight: VotersCreateApplicationArgs['vipVoteWeight'];
-};
+  buttonClass: string
+  buttonLoadingNode?: ReactNode
+  buttonNode: ReactNode
+  typedClient: VotersClient
+  algoToVoteRatio: VotersCreateApplicationArgs['algoToVoteRatio']
+  vipVoteWeight: VotersCreateApplicationArgs['vipVoteWeight']
+}
 
 const VotersCreateApplication = (props: Props) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { activeAddress, signer } = useWallet();
-  const sender = { signer, addr: activeAddress! };
+  const [loading, setLoading] = useState<boolean>(false)
+  const { activeAddress, signer } = useWallet()
+  const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
-    setLoading(true);
-    console.log(`Calling createApplication`);
+    setLoading(true)
+    console.log(`Calling createApplication`)
     await props.typedClient.create.createApplication(
       {
         algoToVoteRatio: props.algoToVoteRatio,
         vipVoteWeight: props.vipVoteWeight,
       },
-      { sender }
-    );
-    setLoading(false);
-  };
+      { sender },
+    )
+    setLoading(false)
+  }
 
   return (
     <button className={props.buttonClass} onClick={callMethod}>
       {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
     </button>
-  );
-};
+  )
+}
 
-export default VotersCreateApplication;
+export default VotersCreateApplication

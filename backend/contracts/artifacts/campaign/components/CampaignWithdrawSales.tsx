@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { ReactNode, useState } from 'react'
-import { CampaignClient } from '../../contracts/CampaignClient'
+import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage

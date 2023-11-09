@@ -4,8 +4,6 @@ type VestingSchedule = {
   x: number;
 };
 
-// 2850
-
 type CampaignObj = {
   price: number;
   maxBuyCap: number;
@@ -17,7 +15,7 @@ type CampaignObj = {
 };
 
 // eslint-disable-next-line no-unused-vars
-class Campaign extends Contract {
+export default class Campaign extends Contract {
   idoAsaId = GlobalStateKey<Asset>();
 
   buyAsaId = GlobalStateKey<Asset>();
@@ -33,22 +31,51 @@ class Campaign extends Contract {
   vestingSchedule = GlobalStateKey<VestingSchedule>();
 
   // eslint-disable-next-line no-unused-vars
-  createApplication(
-    votersAsa: Asset,
-    idoAsa: Asset,
-    buyAsa: Asset,
+  createApplication() // votersAsa: Asset,
+  // idoAsa: Asset,
+  // buyAsa: Asset,
+  // price: number,
+  // maxBuyCap: number,
+  // softCap: number,
+  // hardCap: number,
+  // startTime: number,
+  // endTime: number,
+  // vestingSchedule: number,
+  // metadataUrl: string
+  : void {
+    // this.votersAsaId.value = votersAsa;
+    // this.idoAsaId.value = idoAsa;
+    // this.buyAsaId.value = buyAsa;
+    // this.campaign.value = {
+    //   price: price,
+    //   maxBuyCap: maxBuyCap,
+    //   softCap: softCap,
+    //   hardCap: hardCap,
+    //   startTime: startTime,
+    //   endTime: endTime,
+    //   metadataUrl: metadataUrl,
+    // };
+    // this.vestingSchedule.value = {
+    //   x: vestingSchedule,
+    // };
+  }
+
+  createCampaign(
+    // votersAsa: Asset,
+    // idoAsa: Asset,
+    // buyAsa: Asset,
     price: number,
     maxBuyCap: number,
     softCap: number,
     hardCap: number,
     startTime: number,
     endTime: number,
-    vestingSchedule: number,
+    // vestingSchedule: number,
     metadataUrl: string
   ): void {
-    this.votersAsaId.value = votersAsa;
-    this.idoAsaId.value = idoAsa;
-    this.buyAsaId.value = buyAsa;
+    // this.votersAsaId.value = votersAsa;
+    // this.idoAsaId.value = idoAsa;
+    // this.buyAsaId.value = buyAsa;
     this.campaign.value = {
       price: price,
       maxBuyCap: maxBuyCap,
@@ -58,10 +85,9 @@ class Campaign extends Contract {
       endTime: endTime,
       metadataUrl: metadataUrl,
     };
-
-    this.vestingSchedule.value = {
-      x: vestingSchedule,
-    };
+    // this.vestingSchedule.value = {
+    //   x: vestingSchedule,
+    // };
   }
 
   buy(): void {
@@ -120,5 +146,53 @@ class Campaign extends Contract {
   private isHypelisted(): boolean {
     // Check if caller is hypelisted
     return true;
+  }
+}
+
+// eslint-disable-next-line no-unused-vars
+export class AlgohubCampaignFactory extends Contract {
+  algohubCampaigns = GlobalStateKey<Application[]>();
+
+  createCampaign(
+    price: number,
+    maxBuyCap: number,
+    softCap: number,
+    hardCap: number,
+    startTime: number,
+    endTime: number,
+    metadataUrl: string
+  ): Application {
+    sendMethodCall<[], void>({
+      name: 'createApplication',
+      clearStateProgram: Campaign.clearProgram(),
+      approvalProgram: Campaign.approvalProgram(),
+      globalNumByteSlice: 5,
+      globalNumUint: 2,
+    });
+
+    const factoryApp = this.itxn.createdApplicationID;
+
+    sendPayment({
+      amount: 200_000,
+      receiver: factoryApp.address,
+    });
+    if (this.algohubCampaigns.exists) {
+      this.algohubCampaigns.value.push(factoryApp);
+    } else {
+      const newApp: Application[] = [factoryApp];
+      this.algohubCampaigns.value = newApp;
+    }
+
+    sendMethodCall<[number, number, number, number, number, number, string], void>({
+      applicationID: factoryApp,
+      name: 'createCampaign',
+      methodArgs: [price, maxBuyCap, softCap, hardCap, startTime, endTime, metadataUrl],
+    });
+
+    return factoryApp;
+  }
+
+  getAllCampaignApps(): Application[] {
+    return this.algohubCampaigns.exists ? this.algohubCampaigns.value : [];
   }
 }

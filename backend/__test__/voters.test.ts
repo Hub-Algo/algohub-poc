@@ -81,18 +81,18 @@ describe('Voter', () => {
       algoToVoteRatio,
       vipVoteWeight,
     });
+    await appClient.appClient.fundAppAccount(microAlgos(200_000));
+    await appClient.appClient.fundAppAccount(microAlgos(28100));
   }, 15_000);
 
   test('app creation', async () => {
-    const votersDetails = await appClient.getVoterssDetails({});
+    const votersDetails = await appClient.getVotersDetails({});
     expect(votersDetails.return?.[0].valueOf()).toBe(BigInt(algoToVoteRatio));
     expect(votersDetails.return?.[1].valueOf()).toBe(BigInt(vipVoteWeight));
     expect(votersDetails.return?.[2].valueOf()).toBe(BigInt(0));
   });
 
   test('bootstrap (Negative)', async () => {
-    await appClient.appClient.fundAppAccount(microAlgos(200_000));
-
     await expect(
       appClient.bootstrap(
         { voteAsaTotal },
@@ -138,7 +138,10 @@ describe('Voter', () => {
     expect(assetBalance['asset-holding']['asset-id'].toString()).toBe(voteASA.toString());
     const totalVoters = await appClient.getTotalVoters({});
     expect(totalVoters.return?.valueOf()).toBe(BigInt(1));
-    const votePower = await appClient.getVotePower({ account: voter1.addr });
+    const votePower = await appClient.getVotePower(
+      { account: voter1.addr, votersAsa: voteASA }
+      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
     expect(votePower.return?.valueOf()).toBe(BigInt('100'));
   });
 
@@ -147,6 +150,7 @@ describe('Voter', () => {
       appClient.register(
         { votersAsa: voteASA },
         {
+          boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter2.addr).publicKey }],
           sender: voter2,
           sendParams: {
             fee: microAlgos(3_000),
@@ -154,7 +158,10 @@ describe('Voter', () => {
         }
       )
     ).rejects.toThrow();
-    const votePower = await appClient.getVotePower({ account: voter2.addr });
+    const votePower = await appClient.getVotePower(
+      { account: voter2.addr, votersAsa: voteASA }
+      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter2.addr).publicKey }] }
+    );
     expect(votePower.return?.valueOf()).toBe(BigInt('100')); // TODO: this must be zero ....
   });
 
@@ -163,6 +170,7 @@ describe('Voter', () => {
       appClient.register(
         { votersAsa: voteASA },
         {
+          // boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }],
           sender: voter1,
           sendParams: {
             fee: microAlgos(3_000),
@@ -174,7 +182,13 @@ describe('Voter', () => {
 
   test('set VIP status (negative - access control)', async () => {
     await expect(
-      appClient.setVipStatus({ account: voter1.addr, isVIP: true, votersAsa: voteASA }, { sender: voter1 })
+      appClient.setVipStatus(
+        { account: voter1.addr, isVIP: true, votersAsa: voteASA },
+        {
+          // boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }],
+          sender: voter1,
+        }
+      )
     ).rejects.toThrow();
   });
 
@@ -183,10 +197,16 @@ describe('Voter', () => {
     expect(vipStatus.return?.valueOf()).toBe(false);
     // const assetBalance = await algod.accountAssetInformation(voter1.addr, Number(voteASA)).do();
     // console.log(assetBalance);
-    await appClient.setVipStatus({ account: voter1.addr, isVIP: true, votersAsa: voteASA });
+    await appClient.setVipStatus(
+      { account: voter1.addr, isVIP: true, votersAsa: voteASA }
+      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
     vipStatus = await appClient.getVipStatus({ account: voter1.addr });
     expect(vipStatus.return?.valueOf()).toBe(true);
-    const votePower = await appClient.getVotePower({ account: voter1.addr });
+    const votePower = await appClient.getVotePower(
+      { account: voter1.addr, votersAsa: voteASA }
+      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
     expect(votePower.return?.valueOf()).toBe(BigInt('125'));
   });
 });

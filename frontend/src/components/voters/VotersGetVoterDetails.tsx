@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
+import { useWallet } from '@txnlab/use-wallet'
 import { VotersClient } from '../../contracts/VotersClient'
 
 /* Example usage

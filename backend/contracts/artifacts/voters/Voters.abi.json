@@ -54,7 +54,13 @@
     },
     {
       "name": "closeOutOfApplication",
-      "args": [],
+      "args": [
+        {
+          "name": "votersAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
       "desc": "",
       "returns": {
         "type": "void",
@@ -62,7 +68,7 @@
       }
     },
     {
-      "name": "getVoterssDetails",
+      "name": "getVotersDetails",
       "args": [],
       "desc": "",
       "returns": {
@@ -76,6 +82,11 @@
         {
           "name": "account",
           "type": "address",
+          "desc": ""
+        },
+        {
+          "name": "votersAsa",
+          "type": "asset",
           "desc": ""
         }
       ],
