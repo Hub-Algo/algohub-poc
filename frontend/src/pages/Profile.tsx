@@ -34,7 +34,7 @@ function Profile() {
       <PageContainer>
         <Breadcrumbs pathList={['Home', 'Profile']} />
         <div className="flex flex-col">
-          <ProfileStatsWidget username={userData.username} usdc_balance={userData.usdc_balance} algo_balance={userData.algo_balance} />
+          <ProfileStatsWidget username={userData?.username} usdc_balance={userData?.usdc_balance} algo_balance={userData?.algo_balance} />
         </div>
       </PageContainer>
       <Tab items={tabItems}>
