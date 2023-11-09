@@ -41,7 +41,6 @@ function InvestModal({ campaignStatus }: InvestModalProps) {
     // USDC value cannot be a negative number or be greater than max value
     if (value.includes('-')) {
       value = value.replace('-', '')
-      // eslint-disable-next-line no-magic-numbers
     } else if (parseFloat(value) > Number(event.currentTarget.max)) {
       value = value.slice(0, value.length - 1)
     }
