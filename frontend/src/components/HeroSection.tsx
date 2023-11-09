@@ -2,6 +2,7 @@ import { BiDollarCircle, BiWallet } from 'react-icons/bi'
 import HeroButton from './HeroButton'
 import { UserDataOutletInterface } from './NavBar'
 import Button from './common/button/Button'
+import routes from '../core/routes'
 
 const HeroSection = ({ userData }: UserDataOutletInterface) => {
   return (
@@ -51,7 +52,9 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2">
-        <HeroButton customClassName={'hidden md:flex w-full h-32 md:h-64'}>{'Create campaign'}</HeroButton>
+        <HeroButton href={routes.CAMPAIGN_APPLICATION_FORM.ROUTE} customClassName={'hidden md:flex w-full h-32 md:h-64'}>
+          {'Create campaign'}
+        </HeroButton>
         <HeroButton customClassName={'hidden md:flex w-full h-32 md:h-64'}>{'View campaigns'}</HeroButton>
       </div>
     </div>

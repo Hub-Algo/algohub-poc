@@ -1,34 +1,19 @@
-// import { Asset, useWallet } from '@txnlab/use-wallet'
-// import { useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
 import ProfileStatsWidget from '../components/ProfileStatsWidget'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import { TabItem } from '../components/common/tab/Tab.types'
-// import useAsyncProcess from '../core/async-process/useAsyncProcess'
-import CampaignList from '../components/campaign-list/CampaignList'
 import Tab from '../components/common/tab/Tab'
 import { UserInterface } from '../interfaces/userInterface'
 import { CampaignOutletInterface } from './CampaignDetails'
+import CampaignList from '../components/campaign/list/CampaignList'
 
 export interface UserDataOutletInterface {
   userData: UserInterface
 }
 
 function Profile() {
-  // const { getAssets, activeAddress } = useWallet()
-  // const { state, runAsyncProcess } = useAsyncProcess<Asset[]>()
-
   const { userData } = useOutletContext() as UserDataOutletInterface
-
-  // TODO: This is an example usage of running async processes using useAsyncProcess hook.
-  // Somehow it doesn't set the state and I don't understand why. Remove this useEffect
-  // useEffect(() => {
-  //   if (activeAddress) {
-  //     runAsyncProcess(getAssets())
-  //   }
-  // }, [getAssets, runAsyncProcess, activeAddress])
-
   const { campaignList } = useOutletContext() as CampaignOutletInterface
 
   const tabItems: TabItem[] = [

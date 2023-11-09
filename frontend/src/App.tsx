@@ -18,6 +18,7 @@ import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
+import CampaignApplicationForm from './components/campaign/application-form/CampaignApplicationForm'
 import { userServices } from './services/userServices'
 
 export default function App() {
@@ -52,7 +53,6 @@ export default function App() {
   const fetchAndAppendUserData = async (walletAddress: string) => {
     const userAssets = await userService.fetchUserAssets(walletAddress)
 
-    console.log(userAssets)
     // const user = await userService.signupUser(walletAddress)
     const usdcDecimals = 6
     //Asset needs type
@@ -83,6 +83,8 @@ export default function App() {
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
     }
+    // TODO: Remove this hook once we set fetchAndAppendUserData inside a useCallback
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeAccount])
 
   const algodConfig = getAlgodConfigFromViteEnvironment()
@@ -116,6 +118,7 @@ export default function App() {
         },
         { path: ROUTES.PROJECT_DETAIL.FULL_PATH, element: <CampaignDetails /> },
         { path: ROUTES.ABOUT.FULL_PATH, element: <About /> },
+        { path: ROUTES.CAMPAIGN_APPLICATION_FORM.FULL_PATH, element: <CampaignApplicationForm /> },
       ],
     },
   ])

@@ -11,14 +11,14 @@ type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className'>
 
 function Input({ labels, isDisabled, customClassName, ...rest }: InputProps) {
   return (
-    <div className="form-control w-full max-w-xs">
+    <div className={classNames('form-control w-full', customClassName)}>
       {labels?.inputTitle && (
         <label className="label">
           <span className="label-text">{labels.inputTitle}</span>
         </label>
       )}
 
-      <input className={classNames('input input-bordered w-full max-w-xs', customClassName)} {...rest} />
+      <input className={classNames('input input-bordered w-full')} {...rest} />
 
       {labels?.bottomText && (
         <label className="label">
