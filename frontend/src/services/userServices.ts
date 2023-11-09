@@ -3,8 +3,6 @@ import { Provider } from '@txnlab/use-wallet'
 import axios from 'axios'
 import { ellipseAddress } from '../core/util/wallet/ellipseAddress'
 
-const API_URL = import.meta.env.API_URL
-
 export class userServices {
   async connectWallet(provider: Provider) {
     provider.connect()
@@ -42,8 +40,6 @@ export class userServices {
   async fetchUserNfd(walletAddress: string) {
     try {
       const { data } = await axios.get(`https://api.nf.domains/nfd/v2/address?address=${walletAddress}`)
-      console.log('Fetching user NFD')
-      console.log(data)
       return data[walletAddress][0].name
     } catch (error) {
       return ellipseAddress(walletAddress)
