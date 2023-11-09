@@ -1,6 +1,6 @@
 import { useOutletContext } from 'react-router-dom'
 import HeroSection from '../components/HeroSection'
-import CampaignList from '../components/campaign-list/CampaignList'
+import CampaignList from '../components/campaign/list/CampaignList'
 import { filterCampaignByCategory } from '../services/campaignServices'
 import { CampaignOutletInterface } from './CampaignDetails'
 import { UserDataOutletInterface } from './Profile'

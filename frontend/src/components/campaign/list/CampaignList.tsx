@@ -4,10 +4,10 @@ import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti'
 import { useNavigate } from 'react-router-dom'
 
 import { useEffect, useState } from 'react'
-import { useWindowSizeContext } from '../../core/window-size/WindowSizeContext'
-import { CampaignInterface } from '../../interfaces/campaign-interface'
-import Button from '../common/button/Button'
-import CardWithImage from '../common/card/with-image/CardWithImage'
+import { useWindowSizeContext } from '../../../core/window-size/WindowSizeContext'
+import { CampaignInterface } from '../../../interfaces/campaign-interface'
+import Button from '../../common/button/Button'
+import CardWithImage from '../../common/card/with-image/CardWithImage'
 
 interface CampaignsListPropsInterface {
   campaigns: CampaignInterface[]
