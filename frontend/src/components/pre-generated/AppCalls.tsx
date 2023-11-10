@@ -4,8 +4,8 @@ import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
 import { useWallet } from '@txnlab/use-wallet'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
+import { AlgohubMasterClient } from '../../contracts/AlgohubMaster'
 import { CampaignClient } from '../../contracts/CampaignClient'
-import { VotersClient } from '../../contracts/VotersClient'
 import { getAlgodConfigFromViteEnvironment, getIndexerConfigFromViteEnvironment } from '../../core/util/network/getAlgoClientConfigs'
 
 interface AppCallsInterface {
@@ -45,7 +45,7 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
     } as AppDetails
 
     const campaignClient = new CampaignClient(appDetails, algodClient)
-    const votersClient = new VotersClient(appDetails, algodClient)
+    const algohubClient = new AlgohubMasterClient(appDetails, algodClient)
 
     // Please note, in typical production scenarios,
     // you wouldn't want to use deploy directly from your frontend.
@@ -71,14 +71,14 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
       return
     })
 
-    const votersResponse = await votersClient.getTotalVoters({}).catch((e: Error) => {
+    const algohubResponse = await algohubClient.getAllCampaignApps({}).catch((e: Error) => {
       enqueueSnackbar(`Error calling the contract: ${e.message}`, { variant: 'error' })
       setLoading(false)
       return
     })
 
     enqueueSnackbar(`Response from the campaign contract. Campaign Details: ${campaignResponse?.return}`, { variant: 'success' })
-    enqueueSnackbar(`Response from the voters contract. Total Voters: ${votersResponse?.return}`, { variant: 'success' })
+    enqueueSnackbar(`Response from the algohub master contract. All Campaigns: ${algohubResponse?.return}`, { variant: 'success' })
     setLoading(false)
   }
 

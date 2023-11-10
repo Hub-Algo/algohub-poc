@@ -1,44 +1,41 @@
 /* eslint-disable no-console */
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
+import { AlgohubMaster, AlgohubMasterClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignVote
+<AlgohubMasterCreateApplication
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call vote"
+  buttonNode="Call createApplication"
   typedClient={typedClient}
-  boxMBRPayment={boxMBRPayment}
-  inFavor={inFavor}
-  votersAsa={votersAsa}
+  algoToVoteRatio={algoToVoteRatio}
+  vipVoteWeight={vipVoteWeight}
 />
 */
-type CampaignVoteArgs = Dao['methods']['vote(pay,bool,asset)void']['argsObj']
+type AlgohubMasterCreateApplicationArgs = Dao['methods']['createApplication(uint64,uint64)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
-  boxMBRPayment: CampaignVoteArgs['boxMBRPayment']
-  inFavor: CampaignVoteArgs['inFavor']
-  votersAsa: CampaignVoteArgs['votersAsa']
+  typedClient: AlgohubMasterClient
+  algoToVoteRatio: AlgohubMasterCreateApplicationArgs['algoToVoteRatio']
+  vipVoteWeight: AlgohubMasterCreateApplicationArgs['vipVoteWeight']
 }
 
-const CampaignVote = (props: Props) => {
+const AlgohubMasterCreateApplication = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling vote`)
-    await props.typedClient.vote(
+    console.log(`Calling createApplication`)
+    await props.typedClient.create.createApplication(
       {
-        boxMBRPayment: props.boxMBRPayment,
-        inFavor: props.inFavor,
-        votersAsa: props.votersAsa,
+        algoToVoteRatio: props.algoToVoteRatio,
+        vipVoteWeight: props.vipVoteWeight,
       },
       { sender },
     )
@@ -52,4 +49,4 @@ const CampaignVote = (props: Props) => {
   )
 }
 
-export default CampaignVote
+export default AlgohubMasterCreateApplication

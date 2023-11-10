@@ -1,47 +1,32 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import { CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
-<CampaignVote
+<CampaignGetVotersASA
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call vote"
+  buttonNode="Call getVotersASA"
   typedClient={typedClient}
-  boxMBRPayment={boxMBRPayment}
-  inFavor={inFavor}
-  votersAsa={votersAsa}
 />
 */
-type CampaignVoteArgs = Campaign['methods']['vote(pay,bool,asset)void']['argsObj']
-
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  boxMBRPayment: CampaignVoteArgs['boxMBRPayment']
-  inFavor: CampaignVoteArgs['inFavor']
-  votersAsa: CampaignVoteArgs['votersAsa']
 }
 
-const CampaignVote = (props: Props) => {
+const CampaignGetVotersASA = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling vote`)
-    await props.typedClient.vote(
-      {
-        boxMBRPayment: props.boxMBRPayment,
-        inFavor: props.inFavor,
-        votersAsa: props.votersAsa,
-      },
-      { sender },
-    )
+    console.log(`Calling getVotersASA`)
+    await props.typedClient.getVotersAsa({}, { sender })
     setLoading(false)
   }
 
@@ -52,4 +37,4 @@ const CampaignVote = (props: Props) => {
   )
 }
 
-export default CampaignVote
+export default CampaignGetVotersASA

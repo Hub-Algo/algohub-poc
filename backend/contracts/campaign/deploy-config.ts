@@ -1,5 +1,8 @@
 import * as algokit from '@algorandfoundation/algokit-utils';
-import { AlgohubCampaignFactoryClient } from '../clients/AlgohubCampaignFactory';
+import { AlgohubMasterClient } from '../clients/AlgohubMaster';
+
+const ALGO_TO_VOTE_RATIO: number = 10;
+const VIP_VOTE_WEIGHT: number = 125;
 
 // Below is a showcase of various deployment options you can use in TypeScript Client
 export async function deploy() {
@@ -20,7 +23,7 @@ export async function deploy() {
     },
     algod
   );
-  const campaignFactory = new AlgohubCampaignFactoryClient(
+  const campaignFactory = new AlgohubMasterClient(
     {
       resolveBy: 'creatorAndName',
       findExistingUsing: indexer,
@@ -32,7 +35,11 @@ export async function deploy() {
 
   const factory = await campaignFactory.deploy({
     onUpdate: 'append',
-    createCall: (calls) => calls.createApplication({}),
+    createCall: (calls) =>
+      calls.createApplication({
+        algoToVoteRatio: ALGO_TO_VOTE_RATIO,
+        vipVoteWeight: VIP_VOTE_WEIGHT,
+      }),
   });
   // If app was just created fund the app account
   if (['create', 'replace'].includes(factory.operationPerformed)) {

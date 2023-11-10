@@ -15,6 +15,11 @@
       "name": "createCampaign",
       "args": [
         {
+          "name": "votersAsa",
+          "type": "asset",
+          "desc": ""
+        },
+        {
           "name": "price",
           "type": "uint64",
           "desc": ""
@@ -105,6 +110,11 @@
       "name": "vote",
       "args": [
         {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
           "name": "inFavor",
           "type": "bool",
           "desc": ""
@@ -118,6 +128,24 @@
       "desc": "",
       "returns": {
         "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getVotes",
+      "args": [],
+      "desc": "",
+      "returns": {
+        "type": "(uint64,uint64)",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getVotersASA",
+      "args": [],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
         "desc": ""
       }
     },
