@@ -33,7 +33,7 @@ const AllCampaigns = () => {
   return (
     <div>
       <PageContainer>
-        <Breadcrumbs pathList={['home', 'all categories']} />
+        <Breadcrumbs pathList={['Home', 'All categories']} />
         <CampaignFilter handleFilterCampaigns={handleFilterCampaigns} />
       </PageContainer>
       <CampaignList campaigns={displayCampaigns} />
