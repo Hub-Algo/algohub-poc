@@ -35,6 +35,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
       <CardWithImage
         key={index}
         imageProps={{ src: 'https://pbs.twimg.com/profile_banners/1502651569053044737/1658777150/1500x500', alt: 'gunny-tps' }}
+        campaign_id={campaign.campaign_id}
       >
         <h2 className={'card-title'}>{campaign.campaign_title}</h2>
         <div className={'mb-8'}>
@@ -65,10 +66,10 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         aria-label={'previous-button'}
         onClick={handleDisplayPrevious}
         buttonColor="ghost"
-        customClassName={'btn-round text-orange-500 campaign-list__previous-button'}
+        customClassName={'btn-round text-orange-500 campaign-list__previous-button group'}
         isDisabled={!displayedCampaignsOffset}
       >
-        <TiMediaPlayReverse className="text-3xl" />
+        <TiMediaPlayReverse className="text-3xl group-hover:text-orange-600" />
       </Button>
 
       <div className="flex gap-10 py-5 w-full justify-center md:justify-start">
@@ -83,10 +84,10 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         aria-label={'next-button'}
         onClick={handleDisplayNext}
         buttonColor="ghost"
-        customClassName={'btn-round text-orange-500 campaign-list__next-button'}
+        customClassName={'btn-round text-orange-500 campaign-list__next-button group'}
         isDisabled={displayedCampaignsOffset >= maxOffset - limit}
       >
-        <TiMediaPlay className="text-3xl" />
+        <TiMediaPlay className="text-3xl group-hover:text-orange-600" />
       </Button>
     </div>
   )
