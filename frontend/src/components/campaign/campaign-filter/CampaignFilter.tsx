@@ -15,6 +15,7 @@ const CampaignFilter = ({ handleFilterCampaigns }: campaignFilterProps) => {
 
   const categoriesRenderer = categories.map((categorie) => (
     <div
+      key={categorie}
       onClick={() => handleCategoryClick(categorie)}
       className={`border-2 ${
         selectedCategorie === categorie ? 'bg-orange-500 border-orange-500' : ''
