@@ -66,6 +66,11 @@
       "name": "createCampaign",
       "args": [
         {
+          "name": "votersAsa",
+          "type": "asset",
+          "desc": ""
+        },
+        {
           "name": "price",
           "type": "uint64",
           "desc": ""

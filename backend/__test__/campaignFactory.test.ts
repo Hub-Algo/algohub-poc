@@ -5,6 +5,7 @@ import algosdk from 'algosdk';
 import * as algokit from '@algorandfoundation/algokit-utils';
 import { AlgohubCampaignFactoryClient } from '../contracts/clients/AlgohubCampaignFactory';
 import { CampaignClient } from '../contracts/clients/CampaignClient';
+import { createAsa } from './_testHelpers';
 
 const fixture = algorandFixture();
 
@@ -27,9 +28,13 @@ describe.only('Campaign Factory', () => {
 
   let algod: algosdk.Algodv2;
   let voteAsa: bigint;
+  let deployer: algosdk.Account;
   let sender1: algosdk.Account;
   let voter1: algosdk.Account;
   let voter2: algosdk.Account;
+
+  let idoAsa;
+  let usdcAsa;
 
   const registerAsVoterHelper = async (voter: algosdk.Account) => {
     const registeredAsaOptInTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
@@ -55,7 +60,7 @@ describe.only('Campaign Factory', () => {
 
   beforeAll(async () => {
     await fixture.beforeEach();
-    const { testAccount, kmd } = fixture.context;
+    const { kmd } = fixture.context;
     algod = fixture.context.algod;
 
     sender1 = await getOrCreateKmdWalletAccount(
@@ -84,14 +89,26 @@ describe.only('Campaign Factory', () => {
       kmd
     );
 
+    deployer = await getOrCreateKmdWalletAccount(
+      {
+        name: 'DEPLOYER',
+        fundWith: algos(5000),
+      },
+      algod,
+      kmd
+    );
+
+    // const x = await getLocalAccounts();
     appClient = new AlgohubCampaignFactoryClient(
       {
-        sender: testAccount,
+        sender: deployer,
         resolveBy: 'id',
         id: 0,
       },
       algod
     );
+    // console.log(deployer.addr);
+    // usdcAsa = await createAsa(deployer, 'USDC', 'USDC Token', algod);
 
     await appClient.create.createApplication({
       algoToVoteRatio,
@@ -100,6 +117,7 @@ describe.only('Campaign Factory', () => {
 
     await appClient.appClient.fundAppAccount(microAlgos(1_000_000));
     await appClient.appClient.fundAppAccount(microAlgos(28100));
+    // idoAsa = await createAsa(testAccount, 'IDO', 'IDO TOken', algod);
   });
 
   test('factory creation', async () => {
@@ -149,8 +167,8 @@ describe.only('Campaign Factory', () => {
 
   test('register as voter', async () => {
     let votePower = await appClient.getVotePower(
-      { account: voter1.addr, votersAsa: voteAsa }
-      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+      { account: voter1.addr, votersAsa: voteAsa },
+      { boxes: [algosdk.decodeAddress(voter1.addr).publicKey] }
     );
     expect(votePower.return?.valueOf()).toBe(BigInt(0));
 
@@ -162,34 +180,40 @@ describe.only('Campaign Factory', () => {
     const totalVoters = await appClient.getTotalVoters({});
     expect(totalVoters.return?.valueOf()).toBe(BigInt(1));
     votePower = await appClient.getVotePower(
-      { account: voter1.addr, votersAsa: voteAsa }
-      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+      { account: voter1.addr, votersAsa: voteAsa },
+      { boxes: [algosdk.decodeAddress(voter1.addr).publicKey] }
     );
     expect(votePower.return?.valueOf()).toBe(BigInt(100));
   });
 
   test('set VIP status', async () => {
-    let vipStatus = await appClient.getVipStatus({ account: voter1.addr });
+    let vipStatus = await appClient.getVipStatus(
+      { account: voter1.addr },
+      { boxes: [algosdk.decodeAddress(voter1.addr).publicKey] }
+    );
     expect(vipStatus.return?.valueOf()).toBe(false);
     await appClient.setVipStatus(
-      { account: voter1.addr, isVip: true, votersAsa: voteAsa }
-      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+      { account: voter1.addr, isVip: true, votersAsa: voteAsa },
+      { boxes: [algosdk.decodeAddress(voter1.addr).publicKey] }
     );
-    vipStatus = await appClient.getVipStatus({ account: voter1.addr });
+    vipStatus = await appClient.getVipStatus(
+      { account: voter1.addr },
+      { boxes: [algosdk.decodeAddress(voter1.addr).publicKey] }
+    );
     expect(vipStatus.return?.valueOf()).toBe(true);
     let votePower = await appClient.getVotePower(
-      { account: voter1.addr, votersAsa: voteAsa }
-      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+      { account: voter1.addr, votersAsa: voteAsa },
+      { boxes: [algosdk.decodeAddress(voter1.addr).publicKey] }
     );
     expect(votePower.return?.valueOf()).toBe(BigInt('125'));
 
     await appClient.setVipStatus(
-      { account: voter1.addr, isVip: false, votersAsa: voteAsa }
-      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+      { account: voter1.addr, isVip: false, votersAsa: voteAsa },
+      { boxes: [algosdk.decodeAddress(voter1.addr).publicKey] }
     );
     votePower = await appClient.getVotePower(
-      { account: voter1.addr, votersAsa: voteAsa }
-      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+      { account: voter1.addr, votersAsa: voteAsa },
+      { boxes: [algosdk.decodeAddress(voter1.addr).publicKey] }
     );
     expect(votePower.return?.valueOf()).toBe(BigInt('100'));
   });
@@ -199,7 +223,7 @@ describe.only('Campaign Factory', () => {
       appClient.setVipStatus(
         { account: voter1.addr, isVip: true, votersAsa: voteAsa },
         {
-          // boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }],
+          boxes: [algosdk.decodeAddress(voter1.addr).publicKey],
           sender: voter1,
         }
       )
@@ -210,7 +234,7 @@ describe.only('Campaign Factory', () => {
     await appClient.unregisterAsVoter(
       { votersAsa: voteAsa },
       {
-        // boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter2.addr).publicKey }],
+        boxes: [algosdk.decodeAddress(voter1.addr).publicKey],
         sender: voter1,
         sendParams: {
           fee: microAlgos(3_000),
@@ -218,15 +242,14 @@ describe.only('Campaign Factory', () => {
       }
     );
     const assetBalance = await algod.accountAssetInformation(voter1.addr, Number(voteAsa)).do();
-    console.log(assetBalance);
     expect(assetBalance['asset-holding'].amount).toBe(0);
-    // expect(assetBalance['asset-holding']['is-frozen']).toBe(true);
-    // expect(assetBalance['asset-holding']['asset-id'].toString()).toBe(voteAsa.toString());
+    expect(assetBalance['asset-holding']['is-frozen']).toBe(false);
+    expect(assetBalance['asset-holding']['asset-id'].toString()).toBe(voteAsa.toString());
     const totalVoters = await appClient.getTotalVoters({});
     expect(totalVoters.return?.valueOf()).toBe(BigInt(0));
     const votePower = await appClient.getVotePower(
-      { account: voter2.addr, votersAsa: voteAsa }
-      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter2.addr).publicKey }] }
+      { account: voter2.addr, votersAsa: voteAsa },
+      { boxes: [algosdk.decodeAddress(voter2.addr).publicKey] }
     );
     expect(votePower.return?.valueOf()).toBe(BigInt(0));
   });
@@ -236,7 +259,7 @@ describe.only('Campaign Factory', () => {
       appClient.registerAsVoter(
         { votersAsa: voteAsa },
         {
-          // boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter2.addr).publicKey }],
+          boxes: [algosdk.decodeAddress(sender1.addr).publicKey],
           sender: sender1,
           sendParams: {
             fee: microAlgos(3_000),
@@ -245,8 +268,8 @@ describe.only('Campaign Factory', () => {
       )
     ).rejects.toThrow();
     const votePower = await appClient.getVotePower(
-      { account: sender1.addr, votersAsa: voteAsa }
-      // { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter2.addr).publicKey }] }
+      { account: sender1.addr, votersAsa: voteAsa },
+      { boxes: [algosdk.decodeAddress(sender1.addr).publicKey] }
     );
     expect(votePower.return?.valueOf()).toBe(BigInt(0));
   });
@@ -256,7 +279,7 @@ describe.only('Campaign Factory', () => {
       appClient.unregisterAsVoter(
         { votersAsa: voteAsa },
         {
-          // boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter2.addr).publicKey }],
+          boxes: [algosdk.decodeAddress(sender1.addr).publicKey],
           sender: sender1,
           sendParams: {
             fee: microAlgos(3_000),
@@ -271,7 +294,7 @@ describe.only('Campaign Factory', () => {
       appClient.setVipStatus(
         { account: sender1.addr, isVip: true, votersAsa: voteAsa },
         {
-          // boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }],
+          boxes: [algosdk.decodeAddress(sender1.addr).publicKey],
         }
       )
     ).rejects.toThrow();
@@ -280,46 +303,51 @@ describe.only('Campaign Factory', () => {
   /// =========================
   /// === Campaign Creation ===
   /// =========================
-  // test('campaign creation', async () => {
-  //   campaign.startTime = Math.floor(Date.now() / 1000);
-  //   campaign.endTime = Math.floor(Date.now() / 1000) + 24 * 60 * 60; // One day later
-  //   const createCampaignTx = await appClient.createCampaign(
-  //     {
-  //       price: campaign.price,
-  //       maxBuyCap: campaign.maxBuyCap,
-  //       softCap: campaign.softCap,
-  //       hardCap: campaign.hardCap,
-  //       startTime: campaign.startTime,
-  //       endTime: campaign.endTime,
-  //       metadataUrl: campaign.metadataUrl,
-  //     },
-  //     {
-  //       sender: sender1,
-  //       sendParams: {
-  //         fee: microAlgos(4_000),
-  //       },
-  //     }
-  //   );
-  //   const campaignAppId = createCampaignTx.return;
-  //   const allCampaigns = await appClient.getAllCampaignApps({});
-  //   expect(campaignAppId).toBe(allCampaigns.return?.at(0));
+  test('campaign creation', async () => {
+    campaign.startTime = Math.floor(Date.now() / 1000);
+    campaign.endTime = Math.floor(Date.now() / 1000) + 24 * 60 * 60; // One day later
 
-  //   const campaignContract = new CampaignClient(
-  //     {
-  //       sender: sender1,
-  //       resolveBy: 'id',
-  //       id: campaignAppId!,
-  //     },
-  //     algod
-  //   );
-  //   const campaignDetails = await campaignContract.getCampaign({});
+    const createCampaignTx = await appClient.createCampaign(
+      {
+        votersAsa: voteAsa,
+        price: campaign.price,
+        maxBuyCap: campaign.maxBuyCap,
+        softCap: campaign.softCap,
+        hardCap: campaign.hardCap,
+        startTime: campaign.startTime,
+        endTime: campaign.endTime,
+        metadataUrl: campaign.metadataUrl,
+      },
+      {
+        sender: sender1,
+        sendParams: {
+          fee: microAlgos(4_000),
+        },
+      }
+    );
+    const campaignAppId = createCampaignTx.return;
+    const allCampaigns = await appClient.getAllCampaignApps({});
+    expect(campaignAppId).toBe(allCampaigns.return?.at(0));
 
-  //   expect(campaignDetails.return?.at(0)).toBe(BigInt(campaign.price));
-  //   expect(campaignDetails.return?.at(1)).toBe(BigInt(campaign.maxBuyCap));
-  //   expect(campaignDetails.return?.at(2)).toBe(BigInt(campaign.softCap));
-  //   expect(campaignDetails.return?.at(3)).toBe(BigInt(campaign.hardCap));
-  //   expect(campaignDetails.return?.at(4)).toBe(BigInt(campaign.startTime));
-  //   expect(campaignDetails.return?.at(5)).toBe(BigInt(campaign.endTime));
-  //   expect(campaignDetails.return?.at(6)).toBe(campaign.metadataUrl);
-  // });
+    const campaignContract = new CampaignClient(
+      {
+        sender: sender1,
+        resolveBy: 'id',
+        id: campaignAppId!,
+      },
+      algod
+    );
+    const campaignDetails = await campaignContract.getCampaign({});
+
+    expect(campaignDetails.return?.at(0)).toBe(BigInt(campaign.price));
+    expect(campaignDetails.return?.at(1)).toBe(BigInt(campaign.maxBuyCap));
+    expect(campaignDetails.return?.at(2)).toBe(BigInt(campaign.softCap));
+    expect(campaignDetails.return?.at(3)).toBe(BigInt(campaign.hardCap));
+    expect(campaignDetails.return?.at(4)).toBe(BigInt(campaign.startTime));
+    expect(campaignDetails.return?.at(5)).toBe(BigInt(campaign.endTime));
+    expect(campaignDetails.return?.at(6)).toBe(campaign.metadataUrl);
+
+    const voterAsa = await campaignContract.getVotersAsa({});
+    expect(voterAsa.return).toBe(voteAsa);
+  });
 });
