@@ -161,7 +161,7 @@ export default class Campaign extends Contract {
 }
 
 // eslint-disable-next-line no-unused-vars
-export class AlgohubCampaignFactory extends Contract {
+export class AlgohubMaster extends Contract {
   algohubCampaigns = GlobalStateKey<Application[]>();
 
   votersAsaId = GlobalStateKey<Asset>();

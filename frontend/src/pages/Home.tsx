@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from 'react-router-dom'
+import { useOutletContext } from 'react-router-dom'
 import HeroSection from '../components/HeroSection'
 import CampaignList from '../components/campaign/list/CampaignList'
 import { filterCampaignsByStatus } from '../services/campaignServices'

@@ -1,44 +1,38 @@
 /* eslint-disable no-console */
-import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import { AlgohubMaster, AlgohubMasterClient } from '../contracts/DaoClient'
+import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignVote
+<AlgohubMasterGetVipStatus
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call vote"
+  buttonNode="Call getVipStatus"
   typedClient={typedClient}
-  boxMBRPayment={boxMBRPayment}
-  inFavor={inFavor}
-  votersAsa={votersAsa}
+  account={account}
 />
 */
-type CampaignVoteArgs = Campaign['methods']['vote(pay,bool,asset)void']['argsObj']
+type AlgohubMasterGetVipStatusArgs = Dao['methods']['getVipStatus(account)bool']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
-  boxMBRPayment: CampaignVoteArgs['boxMBRPayment']
-  inFavor: CampaignVoteArgs['inFavor']
-  votersAsa: CampaignVoteArgs['votersAsa']
+  typedClient: AlgohubMasterClient
+  account: AlgohubMasterGetVipStatusArgs['account']
 }
 
-const CampaignVote = (props: Props) => {
+const AlgohubMasterGetVipStatus = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling vote`)
-    await props.typedClient.vote(
+    console.log(`Calling getVipStatus`)
+    await props.typedClient.getVipStatus(
       {
-        boxMBRPayment: props.boxMBRPayment,
-        inFavor: props.inFavor,
-        votersAsa: props.votersAsa,
+        account: props.account,
       },
       { sender },
     )
@@ -52,4 +46,4 @@ const CampaignVote = (props: Props) => {
   )
 }
 
-export default CampaignVote
+export default AlgohubMasterGetVipStatus

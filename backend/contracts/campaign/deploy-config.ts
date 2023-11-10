@@ -1,5 +1,5 @@
 import * as algokit from '@algorandfoundation/algokit-utils';
-import { AlgohubCampaignFactoryClient } from '../clients/AlgohubCampaignFactory';
+import { AlgohubMasterClient } from '../clients/AlgohubMaster';
 
 const ALGO_TO_VOTE_RATIO: number = 10;
 const VIP_VOTE_WEIGHT: number = 125;
@@ -23,7 +23,7 @@ export async function deploy() {
     },
     algod
   );
-  const campaignFactory = new AlgohubCampaignFactoryClient(
+  const campaignFactory = new AlgohubMasterClient(
     {
       resolveBy: 'creatorAndName',
       findExistingUsing: indexer,

@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
+import { AlgohubMaster, AlgohubMasterClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignCreateCampaign
+<AlgohubMasterCreateCampaign
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call createCampaign"
@@ -19,24 +19,24 @@ import { useWallet } from '@txnlab/use-wallet'
   metadataUrl={metadataUrl}
 />
 */
-type CampaignCreateCampaignArgs = Dao['methods']['createCampaign(asset,uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
+type AlgohubMasterCreateCampaignArgs = Dao['methods']['createCampaign(asset,uint64,uint64,uint64,uint64,uint64,uint64,string)uint64']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
-  votersAsa: CampaignCreateCampaignArgs['votersAsa']
-  price: CampaignCreateCampaignArgs['price']
-  maxBuyCap: CampaignCreateCampaignArgs['maxBuyCap']
-  softCap: CampaignCreateCampaignArgs['softCap']
-  hardCap: CampaignCreateCampaignArgs['hardCap']
-  startTime: CampaignCreateCampaignArgs['startTime']
-  endTime: CampaignCreateCampaignArgs['endTime']
-  metadataUrl: CampaignCreateCampaignArgs['metadataUrl']
+  typedClient: AlgohubMasterClient
+  votersAsa: AlgohubMasterCreateCampaignArgs['votersAsa']
+  price: AlgohubMasterCreateCampaignArgs['price']
+  maxBuyCap: AlgohubMasterCreateCampaignArgs['maxBuyCap']
+  softCap: AlgohubMasterCreateCampaignArgs['softCap']
+  hardCap: AlgohubMasterCreateCampaignArgs['hardCap']
+  startTime: AlgohubMasterCreateCampaignArgs['startTime']
+  endTime: AlgohubMasterCreateCampaignArgs['endTime']
+  metadataUrl: AlgohubMasterCreateCampaignArgs['metadataUrl']
 }
 
-const CampaignCreateCampaign = (props: Props) => {
+const AlgohubMasterCreateCampaign = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
@@ -67,4 +67,4 @@ const CampaignCreateCampaign = (props: Props) => {
   )
 }
 
-export default CampaignCreateCampaign
+export default AlgohubMasterCreateCampaign
