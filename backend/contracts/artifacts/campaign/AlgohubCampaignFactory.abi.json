@@ -3,6 +3,66 @@
   "desc": "",
   "methods": [
     {
+      "name": "createApplication",
+      "args": [
+        {
+          "name": "algoToVoteRatio",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "vipVoteWeight",
+          "type": "uint64",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "bootstrap",
+      "args": [
+        {
+          "name": "voteAsaTotal",
+          "type": "uint64",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "setVipStatus",
+      "args": [
+        {
+          "name": "account",
+          "type": "account",
+          "desc": ""
+        },
+        {
+          "name": "isVip",
+          "type": "bool",
+          "desc": ""
+        },
+        {
+          "name": "votersAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
       "name": "createCampaign",
       "args": [
         {
@@ -48,6 +108,36 @@
       }
     },
     {
+      "name": "registerAsVoter",
+      "args": [
+        {
+          "name": "votersAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "unregisterAsVoter",
+      "args": [
+        {
+          "name": "votersAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
       "name": "getAllCampaignApps",
       "args": [],
       "desc": "",
@@ -57,13 +147,57 @@
       }
     },
     {
-      "name": "createApplication",
+      "name": "getVotersDetails",
+      "args": [],
       "desc": "",
       "returns": {
-        "type": "void",
+        "type": "(uint64,uint64,uint64)",
         "desc": ""
-      },
-      "args": []
+      }
+    },
+    {
+      "name": "getVotePower",
+      "args": [
+        {
+          "name": "account",
+          "type": "account",
+          "desc": ""
+        },
+        {
+          "name": "votersAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getTotalVoters",
+      "args": [],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getVipStatus",
+      "args": [
+        {
+          "name": "account",
+          "type": "account",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "bool",
+        "desc": ""
+      }
     }
   ]
 }

@@ -17,14 +17,14 @@ int 6
 *
 txn OnCompletion
 +
-switch create_NoOp create_OptIn NOT_IMPLEMENTED NOT_IMPLEMENTED NOT_IMPLEMENTED NOT_IMPLEMENTED call_NoOp NOT_IMPLEMENTED call_CloseOut
+switch create_NoOp NOT_IMPLEMENTED NOT_IMPLEMENTED NOT_IMPLEMENTED NOT_IMPLEMENTED NOT_IMPLEMENTED call_NoOp
 
 NOT_IMPLEMENTED:
 	err
 
 // createApplication(uint64,uint64)void
 //
-// // vipVoters = BoxMap<Address, boolean>();
+// // eslint-disable-next-line no-unused-vars
 abi_route_createApplication:
 	// vipVoteWeight: uint64
 	txna ApplicationArgs 2
@@ -42,13 +42,13 @@ abi_route_createApplication:
 createApplication:
 	proto 2 0
 
-	// contracts/voters/voters.algo.ts:25
+	// contracts/voters/voters.algo.ts:24
 	// this.algoToVoteRation.value = algoToVoteRatio
 	byte 0x616c676f546f566f7465526174696f6e // "algoToVoteRation"
 	frame_dig -1 // algoToVoteRatio: uint64
 	app_global_put
 
-	// contracts/voters/voters.algo.ts:26
+	// contracts/voters/voters.algo.ts:25
 	// this.vipVoteWeight.value = vipVoteWeight
 	byte 0x766970566f7465576569676874 // "vipVoteWeight"
 	frame_dig -2 // vipVoteWeight: uint64
@@ -58,7 +58,7 @@ createApplication:
 doAxfer:
 	proto 3 0
 
-	// contracts/voters/voters.algo.ts:30
+	// contracts/voters/voters.algo.ts:29
 	// sendAssetTransfer({
 	//       assetReceiver: receiver,
 	//       xferAsset: asset,
@@ -68,17 +68,17 @@ doAxfer:
 	int axfer
 	itxn_field TypeEnum
 
-	// contracts/voters/voters.algo.ts:31
+	// contracts/voters/voters.algo.ts:30
 	// assetReceiver: receiver
 	frame_dig -1 // receiver: account
 	itxn_field AssetReceiver
 
-	// contracts/voters/voters.algo.ts:32
+	// contracts/voters/voters.algo.ts:31
 	// xferAsset: asset
 	frame_dig -2 // asset: asset
 	itxn_field XferAsset
 
-	// contracts/voters/voters.algo.ts:33
+	// contracts/voters/voters.algo.ts:32
 	// assetAmount: amount
 	frame_dig -3 // amount: uint64
 	itxn_field AssetAmount
@@ -94,7 +94,7 @@ doAxfer:
 doOptIn:
 	proto 1 0
 
-	// contracts/voters/voters.algo.ts:38
+	// contracts/voters/voters.algo.ts:37
 	// this.doAxfer(this.app.address, asset, 0)
 	int 0
 	frame_dig -1 // asset: asset
@@ -118,7 +118,7 @@ abi_route_bootstrap:
 bootstrap:
 	proto 2 0
 
-	// contracts/voters/voters.algo.ts:42
+	// contracts/voters/voters.algo.ts:41
 	// verifyTxn(this.txn, { sender: this.app.creator })
 	// verify sender
 	txn Sender
@@ -128,7 +128,7 @@ bootstrap:
 	==
 	assert
 
-	// contracts/voters/voters.algo.ts:43
+	// contracts/voters/voters.algo.ts:42
 	// assert(!this.votersAsaId.exists)
 	txna Applications 0
 	byte 0x766f746572734173614964 // "votersAsaId"
@@ -138,7 +138,7 @@ bootstrap:
 	!
 	assert
 
-	// contracts/voters/voters.algo.ts:44
+	// contracts/voters/voters.algo.ts:43
 	// votersAsa = sendAssetCreation({
 	//       configAssetName: 'AlgoHub Vote',
 	//       configAssetUnitName: 'AHV',
@@ -150,27 +150,27 @@ bootstrap:
 	int acfg
 	itxn_field TypeEnum
 
-	// contracts/voters/voters.algo.ts:45
+	// contracts/voters/voters.algo.ts:44
 	// configAssetName: 'AlgoHub Vote'
 	byte 0x416c676f48756220566f7465 // "AlgoHub Vote"
 	itxn_field ConfigAssetName
 
-	// contracts/voters/voters.algo.ts:46
+	// contracts/voters/voters.algo.ts:45
 	// configAssetUnitName: 'AHV'
 	byte 0x414856 // "AHV"
 	itxn_field ConfigAssetUnitName
 
-	// contracts/voters/voters.algo.ts:47
+	// contracts/voters/voters.algo.ts:46
 	// configAssetDecimals: 18
 	int 18
 	itxn_field ConfigAssetDecimals
 
-	// contracts/voters/voters.algo.ts:48
+	// contracts/voters/voters.algo.ts:47
 	// configAssetTotal: voteAsaTotal
 	frame_dig -1 // voteAsaTotal: uint64
 	itxn_field ConfigAssetTotal
 
-	// contracts/voters/voters.algo.ts:49
+	// contracts/voters/voters.algo.ts:48
 	// configAssetFreeze: this.app.address
 	global CurrentApplicationAddress
 	itxn_field ConfigAssetFreeze
@@ -184,18 +184,18 @@ bootstrap:
 	itxn CreatedAssetID
 	frame_bury -2 // votersAsa: asset
 
-	// contracts/voters/voters.algo.ts:51
+	// contracts/voters/voters.algo.ts:50
 	// this.votersAsaId.value = votersAsa
 	byte 0x766f746572734173614964 // "votersAsaId"
 	frame_dig -2 // votersAsa: asset
 	app_global_put
 
-	// contracts/voters/voters.algo.ts:52
+	// contracts/voters/voters.algo.ts:51
 	// this.doOptIn(votersAsa)
 	frame_dig -2 // votersAsa: asset
 	callsub doOptIn
 
-	// contracts/voters/voters.algo.ts:53
+	// contracts/voters/voters.algo.ts:52
 	// return votersAsa;
 	frame_dig -2 // votersAsa: asset
 	itob
@@ -223,7 +223,7 @@ register:
 	proto 1 0
 
 	// Verify a ASA hasn't already been opted into
-	// contracts/voters/voters.algo.ts:61
+	// contracts/voters/voters.algo.ts:60
 	// assert(this.txn.sender.assetBalance(this.votersAsaId.value) === 0)
 	txn Sender
 	byte 0x766f746572734173614964 // "votersAsaId"
@@ -235,7 +235,7 @@ register:
 	assert
 
 	// Verify that the balance is higher than the minimum algo to vote ratio
-	// contracts/voters/voters.algo.ts:63
+	// contracts/voters/voters.algo.ts:62
 	// assert(this.txn.sender.balance >= this.algoToVoteRation.value)
 	txn Sender
 	acct_params_get AcctBalance
@@ -245,7 +245,7 @@ register:
 	>=
 	assert
 
-	// contracts/voters/voters.algo.ts:64
+	// contracts/voters/voters.algo.ts:63
 	// sendAssetTransfer({
 	//       xferAsset: this.votersAsaId.value,
 	//       assetReceiver: this.txn.sender,
@@ -255,18 +255,18 @@ register:
 	int axfer
 	itxn_field TypeEnum
 
-	// contracts/voters/voters.algo.ts:65
+	// contracts/voters/voters.algo.ts:64
 	// xferAsset: this.votersAsaId.value
 	byte 0x766f746572734173614964 // "votersAsaId"
 	app_global_get
 	itxn_field XferAsset
 
-	// contracts/voters/voters.algo.ts:66
+	// contracts/voters/voters.algo.ts:65
 	// assetReceiver: this.txn.sender
 	txn Sender
 	itxn_field AssetReceiver
 
-	// contracts/voters/voters.algo.ts:67
+	// contracts/voters/voters.algo.ts:66
 	// assetAmount: 1
 	int 1
 	itxn_field AssetAmount
@@ -278,7 +278,7 @@ register:
 	// Submit inner transaction
 	itxn_submit
 
-	// contracts/voters/voters.algo.ts:69
+	// contracts/voters/voters.algo.ts:68
 	// sendAssetFreeze({
 	//       freezeAsset: this.votersAsaId.value,
 	//       freezeAssetAccount: this.txn.sender,
@@ -288,18 +288,18 @@ register:
 	int afrz
 	itxn_field TypeEnum
 
-	// contracts/voters/voters.algo.ts:70
+	// contracts/voters/voters.algo.ts:69
 	// freezeAsset: this.votersAsaId.value
 	byte 0x766f746572734173614964 // "votersAsaId"
 	app_global_get
 	itxn_field FreezeAsset
 
-	// contracts/voters/voters.algo.ts:71
+	// contracts/voters/voters.algo.ts:70
 	// freezeAssetAccount: this.txn.sender
 	txn Sender
 	itxn_field FreezeAssetAccount
 
-	// contracts/voters/voters.algo.ts:72
+	// contracts/voters/voters.algo.ts:71
 	// freezeAssetFrozen: true
 	int 1
 	itxn_field FreezeAssetFrozen
@@ -311,7 +311,7 @@ register:
 	// Submit inner transaction
 	itxn_submit
 
-	// contracts/voters/voters.algo.ts:75
+	// contracts/voters/voters.algo.ts:74
 	// this.totalVotes.value = this.totalVotes.value + 1
 	byte 0x746f74616c566f746573 // "totalVotes"
 	byte 0x746f74616c566f746573 // "totalVotes"
@@ -321,25 +321,25 @@ register:
 	app_global_put
 	retsub
 
-// closeOutOfApplication(asset)void
+// unregister(asset)void
 //
 // // eslint-disable-next-line no-unused-vars
-abi_route_closeOutOfApplication:
+abi_route_unregister:
 	// votersAsa: asset
 	txna ApplicationArgs 1
 	btoi
 	txnas Assets
 
-	// execute closeOutOfApplication(asset)void
-	callsub closeOutOfApplication
+	// execute unregister(asset)void
+	callsub unregister
 	int 1
 	return
 
-closeOutOfApplication:
+unregister:
 	proto 1 0
 
 	// Verify a ASA has already been opted into
-	// contracts/voters/voters.algo.ts:81
+	// contracts/voters/voters.algo.ts:80
 	// assert(this.txn.sender.assetBalance(this.votersAsaId.value) === 1)
 	txn Sender
 	byte 0x766f746572734173614964 // "votersAsaId"
@@ -350,7 +350,7 @@ closeOutOfApplication:
 	==
 	assert
 
-	// contracts/voters/voters.algo.ts:83
+	// contracts/voters/voters.algo.ts:82
 	// sendAssetFreeze({
 	//       freezeAsset: this.votersAsaId.value,
 	//       freezeAssetAccount: this.txn.sender,
@@ -360,18 +360,18 @@ closeOutOfApplication:
 	int afrz
 	itxn_field TypeEnum
 
-	// contracts/voters/voters.algo.ts:84
+	// contracts/voters/voters.algo.ts:83
 	// freezeAsset: this.votersAsaId.value
 	byte 0x766f746572734173614964 // "votersAsaId"
 	app_global_get
 	itxn_field FreezeAsset
 
-	// contracts/voters/voters.algo.ts:85
+	// contracts/voters/voters.algo.ts:84
 	// freezeAssetAccount: this.txn.sender
 	txn Sender
 	itxn_field FreezeAssetAccount
 
-	// contracts/voters/voters.algo.ts:86
+	// contracts/voters/voters.algo.ts:85
 	// freezeAssetFrozen: false
 	int 0
 	itxn_field FreezeAssetFrozen
@@ -383,7 +383,7 @@ closeOutOfApplication:
 	// Submit inner transaction
 	itxn_submit
 
-	// contracts/voters/voters.algo.ts:89
+	// contracts/voters/voters.algo.ts:88
 	// sendAssetTransfer({
 	//       xferAsset: this.votersAsaId.value,
 	//       assetReceiver: this.app.address,
@@ -393,18 +393,18 @@ closeOutOfApplication:
 	int axfer
 	itxn_field TypeEnum
 
-	// contracts/voters/voters.algo.ts:90
+	// contracts/voters/voters.algo.ts:89
 	// xferAsset: this.votersAsaId.value
 	byte 0x766f746572734173614964 // "votersAsaId"
 	app_global_get
 	itxn_field XferAsset
 
-	// contracts/voters/voters.algo.ts:91
+	// contracts/voters/voters.algo.ts:90
 	// assetReceiver: this.app.address
 	global CurrentApplicationAddress
 	itxn_field AssetReceiver
 
-	// contracts/voters/voters.algo.ts:92
+	// contracts/voters/voters.algo.ts:91
 	// assetAmount: 1
 	int 1
 	itxn_field AssetAmount
@@ -416,7 +416,7 @@ closeOutOfApplication:
 	// Submit inner transaction
 	itxn_submit
 
-	// contracts/voters/voters.algo.ts:95
+	// contracts/voters/voters.algo.ts:94
 	// this.totalVotes.value = this.totalVotes.value - 1
 	byte 0x746f74616c566f746573 // "totalVotes"
 	byte 0x746f74616c566f746573 // "totalVotes"
@@ -436,7 +436,7 @@ abi_route_getVotersDetails:
 getVotersDetails:
 	proto 0 0
 
-	// contracts/voters/voters.algo.ts:99
+	// contracts/voters/voters.algo.ts:98
 	// return {
 	//       algoToVoteRation: this.algoToVoteRation.value,
 	//       vipVoteWeight: this.vipVoteWeight.value,
@@ -459,7 +459,7 @@ getVotersDetails:
 	log
 	retsub
 
-// getVotePower(asset,address)uint64
+// getVotePower(asset,account)uint64
 //
 // // eslint-disable-next-line no-unused-vars
 abi_route_getVotePower:
@@ -468,15 +468,12 @@ abi_route_getVotePower:
 	btoi
 	txnas Assets
 
-	// account: address
+	// account: account
 	txna ApplicationArgs 1
-	dup
-	len
-	int 32
-	==
-	assert
+	btoi
+	txnas Accounts
 
-	// execute getVotePower(asset,address)uint64
+	// execute getVotePower(asset,account)uint64
 	callsub getVotePower
 	int 1
 	return
@@ -485,23 +482,23 @@ getVotePower:
 	proto 2 0
 
 	// if0_condition
-	// contracts/voters/voters.algo.ts:111
+	// contracts/voters/voters.algo.ts:110
 	// this.vipVoters(account).value
-	frame_dig -1 // account: address
+	frame_dig -1 // account: account
 	app_global_get
 	int 0
 	getbit
 	bz if0_end
 
 	// if0_consequent
-	// contracts/voters/voters.algo.ts:111
+	// contracts/voters/voters.algo.ts:110
 	// return 125;
 	byte 0x151f7c75000000000000007d
 	log
 	retsub
 
 if0_end:
-	// contracts/voters/voters.algo.ts:112
+	// contracts/voters/voters.algo.ts:111
 	// return 100;
 	byte 0x151f7c750000000000000064
 	log
@@ -517,7 +514,7 @@ abi_route_getTotalVoters:
 getTotalVoters:
 	proto 0 0
 
-	// contracts/voters/voters.algo.ts:116
+	// contracts/voters/voters.algo.ts:115
 	// return this.totalVotes.value;
 	byte 0x746f74616c566f746573 // "totalVotes"
 	app_global_get
@@ -528,17 +525,14 @@ getTotalVoters:
 	log
 	retsub
 
-// getVIPStatus(address)bool
+// getVIPStatus(account)bool
 abi_route_getVIPStatus:
-	// account: address
+	// account: account
 	txna ApplicationArgs 1
-	dup
-	len
-	int 32
-	==
-	assert
+	btoi
+	txnas Accounts
 
-	// execute getVIPStatus(address)bool
+	// execute getVIPStatus(account)bool
 	callsub getVIPStatus
 	int 1
 	return
@@ -546,9 +540,9 @@ abi_route_getVIPStatus:
 getVIPStatus:
 	proto 1 0
 
-	// contracts/voters/voters.algo.ts:120
+	// contracts/voters/voters.algo.ts:119
 	// return this.vipVoters(account).value;
-	frame_dig -1 // account: address
+	frame_dig -1 // account: account
 	app_global_get
 	int 0
 	getbit
@@ -562,7 +556,7 @@ getVIPStatus:
 	log
 	retsub
 
-// setVIPStatus(asset,bool,address)void
+// setVIPStatus(asset,bool,account)void
 //
 // // eslint-disable-next-line no-unused-vars
 abi_route_setVIPStatus:
@@ -581,15 +575,12 @@ abi_route_setVIPStatus:
 	int 0
 	getbit
 
-	// account: address
+	// account: account
 	txna ApplicationArgs 1
-	dup
-	len
-	int 32
-	==
-	assert
+	btoi
+	txnas Accounts
 
-	// execute setVIPStatus(asset,bool,address)void
+	// execute setVIPStatus(asset,bool,account)void
 	callsub setVIPStatus
 	int 1
 	return
@@ -598,7 +589,7 @@ setVIPStatus:
 	proto 3 0
 
 	// Only allow app creator to set VIP status
-	// contracts/voters/voters.algo.ts:126
+	// contracts/voters/voters.algo.ts:125
 	// verifyTxn(this.txn, { sender: globals.creatorAddress })
 	// verify sender
 	txn Sender
@@ -606,9 +597,9 @@ setVIPStatus:
 	==
 	assert
 
-	// contracts/voters/voters.algo.ts:129
+	// contracts/voters/voters.algo.ts:128
 	// this.vipVoters(account).value = isVIP
-	frame_dig -1 // account: address
+	frame_dig -1 // account: account
 	frame_dig -2 // isVIP: bool
 	byte 0x00
 	int 0
@@ -626,23 +617,12 @@ create_NoOp:
 call_NoOp:
 	method "bootstrap(uint64)uint64"
 	method "register(asset)void"
+	method "unregister(asset)void"
 	method "getVotersDetails()(uint64,uint64,uint64)"
-	method "getVotePower(address,asset)uint64"
+	method "getVotePower(account,asset)uint64"
 	method "getTotalVoters()uint64"
-	method "getVIPStatus(address)bool"
-	method "setVIPStatus(address,bool,asset)void"
+	method "getVIPStatus(account)bool"
+	method "setVIPStatus(account,bool,asset)void"
 	txna ApplicationArgs 0
-	match abi_route_bootstrap abi_route_register abi_route_getVotersDetails abi_route_getVotePower abi_route_getTotalVoters abi_route_getVIPStatus abi_route_setVIPStatus
-	err
-
-create_OptIn:
-	method "createApplication(uint64,uint64)void"
-	txna ApplicationArgs 0
-	match abi_route_createApplication
-	err
-
-call_CloseOut:
-	method "closeOutOfApplication(asset)void"
-	txna ApplicationArgs 0
-	match abi_route_closeOutOfApplication
+	match abi_route_bootstrap abi_route_register abi_route_unregister abi_route_getVotersDetails abi_route_getVotePower abi_route_getTotalVoters abi_route_getVIPStatus abi_route_setVIPStatus
 	err

@@ -73,7 +73,7 @@ abi_route_createCampaign:
 createCampaign:
 	proto 7 0
 
-	// contracts/campaign/campaign.algo.ts:79
+	// contracts/campaign/campaign.algo.ts:85
 	// this.campaign.value = {
 	//       price: price,
 	//       maxBuyCap: maxBuyCap,
@@ -200,7 +200,7 @@ abi_route_vote:
 vote:
 	proto 2 0
 
-	// contracts/campaign/campaign.algo.ts:121
+	// contracts/campaign/campaign.algo.ts:127
 	// assert(this.txn.sender.assetBalance(this.votersAsaId.value) > 1)
 	txn Sender
 	byte 0x766f746572734173614964 // "votersAsaId"
@@ -211,7 +211,7 @@ vote:
 	>
 	assert
 
-	// contracts/campaign/campaign.algo.ts:122
+	// contracts/campaign/campaign.algo.ts:128
 	// this.votesTotal.value = this.votesTotal.value + 1
 	byte 0x766f746573546f74616c // "votesTotal"
 	byte 0x766f746573546f74616c // "votesTotal"
@@ -221,13 +221,13 @@ vote:
 	app_global_put
 
 	// if0_condition
-	// contracts/campaign/campaign.algo.ts:123
+	// contracts/campaign/campaign.algo.ts:129
 	// inFavor
 	frame_dig -1 // inFavor: bool
 	bz if0_end
 
 	// if0_consequent
-	// contracts/campaign/campaign.algo.ts:124
+	// contracts/campaign/campaign.algo.ts:130
 	// this.votesInFavor.value = this.votesInFavor.value + 1
 	byte 0x766f746573496e4661766f72 // "votesInFavor"
 	byte 0x766f746573496e4661766f72 // "votesInFavor"
@@ -249,7 +249,7 @@ abi_route_getCampaign:
 getCampaign:
 	proto 0 0
 
-	// contracts/campaign/campaign.algo.ts:129
+	// contracts/campaign/campaign.algo.ts:135
 	// return this.campaign.value;
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
@@ -269,7 +269,7 @@ abi_route_getVestingSchedule:
 getVestingSchedule:
 	proto 0 0
 
-	// contracts/campaign/campaign.algo.ts:133
+	// contracts/campaign/campaign.algo.ts:139
 	// return this.vestingSchedule.value;
 	byte 0x76657374696e675363686564756c65 // "vestingSchedule"
 	app_global_get
@@ -282,7 +282,7 @@ getVestingSchedule:
 canVote:
 	proto 0 1
 
-	// contracts/campaign/campaign.algo.ts:138
+	// contracts/campaign/campaign.algo.ts:144
 	// return true;
 	int 1
 	retsub
@@ -290,7 +290,7 @@ canVote:
 isApproved:
 	proto 0 1
 
-	// contracts/campaign/campaign.algo.ts:143
+	// contracts/campaign/campaign.algo.ts:149
 	// return true;
 	int 1
 	retsub
@@ -298,7 +298,7 @@ isApproved:
 isHypelisted:
 	proto 0 1
 
-	// contracts/campaign/campaign.algo.ts:148
+	// contracts/campaign/campaign.algo.ts:154
 	// return true;
 	int 1
 	retsub

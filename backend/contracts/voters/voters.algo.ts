@@ -19,7 +19,6 @@ export default class Voters extends Contract {
   vipVoters = GlobalStateMap<Address, boolean>({ maxKeys: 50 });
   // vipVoters = BoxMap<Address, boolean>();
 
-  @allow.create('OptIn')
   // eslint-disable-next-line no-unused-vars
   createApplication(algoToVoteRatio: number, vipVoteWeight: number): void {
     this.algoToVoteRation.value = algoToVoteRatio;
@@ -76,7 +75,7 @@ export default class Voters extends Contract {
   }
 
   // eslint-disable-next-line no-unused-vars
-  closeOutOfApplication(votersAsa: Asset): void {
+  unregister(votersAsa: Asset): void {
     /// Verify a ASA has already been opted into
     assert(this.txn.sender.assetBalance(this.votersAsaId.value) === 1);
     // unfreeze the asset for the sender
@@ -104,7 +103,7 @@ export default class Voters extends Contract {
   }
 
   // eslint-disable-next-line no-unused-vars
-  getVotePower(account: Address, votersAsa: Asset): number {
+  getVotePower(account: Account, votersAsa: Asset): number {
     // TODO: something seems off with getting the asset balance on-chain ....
     // if (account.hasAsset(this.votersAsaId.value) === 0) return 0;
     // if (account.assetBalance(this.votersAsaId.value) === 0) return 0;
@@ -116,12 +115,12 @@ export default class Voters extends Contract {
     return this.totalVotes.value;
   }
 
-  getVIPStatus(account: Address): boolean {
+  getVIPStatus(account: Account): boolean {
     return this.vipVoters(account).value;
   }
 
   // eslint-disable-next-line no-unused-vars
-  setVIPStatus(account: Address, isVIP: boolean, votersAsa: Asset): void {
+  setVIPStatus(account: Account, isVIP: boolean, votersAsa: Asset): void {
     /// Only allow app creator to set VIP status
     verifyTxn(this.txn, { sender: globals.creatorAddress });
     // TODO: Add check to make sure that account is already opted-in

@@ -53,7 +53,7 @@
       }
     },
     {
-      "name": "closeOutOfApplication",
+      "name": "unregister",
       "args": [
         {
           "name": "votersAsa",
@@ -81,7 +81,7 @@
       "args": [
         {
           "name": "account",
-          "type": "address",
+          "type": "account",
           "desc": ""
         },
         {
@@ -110,7 +110,7 @@
       "args": [
         {
           "name": "account",
-          "type": "address",
+          "type": "account",
           "desc": ""
         }
       ],
@@ -125,7 +125,7 @@
       "args": [
         {
           "name": "account",
-          "type": "address",
+          "type": "account",
           "desc": ""
         },
         {
