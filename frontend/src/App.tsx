@@ -20,6 +20,7 @@ import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
 import CampaignApplicationForm from './components/campaign/application-form/CampaignApplicationForm'
 import { userServices } from './services/userServices'
+import AllCampaigns from './pages/AllCampaigns'
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
@@ -119,6 +120,7 @@ export default function App() {
         { path: ROUTES.PROJECT_DETAIL.FULL_PATH, element: <CampaignDetails /> },
         { path: ROUTES.ABOUT.FULL_PATH, element: <About /> },
         { path: ROUTES.CAMPAIGN_APPLICATION_FORM.FULL_PATH, element: <CampaignApplicationForm /> },
+        { path: ROUTES.ALL_CAMPAIGNS.FULL_PATH, element: <AllCampaigns /> },
       ],
     },
   ])

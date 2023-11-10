@@ -6,8 +6,12 @@ const fetchAllCampaigns = async () => {
 }
 
 const filterCampaignByCategory = (campaigns: CampaignInterface[], category: string) => {
-  const filteredCampaigns = campaigns.filter((campaign) => campaign.campaign_category === category)
-  return filteredCampaigns
+  if (category) {
+    const filteredCampaigns = campaigns.filter((campaign) => campaign.campaign_category === category)
+    return filteredCampaigns
+  }
+
+  return campaigns
 }
 
 const filterCampaignsByStatus = (campaigns: CampaignInterface[], status: CampaignInterface['campaign_status']) => {

@@ -3,8 +3,11 @@ import HeroButton from './HeroButton'
 import { UserDataOutletInterface } from './NavBar'
 import Button from './common/button/Button'
 import routes from '../core/routes'
+import { useNavigate } from 'react-router-dom'
 
 const HeroSection = ({ userData }: UserDataOutletInterface) => {
+  const navigate = useNavigate()
+
   return (
     <div className="flex flex-col h-screen bg-gray-900">
       <div className="grid grid-cols-1 md:grid-cols-2 h-full">
@@ -18,7 +21,7 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
             <div className="flex w-full gap-6 md:hidden mt-6">
               <Button buttonColor="orange">CREATE CAMPAIGN</Button>
               <Button buttonColor="orange">
-                <a href="#campaigns">VIEW ALL CAMPAIGNS</a>
+                <a href={routes.ALL_CAMPAIGNS.ROUTE}>VIEW ALL CAMPAIGNS</a>
               </Button>
             </div>
           </div>
@@ -55,7 +58,9 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
         <HeroButton href={routes.CAMPAIGN_APPLICATION_FORM.ROUTE} customClassName={'hidden md:flex w-full h-32 md:h-64'}>
           {'Create campaign'}
         </HeroButton>
-        <HeroButton customClassName={'hidden md:flex w-full h-32 md:h-64'}>{'View campaigns'}</HeroButton>
+        <HeroButton href={routes.ALL_CAMPAIGNS.ROUTE} customClassName={'hidden md:flex w-full h-32 md:h-64'}>
+          {'View campaigns'}
+        </HeroButton>
       </div>
     </div>
   )

@@ -32,7 +32,11 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
 
   const campaignListRenderer = displayedCampaigns.map((campaign, index) => {
     return (
-      <CardWithImage key={index} imageProps={{ src: 'images/the-recoop.png', alt: 'gunny-tps' }}>
+      <CardWithImage
+        key={index}
+        imageProps={{ src: 'https://pbs.twimg.com/profile_banners/1502651569053044737/1658777150/1500x500', alt: 'gunny-tps' }}
+        campaign_id={campaign.campaign_id}
+      >
         <h2 className={'card-title'}>{campaign.campaign_title}</h2>
         <div className={'mb-8'}>
           <div className={'flex gap-4 w-max'}>
@@ -45,7 +49,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         </div>
 
         <Button
-          buttonColor={'accent'}
+          buttonColor={'orange'}
           size={'lg'}
           customClassName={'rounded-2xl'}
           onClick={() => navigate(generatePath(routes.PROJECT_DETAIL.FULL_PATH, { campaignId: campaign.campaign_id }))}
@@ -57,27 +61,33 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
   })
 
   return (
-    <div className={'flex gap-4 md:gap-14 items-center w-full justify-between bg-gray-950'}>
+    <div className={'flex gap-4 md:gap-14 items-center h-96 w-full justify-between bg-gray-950 px-2'}>
       <Button
         aria-label={'previous-button'}
         onClick={handleDisplayPrevious}
         buttonColor="ghost"
-        customClassName={'btn-round text-orange-500 campaign-list__previous-button'}
+        customClassName={'btn-round text-orange-500 campaign-list__previous-button group'}
         isDisabled={!displayedCampaignsOffset}
       >
-        <TiMediaPlayReverse className="" />
+        <TiMediaPlayReverse className="text-3xl group-hover:text-orange-600" />
       </Button>
 
-      <div className="flex gap-10 py-5 w-full justify-center md:justify-start">{campaignListRenderer}</div>
+      <div className="flex gap-10 py-5 w-full justify-center md:justify-start">
+        {campaigns.length <= 0 ? (
+          <div className="w-full text-3xl text-center text-gray-500">No campaigns to display</div>
+        ) : (
+          campaignListRenderer
+        )}
+      </div>
 
       <Button
         aria-label={'next-button'}
         onClick={handleDisplayNext}
         buttonColor="ghost"
-        customClassName={'btn-round text-orange-500 campaign-list__next-button'}
+        customClassName={'btn-round text-orange-500 campaign-list__next-button group'}
         isDisabled={displayedCampaignsOffset >= maxOffset - limit}
       >
-        <TiMediaPlay />
+        <TiMediaPlay className="text-3xl group-hover:text-orange-600" />
       </Button>
     </div>
   )
@@ -95,7 +105,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
       return 1
     }
 
-    return isSmallScreen ? 2 : 3
+    return isSmallScreen ? 3 : 5
   }
 }
 
