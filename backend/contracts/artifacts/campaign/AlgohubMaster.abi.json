@@ -14,6 +14,11 @@
           "name": "vipVoteWeight",
           "type": "uint64",
           "desc": ""
+        },
+        {
+          "name": "votingPeriod",
+          "type": "uint64",
+          "desc": ""
         }
       ],
       "desc": "",
@@ -71,6 +76,21 @@
           "desc": ""
         },
         {
+          "name": "adminAccount",
+          "type": "account",
+          "desc": ""
+        },
+        {
+          "name": "idoAsa",
+          "type": "asset",
+          "desc": ""
+        },
+        {
+          "name": "buyAsa",
+          "type": "asset",
+          "desc": ""
+        },
+        {
           "name": "price",
           "type": "uint64",
           "desc": ""
@@ -91,12 +111,7 @@
           "desc": ""
         },
         {
-          "name": "startTime",
-          "type": "uint64",
-          "desc": ""
-        },
-        {
-          "name": "endTime",
+          "name": "duration",
           "type": "uint64",
           "desc": ""
         },
@@ -174,6 +189,15 @@
           "desc": ""
         }
       ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getVotingPeriod",
+      "args": [],
       "desc": "",
       "returns": {
         "type": "uint64",

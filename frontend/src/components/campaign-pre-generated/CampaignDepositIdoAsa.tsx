@@ -1,44 +1,41 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
-<CampaignBuy
+<CampaignDepositIdoAsa
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call buy"
+  buttonNode="Call depositIdoAsa"
   typedClient={typedClient}
-  buyAsaXfer={buyAsaXfer}
-  buyAsa={buyAsa}
-  buyAmount={buyAmount}
+  idoXfer={idoXfer}
+  idoAsa={idoAsa}
 />
 */
-type CampaignBuyArgs = Dao['methods']['buy(axfer,asset,uint64)void']['argsObj']
+type CampaignDepositIdoAsaArgs = Campaign['methods']['depositIdoAsa(axfer,asset)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  buyAsaXfer: CampaignBuyArgs['buyAsaXfer']
-  buyAsa: CampaignBuyArgs['buyAsa']
-  buyAmount: CampaignBuyArgs['buyAmount']
+  idoXfer: CampaignDepositIdoAsaArgs['idoXfer']
+  idoAsa: CampaignDepositIdoAsaArgs['idoAsa']
 }
 
-const CampaignBuy = (props: Props) => {
+const CampaignDepositIdoAsa = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling buy`)
-    await props.typedClient.buy(
+    console.log(`Calling depositIdoAsa`)
+    await props.typedClient.depositIdoAsa(
       {
-        buyAsaXfer: props.buyAsaXfer,
-        buyAsa: props.buyAsa,
-        buyAmount: props.buyAmount,
+        idoXfer: props.idoXfer,
+        idoAsa: props.idoAsa,
       },
       { sender },
     )
@@ -52,4 +49,4 @@ const CampaignBuy = (props: Props) => {
   )
 }
 
-export default CampaignBuy
+export default CampaignDepositIdoAsa

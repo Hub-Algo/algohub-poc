@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { CampaignClient } from '../../contracts/CampaignClient'
+import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
 <CampaignWithdrawSales
@@ -9,13 +9,17 @@ import { CampaignClient } from '../../contracts/CampaignClient'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call withdrawSales"
   typedClient={typedClient}
+  buyAsa={buyAsa}
 />
 */
+type CampaignWithdrawSalesArgs = Campaign['methods']['withdrawSales(asset)void']['argsObj']
+
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
+  buyAsa: CampaignWithdrawSalesArgs['buyAsa']
 }
 
 const CampaignWithdrawSales = (props: Props) => {
@@ -26,7 +30,12 @@ const CampaignWithdrawSales = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling withdrawSales`)
-    await props.typedClient.withdrawSales({}, { sender })
+    await props.typedClient.withdrawSales(
+      {
+        buyAsa: props.buyAsa,
+      },
+      { sender },
+    )
     setLoading(false)
   }
 

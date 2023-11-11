@@ -1,45 +1,33 @@
 /* eslint-disable no-console */
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
+import { AlgohubMaster, AlgohubMasterClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignBuy
+<AlgohubMasterGetVotingPeriod
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call buy"
+  buttonNode="Call getVotingPeriod"
   typedClient={typedClient}
-  buyAsaXfer={buyAsaXfer}
-  buyAsa={buyAsa}
-  buyAmount={buyAmount}
 />
 */
-type CampaignBuyArgs = Dao['methods']['buy(axfer,asset,uint64)void']['argsObj']
-
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
-  buyAsaXfer: CampaignBuyArgs['buyAsaXfer']
-  buyAsa: CampaignBuyArgs['buyAsa']
-  buyAmount: CampaignBuyArgs['buyAmount']
+  typedClient: AlgohubMasterClient
 }
 
-const CampaignBuy = (props: Props) => {
+const AlgohubMasterGetVotingPeriod = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling buy`)
-    await props.typedClient.buy(
-      {
-        buyAsaXfer: props.buyAsaXfer,
-        buyAsa: props.buyAsa,
-        buyAmount: props.buyAmount,
-      },
+    console.log(`Calling getVotingPeriod`)
+    await props.typedClient.getVotingPeriod(
+      {},
       { sender },
     )
     setLoading(false)
@@ -52,4 +40,4 @@ const CampaignBuy = (props: Props) => {
   )
 }
 
-export default CampaignBuy
+export default AlgohubMasterGetVotingPeriod

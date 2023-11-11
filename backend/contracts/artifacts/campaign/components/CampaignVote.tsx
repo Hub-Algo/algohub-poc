@@ -9,19 +9,17 @@ import { useWallet } from '@txnlab/use-wallet'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call vote"
   typedClient={typedClient}
-  boxMBRPayment={boxMBRPayment}
   inFavor={inFavor}
   votersAsa={votersAsa}
 />
 */
-type CampaignVoteArgs = Dao['methods']['vote(pay,bool,asset)void']['argsObj']
+type CampaignVoteArgs = Dao['methods']['vote(bool,asset)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  boxMBRPayment: CampaignVoteArgs['boxMBRPayment']
   inFavor: CampaignVoteArgs['inFavor']
   votersAsa: CampaignVoteArgs['votersAsa']
 }
@@ -36,7 +34,6 @@ const CampaignVote = (props: Props) => {
     console.log(`Calling vote`)
     await props.typedClient.vote(
       {
-        boxMBRPayment: props.boxMBRPayment,
         inFavor: props.inFavor,
         votersAsa: props.votersAsa,
       },
