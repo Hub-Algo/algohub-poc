@@ -11,9 +11,10 @@ import { useWallet } from '@txnlab/use-wallet'
   typedClient={typedClient}
   algoToVoteRatio={algoToVoteRatio}
   vipVoteWeight={vipVoteWeight}
+  votingPeriod={votingPeriod}
 />
 */
-type AlgohubMasterCreateApplicationArgs = Dao['methods']['createApplication(uint64,uint64)void']['argsObj']
+type AlgohubMasterCreateApplicationArgs = Dao['methods']['createApplication(uint64,uint64,uint64)void']['argsObj']
 
 type Props = {
   buttonClass: string
@@ -22,6 +23,7 @@ type Props = {
   typedClient: AlgohubMasterClient
   algoToVoteRatio: AlgohubMasterCreateApplicationArgs['algoToVoteRatio']
   vipVoteWeight: AlgohubMasterCreateApplicationArgs['vipVoteWeight']
+  votingPeriod: AlgohubMasterCreateApplicationArgs['votingPeriod']
 }
 
 const AlgohubMasterCreateApplication = (props: Props) => {
@@ -36,6 +38,7 @@ const AlgohubMasterCreateApplication = (props: Props) => {
       {
         algoToVoteRatio: props.algoToVoteRatio,
         vipVoteWeight: props.vipVoteWeight,
+        votingPeriod: props.votingPeriod,
       },
       { sender },
     )

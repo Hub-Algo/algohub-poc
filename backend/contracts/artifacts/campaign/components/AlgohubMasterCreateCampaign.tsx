@@ -10,16 +10,18 @@ import { useWallet } from '@txnlab/use-wallet'
   buttonNode="Call createCampaign"
   typedClient={typedClient}
   votersAsa={votersAsa}
+  adminAccount={adminAccount}
+  idoAsa={idoAsa}
+  buyAsa={buyAsa}
   price={price}
   maxBuyCap={maxBuyCap}
   softCap={softCap}
   hardCap={hardCap}
-  startTime={startTime}
-  endTime={endTime}
+  duration={duration}
   metadataUrl={metadataUrl}
 />
 */
-type AlgohubMasterCreateCampaignArgs = Dao['methods']['createCampaign(asset,uint64,uint64,uint64,uint64,uint64,uint64,string)uint64']['argsObj']
+type AlgohubMasterCreateCampaignArgs = Dao['methods']['createCampaign(asset,account,asset,asset,uint64,uint64,uint64,uint64,uint64,string)uint64']['argsObj']
 
 type Props = {
   buttonClass: string
@@ -27,12 +29,14 @@ type Props = {
   buttonNode: ReactNode
   typedClient: AlgohubMasterClient
   votersAsa: AlgohubMasterCreateCampaignArgs['votersAsa']
+  adminAccount: AlgohubMasterCreateCampaignArgs['adminAccount']
+  idoAsa: AlgohubMasterCreateCampaignArgs['idoAsa']
+  buyAsa: AlgohubMasterCreateCampaignArgs['buyAsa']
   price: AlgohubMasterCreateCampaignArgs['price']
   maxBuyCap: AlgohubMasterCreateCampaignArgs['maxBuyCap']
   softCap: AlgohubMasterCreateCampaignArgs['softCap']
   hardCap: AlgohubMasterCreateCampaignArgs['hardCap']
-  startTime: AlgohubMasterCreateCampaignArgs['startTime']
-  endTime: AlgohubMasterCreateCampaignArgs['endTime']
+  duration: AlgohubMasterCreateCampaignArgs['duration']
   metadataUrl: AlgohubMasterCreateCampaignArgs['metadataUrl']
 }
 
@@ -47,12 +51,14 @@ const AlgohubMasterCreateCampaign = (props: Props) => {
     await props.typedClient.createCampaign(
       {
         votersAsa: props.votersAsa,
+        adminAccount: props.adminAccount,
+        idoAsa: props.idoAsa,
+        buyAsa: props.buyAsa,
         price: props.price,
         maxBuyCap: props.maxBuyCap,
         softCap: props.softCap,
         hardCap: props.hardCap,
-        startTime: props.startTime,
-        endTime: props.endTime,
+        duration: props.duration,
         metadataUrl: props.metadataUrl,
       },
       { sender },

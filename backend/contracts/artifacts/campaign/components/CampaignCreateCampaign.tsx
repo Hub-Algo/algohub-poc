@@ -9,30 +9,36 @@ import { useWallet } from '@txnlab/use-wallet'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call createCampaign"
   typedClient={typedClient}
+  adminAccount={adminAccount}
   votersAsa={votersAsa}
+  idoAsa={idoAsa}
+  buyAsa={buyAsa}
   price={price}
   maxBuyCap={maxBuyCap}
   softCap={softCap}
   hardCap={hardCap}
-  startTime={startTime}
-  endTime={endTime}
+  votingPeriod={votingPeriod}
+  duration={duration}
   metadataUrl={metadataUrl}
 />
 */
-type CampaignCreateCampaignArgs = Dao['methods']['createCampaign(asset,uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
+type CampaignCreateCampaignArgs = Dao['methods']['createCampaign(account,asset,asset,asset,uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
+  adminAccount: CampaignCreateCampaignArgs['adminAccount']
   votersAsa: CampaignCreateCampaignArgs['votersAsa']
+  idoAsa: CampaignCreateCampaignArgs['idoAsa']
+  buyAsa: CampaignCreateCampaignArgs['buyAsa']
   price: CampaignCreateCampaignArgs['price']
   maxBuyCap: CampaignCreateCampaignArgs['maxBuyCap']
   softCap: CampaignCreateCampaignArgs['softCap']
   hardCap: CampaignCreateCampaignArgs['hardCap']
-  startTime: CampaignCreateCampaignArgs['startTime']
-  endTime: CampaignCreateCampaignArgs['endTime']
+  votingPeriod: CampaignCreateCampaignArgs['votingPeriod']
+  duration: CampaignCreateCampaignArgs['duration']
   metadataUrl: CampaignCreateCampaignArgs['metadataUrl']
 }
 
@@ -46,13 +52,16 @@ const CampaignCreateCampaign = (props: Props) => {
     console.log(`Calling createCampaign`)
     await props.typedClient.createCampaign(
       {
+        adminAccount: props.adminAccount,
         votersAsa: props.votersAsa,
+        idoAsa: props.idoAsa,
+        buyAsa: props.buyAsa,
         price: props.price,
         maxBuyCap: props.maxBuyCap,
         softCap: props.softCap,
         hardCap: props.hardCap,
-        startTime: props.startTime,
-        endTime: props.endTime,
+        votingPeriod: props.votingPeriod,
+        duration: props.duration,
         metadataUrl: props.metadataUrl,
       },
       { sender },

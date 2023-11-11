@@ -4,10 +4,10 @@ import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignGetVotersASA
+<CampaignGetVotersAsa
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getVotersASA"
+  buttonNode="Call getVotersAsa"
   typedClient={typedClient}
 />
 */
@@ -18,15 +18,15 @@ type Props = {
   typedClient: CampaignClient
 }
 
-const CampaignGetVotersASA = (props: Props) => {
+const CampaignGetVotersAsa = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getVotersASA`)
-    await props.typedClient.getVotersASA(
+    console.log(`Calling getVotersAsa`)
+    await props.typedClient.getVotersAsa(
       {},
       { sender },
     )
@@ -40,4 +40,4 @@ const CampaignGetVotersASA = (props: Props) => {
   )
 }
 
-export default CampaignGetVotersASA
+export default CampaignGetVotersAsa
