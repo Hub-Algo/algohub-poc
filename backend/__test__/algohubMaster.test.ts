@@ -135,6 +135,8 @@ describe.only('Campaign Factory', () => {
     expect(votersDetails.return?.[0].valueOf()).toBe(BigInt(algoToVoteRatio));
     expect(votersDetails.return?.[1].valueOf()).toBe(BigInt(vipVoteWeight));
     expect(votersDetails.return?.[2].valueOf()).toBe(BigInt(0));
+    const votingPeriodOnChain = await appClient.getVotingPeriod({});
+    expect(votingPeriodOnChain.return).toBe(BigInt(votingPeriod));
   });
 
   test('bootstrap (Negative - non-admin caller)', async () => {

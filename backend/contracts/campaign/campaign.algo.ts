@@ -288,7 +288,6 @@ export class AlgohubMaster extends Contract {
     assert(this.votersAsaId.exists);
     /// Only allow app creator to set Vip status
     verifyTxn(this.txn, { sender: globals.creatorAddress });
-    // TODO: Add check to make sure that account is already opted-in
     assert(account.assetBalance(this.votersAsaId.value) === 1);
     this.vipVoters(account).value = isVip;
   }

@@ -3,6 +3,7 @@ import { AlgohubMasterClient } from '../clients/AlgohubMaster';
 
 const ALGO_TO_VOTE_RATIO: number = 10;
 const VIP_VOTE_WEIGHT: number = 125;
+const TOTAL_VOTERS: number = 1_000_000;
 // TODO: Make sure to change it for mainnet deployment
 const VOTING_PERIOD: number = 60 * 60; // 1h for testing purposes
 
@@ -55,6 +56,7 @@ export async function deploy() {
       algod
     );
   }
+  await campaignFactory.bootstrap({ voteAsaTotal: TOTAL_VOTERS });
 
   const method = 'getAllCampaignApps';
   const response = await campaignFactory.getAllCampaignApps({});
