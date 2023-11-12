@@ -1,41 +1,32 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import { AlgohubClient } from '../../contracts/AlgohubClient'
 
 /* Example usage
-<CampaignClaim
+<AlgohubGetVotingPeriod
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call claim"
+  buttonNode="Call getVotingPeriod"
   typedClient={typedClient}
-  idoAsa={idoAsa}
 />
 */
-type CampaignClaimArgs = Campaign['methods']['claim(asset)void']['argsObj']
-
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
-  idoAsa: CampaignClaimArgs['idoAsa']
+  typedClient: AlgohubClient
 }
 
-const CampaignClaim = (props: Props) => {
+const AlgohubGetVotingPeriod = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling claim`)
-    await props.typedClient.claim(
-      {
-        idoAsa: props.idoAsa,
-      },
-      { sender },
-    )
+    console.log(`Calling getVotingPeriod`)
+    await props.typedClient.getVotingPeriod({}, { sender })
     setLoading(false)
   }
 
@@ -46,4 +37,4 @@ const CampaignClaim = (props: Props) => {
   )
 }
 
-export default CampaignClaim
+export default AlgohubGetVotingPeriod

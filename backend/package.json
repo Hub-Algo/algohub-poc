@@ -4,10 +4,10 @@
   "license": "MIT",
   "scripts": {
     "generate-campaign": "algokitgen generate -a contracts/artifacts/campaign/Campaign.json -o contracts/clients/CampaignClient.ts",
-    "generate-factory": "algokitgen generate -a contracts/artifacts/campaign/AlgohubMaster.json -o contracts/clients/AlgohubMaster.ts",
+    "generate-factory": "algokitgen generate -a contracts/artifacts/campaign/Algohub.json -o contracts/clients/AlgohubClient.ts",
     "generate-clients": "npm run generate-campaign && npm run generate-factory",
     "generate-campaign-comp": "algokit-generate-component contracts/artifacts/campaign/Campaign.json contracts/artifacts/campaign/components",
-    "generate-factory-comp": "algokit-generate-component contracts/artifacts/campaign/AlgohubMaster.json contracts/artifacts/campaign/components",
+    "generate-factory-comp": "algokit-generate-component contracts/artifacts/campaign/Algohub.json contracts/artifacts/campaign/components",
     "generate-components": "npm run generate-campaign-comp && npm run generate-factory-comp",
     "compile-campaign": "tealscript contracts/campaign/campaign.algo.ts contracts/artifacts/campaign",
     "build": "npm run compile-campaign && npm run generate-clients",

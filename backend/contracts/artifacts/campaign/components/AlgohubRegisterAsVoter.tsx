@@ -1,38 +1,38 @@
 /* eslint-disable no-console */
-import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import { Algohub, AlgohubClient } from '../contracts/DaoClient'
+import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignClaim
+<AlgohubRegisterAsVoter
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call claim"
+  buttonNode="Call registerAsVoter"
   typedClient={typedClient}
-  idoAsa={idoAsa}
+  votersAsa={votersAsa}
 />
 */
-type CampaignClaimArgs = Campaign['methods']['claim(asset)void']['argsObj']
+type AlgohubRegisterAsVoterArgs = Dao['methods']['registerAsVoter(asset)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
-  idoAsa: CampaignClaimArgs['idoAsa']
+  typedClient: AlgohubClient
+  votersAsa: AlgohubRegisterAsVoterArgs['votersAsa']
 }
 
-const CampaignClaim = (props: Props) => {
+const AlgohubRegisterAsVoter = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling claim`)
-    await props.typedClient.claim(
+    console.log(`Calling registerAsVoter`)
+    await props.typedClient.registerAsVoter(
       {
-        idoAsa: props.idoAsa,
+        votersAsa: props.votersAsa,
       },
       { sender },
     )
@@ -46,4 +46,4 @@ const CampaignClaim = (props: Props) => {
   )
 }
 
-export default CampaignClaim
+export default AlgohubRegisterAsVoter

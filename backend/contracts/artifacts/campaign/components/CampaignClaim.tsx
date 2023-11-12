@@ -9,13 +9,17 @@ import { useWallet } from '@txnlab/use-wallet'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call claim"
   typedClient={typedClient}
+  idoAsa={idoAsa}
 />
 */
+type CampaignClaimArgs = Dao['methods']['claim(asset)void']['argsObj']
+
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
+  idoAsa: CampaignClaimArgs['idoAsa']
 }
 
 const CampaignClaim = (props: Props) => {
@@ -27,7 +31,9 @@ const CampaignClaim = (props: Props) => {
     setLoading(true)
     console.log(`Calling claim`)
     await props.typedClient.claim(
-      {},
+      {
+        idoAsa: props.idoAsa,
+      },
       { sender },
     )
     setLoading(false)

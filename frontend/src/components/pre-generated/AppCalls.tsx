@@ -3,11 +3,11 @@ import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
 import { useWallet } from '@txnlab/use-wallet'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
-import { AlgohubMasterClient } from '../../contracts/AlgohubMaster'
+import { AlgohubClient } from '../../contracts/AlgohubClient'
 import { CampaignClient } from '../../contracts/CampaignClient'
 import algod from '../../core/algosdk/AlgodManager'
-import AlgohubMasterGetTotalVoters from '../algohub-master-pre-generated/AlgohubMasterGetTotalVoters'
 import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
+import AlgohubGetTotalVoters from '../algohub-pre-generated/AlgohubGetTotalVoters'
 
 interface AppCallsInterface {
   openModal: boolean
@@ -28,7 +28,7 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
   } as AppDetails
 
   const campaignClient = new CampaignClient(appDetails, algod.client)
-  const algohubClient = new AlgohubMasterClient(appDetails, algod.client)
+  const algohubClient = new AlgohubClient(appDetails, algod.client)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -88,7 +88,7 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
             setContractInput(e.target.value)
           }}
         />
-        <AlgohubMasterGetTotalVoters
+        <AlgohubGetTotalVoters
           buttonClass="btn m-2"
           buttonLoadingNode={<span className="loading loading-spinner" />}
           buttonNode="Call getTotalVoters"

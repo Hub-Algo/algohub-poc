@@ -1,5 +1,6 @@
 import * as algokit from '@algorandfoundation/algokit-utils';
-import { AlgohubMasterClient } from '../clients/AlgohubMaster';
+import { microAlgos } from '@algorandfoundation/algokit-utils';
+import { AlgohubClient } from '../clients/AlgohubClient';
 
 const ALGO_TO_VOTE_RATIO: number = 10;
 const VIP_VOTE_WEIGHT: number = 125;
@@ -26,7 +27,7 @@ export async function deploy() {
     },
     algod
   );
-  const campaignFactory = new AlgohubMasterClient(
+  const campaignFactory = new AlgohubClient(
     {
       resolveBy: 'creatorAndName',
       findExistingUsing: indexer,
@@ -37,7 +38,10 @@ export async function deploy() {
   );
 
   const factory = await campaignFactory.deploy({
+    // allowDelete: true,
     onUpdate: 'append',
+    onSchemaBreak: 'replace',
+    version: '0.0.1',
     createCall: (calls) =>
       calls.createApplication({
         algoToVoteRatio: ALGO_TO_VOTE_RATIO,
@@ -47,16 +51,24 @@ export async function deploy() {
   });
   // If app was just created fund the app account
   if (['create', 'replace'].includes(factory.operationPerformed)) {
-    algokit.transferAlgos(
+    await algokit.transferAlgos(
       {
-        amount: algokit.algos(1),
+        amount: algokit.algos(0.5),
         from: deployer,
         to: factory.appAddress,
       },
       algod
     );
   }
-  await campaignFactory.bootstrap({ voteAsaTotal: TOTAL_VOTERS });
+  const bootsrapResult = await campaignFactory.bootstrap(
+    { voteAsaTotal: TOTAL_VOTERS },
+    {
+      sendParams: {
+        fee: microAlgos(3_000),
+      },
+    }
+  );
+  console.log('VoteASA -->', bootsrapResult.return);
 
   const method = 'getAllCampaignApps';
   const response = await campaignFactory.getAllCampaignApps({});

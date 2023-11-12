@@ -1,38 +1,44 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import { Algohub, AlgohubClient } from '../../contracts/AlgohubClient'
 
 /* Example usage
-<CampaignClaim
+<AlgohubSetVipStatus
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call claim"
+  buttonNode="Call setVipStatus"
   typedClient={typedClient}
-  idoAsa={idoAsa}
+  account={account}
+  isVip={isVip}
+  votersAsa={votersAsa}
 />
 */
-type CampaignClaimArgs = Campaign['methods']['claim(asset)void']['argsObj']
+type AlgohubSetVipStatusArgs = Algohub['methods']['setVipStatus(account,bool,asset)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
-  idoAsa: CampaignClaimArgs['idoAsa']
+  typedClient: AlgohubClient
+  account: AlgohubSetVipStatusArgs['account']
+  isVip: AlgohubSetVipStatusArgs['isVip']
+  votersAsa: AlgohubSetVipStatusArgs['votersAsa']
 }
 
-const CampaignClaim = (props: Props) => {
+const AlgohubSetVipStatus = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling claim`)
-    await props.typedClient.claim(
+    console.log(`Calling setVipStatus`)
+    await props.typedClient.setVipStatus(
       {
-        idoAsa: props.idoAsa,
+        account: props.account,
+        isVip: props.isVip,
+        votersAsa: props.votersAsa,
       },
       { sender },
     )
@@ -46,4 +52,4 @@ const CampaignClaim = (props: Props) => {
   )
 }
 
-export default CampaignClaim
+export default AlgohubSetVipStatus

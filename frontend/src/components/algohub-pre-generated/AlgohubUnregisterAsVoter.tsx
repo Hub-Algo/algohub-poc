@@ -1,38 +1,38 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import { Algohub, AlgohubClient } from '../../contracts/AlgohubClient'
 
 /* Example usage
-<CampaignClaim
+<AlgohubUnregisterAsVoter
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call claim"
+  buttonNode="Call unregisterAsVoter"
   typedClient={typedClient}
-  idoAsa={idoAsa}
+  votersAsa={votersAsa}
 />
 */
-type CampaignClaimArgs = Campaign['methods']['claim(asset)void']['argsObj']
+type AlgohubUnregisterAsVoterArgs = Algohub['methods']['unregisterAsVoter(asset)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
-  idoAsa: CampaignClaimArgs['idoAsa']
+  typedClient: AlgohubClient
+  votersAsa: AlgohubUnregisterAsVoterArgs['votersAsa']
 }
 
-const CampaignClaim = (props: Props) => {
+const AlgohubUnregisterAsVoter = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling claim`)
-    await props.typedClient.claim(
+    console.log(`Calling unregisterAsVoter`)
+    await props.typedClient.unregisterAsVoter(
       {
-        idoAsa: props.idoAsa,
+        votersAsa: props.votersAsa,
       },
       { sender },
     )
@@ -46,4 +46,4 @@ const CampaignClaim = (props: Props) => {
   )
 }
 
-export default CampaignClaim
+export default AlgohubUnregisterAsVoter
