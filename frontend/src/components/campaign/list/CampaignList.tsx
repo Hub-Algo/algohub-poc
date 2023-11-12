@@ -9,6 +9,7 @@ import { useWindowSizeContext } from '../../../core/window-size/WindowSizeContex
 import { CampaignInterface } from '../../../interfaces/campaign-interface'
 import Button from '../../common/button/Button'
 import CardWithImage from '../../common/card/with-image/CardWithImage'
+import ProgressBar from '../../common/ProgressBar'
 
 interface CampaignsListPropsInterface {
   campaigns: CampaignInterface[]
@@ -17,15 +18,15 @@ interface CampaignsListPropsInterface {
 const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
   const maxOffset = campaigns.length
 
-  const { isSmallScreen, isXSmallScreen } = useWindowSizeContext()
+  const { isSmallScreen, isXSmallScreen, isMidRangeScreen } = useWindowSizeContext()
   const [displayedCampaignsOffset, setDisplayedCampaignsOffset] = useState(0)
-  const [limit, setLimit] = useState(getDisplayedCampaignsLimit(isSmallScreen, isXSmallScreen))
+  const [limit, setLimit] = useState(getDisplayedCampaignsLimit(isSmallScreen, isXSmallScreen, isMidRangeScreen))
   const displayedCampaigns = campaigns.length ? campaigns.slice(displayedCampaignsOffset, displayedCampaignsOffset + limit) : []
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    const currentLimit = getDisplayedCampaignsLimit(isSmallScreen, isXSmallScreen)
+    const currentLimit = getDisplayedCampaignsLimit(isSmallScreen, isXSmallScreen, isMidRangeScreen)
 
     setLimit(currentLimit)
   }, [isSmallScreen, isXSmallScreen])
@@ -38,6 +39,11 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         campaign_id={campaign.campaign_id}
       >
         <h2 className={'card-title'}>{campaign.campaign_title}</h2>
+        <div className="flex">
+          <p>Goal:</p>
+          <h3>${campaign.hard_goal}</h3>
+        </div>
+        <ProgressBar hard_goal={campaign.hard_goal} invested_amount={campaign.invested_amount} />
         <div className={'mb-8'}>
           <div className={'flex gap-4 w-max'}>
             <p>{'Start date'}</p> <p>{'02/12/23'}</p>
@@ -61,7 +67,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
   })
 
   return (
-    <div className={'flex gap-4 md:gap-14 items-center h-96 w-full justify-between bg-gray-950 px-2'}>
+    <div className={'flex gap-4 md:gap-14 items-center h-96 w-full justify-between bg-gray-950 px-2 mt-5'}>
       <Button
         aria-label={'previous-button'}
         onClick={handleDisplayPrevious}
@@ -72,7 +78,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         <TiMediaPlayReverse className="text-3xl group-hover:text-orange-600" />
       </Button>
 
-      <div className="flex gap-10 py-5 w-full justify-center md:justify-start">
+      <div className="flex gap-10 py-5 w-full justify-center md:justify-between">
         {campaigns.length <= 0 ? (
           <div className="w-full text-3xl text-center text-gray-500">No campaigns to display</div>
         ) : (
@@ -100,12 +106,16 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
     setDisplayedCampaignsOffset(0 >= displayedCampaignsOffset - limit ? 0 : displayedCampaignsOffset - limit)
   }
 
-  function getDisplayedCampaignsLimit(isSmallScreen: boolean, isXSmallScreen: boolean) {
+  function getDisplayedCampaignsLimit(isSmallScreen: boolean, isXSmallScreen: boolean, isMidRangeScreen: boolean) {
     if (isXSmallScreen) {
       return 1
     }
 
-    return isSmallScreen ? 3 : 5
+    if (isMidRangeScreen) {
+      return 3
+    }
+
+    return isSmallScreen ? 2 : 4
   }
 }
 
