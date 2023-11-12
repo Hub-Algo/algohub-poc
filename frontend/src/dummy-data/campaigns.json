@@ -9,8 +9,8 @@
     "start_date": "31/10/2023",
     "end_date": "31/12/2023",
     "campaign_category": "consumer",
-    "hard_goal": 650.0,
-    "invested_amount":250,
+    "hard_goal": 65000.0,
+    "invested_amount":65000.0,
     "soft_goal": null,
     "max_allocation": 500,
     "campaign_media": [""]
