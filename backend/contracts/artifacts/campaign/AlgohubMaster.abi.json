@@ -76,11 +76,6 @@
           "desc": ""
         },
         {
-          "name": "adminAccount",
-          "type": "account",
-          "desc": ""
-        },
-        {
           "name": "idoAsa",
           "type": "asset",
           "desc": ""
@@ -225,6 +220,21 @@
       "desc": "",
       "returns": {
         "type": "bool",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getVoteAsa",
+      "args": [
+        {
+          "name": "voteAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
         "desc": ""
       }
     }
