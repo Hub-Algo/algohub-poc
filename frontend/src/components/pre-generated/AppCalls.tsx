@@ -4,7 +4,7 @@ import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
 import { useWallet } from '@txnlab/use-wallet'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
-import { AlgohubClient } from '../../contracts/Algohub'
+import { AlgohubClient } from '../../contracts/AlgohubClient'
 import { CampaignClient } from '../../contracts/CampaignClient'
 import { getAlgodConfigFromViteEnvironment, getIndexerConfigFromViteEnvironment } from '../../core/util/network/getAlgoClientConfigs'
 
