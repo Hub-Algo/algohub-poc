@@ -63,8 +63,6 @@ export default function App() {
 
     const username = await userService.fetchUserNfd(walletAddress)
 
-    console.log(username)
-
     //Algo decimals is being used just as dummy for now
     const algoDecimals = 6
 
