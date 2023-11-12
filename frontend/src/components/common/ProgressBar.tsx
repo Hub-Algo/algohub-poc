@@ -16,7 +16,10 @@ const ProgressBar = ({ hard_goal, invested_amount }: ProgressBarPropsInterface) 
           value={progress}
           max="100"
         ></progress>
-        <p className="text-xs">{progress.toFixed(2)}%</p>
+        <div className="flex justify-between w-full">
+          <p className="text-xs">${invested_amount}</p>
+          <p className="text-xs text-end">{progress.toFixed(2)}%</p>
+        </div>
       </div>
     </div>
   )
