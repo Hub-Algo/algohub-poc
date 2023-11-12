@@ -2,6 +2,8 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { Algohub, AlgohubClient } from '../../contracts/AlgohubClient'
+import Button from '../common/button/Button'
+import { microAlgos } from '@algorandfoundation/algokit-utils'
 
 /* Example usage
 <AlgohubCreateCampaign
@@ -24,9 +26,9 @@ type AlgohubCreateCampaignArgs =
   Algohub['methods']['createCampaign(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,string)uint64']['argsObj']
 
 type Props = {
-  buttonClass: string
+  buttonClass?: string
   buttonLoadingNode?: ReactNode
-  buttonNode: ReactNode
+  children: ReactNode
   typedClient: AlgohubClient
   votersAsa: AlgohubCreateCampaignArgs['votersAsa']
   idoAsa: AlgohubCreateCampaignArgs['idoAsa']
@@ -37,6 +39,7 @@ type Props = {
   hardCap: AlgohubCreateCampaignArgs['hardCap']
   duration: AlgohubCreateCampaignArgs['duration']
   metadataUrl: AlgohubCreateCampaignArgs['metadataUrl']
+  onSuccess?: VoidFunction
 }
 
 const AlgohubCreateCampaign = (props: Props) => {
@@ -47,27 +50,45 @@ const AlgohubCreateCampaign = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling createCampaign`)
-    await props.typedClient.createCampaign(
-      {
-        votersAsa: props.votersAsa,
-        idoAsa: props.idoAsa,
-        buyAsa: props.buyAsa,
-        price: props.price,
-        maxBuyCap: props.maxBuyCap,
-        softCap: props.softCap,
-        hardCap: props.hardCap,
-        duration: props.duration,
-        metadataUrl: props.metadataUrl,
-      },
-      { sender },
-    )
-    setLoading(false)
+    await props.typedClient
+      .createCampaign(
+        {
+          votersAsa: props.votersAsa,
+          idoAsa: props.idoAsa,
+          buyAsa: props.buyAsa,
+          price: props.price,
+          maxBuyCap: props.maxBuyCap,
+          softCap: props.softCap,
+          hardCap: props.hardCap,
+          duration: props.duration,
+          metadataUrl: props.metadataUrl,
+        },
+        {
+          sender,
+          sendParams: {
+            fee: microAlgos(8_000),
+          },
+        },
+      )
+      .catch((e) => {
+        console.log(e)
+        setLoading(false)
+
+        return Promise.reject(e)
+      })
+      .then(() => {
+        setLoading(false)
+
+        if (props.onSuccess) {
+          props.onSuccess()
+        }
+      })
   }
 
   return (
-    <button className={props.buttonClass} onClick={callMethod}>
-      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
-    </button>
+    <Button customClassName={props.buttonClass} onClick={callMethod} shouldDisplaySpinner={loading}>
+      {props.children}
+    </Button>
   )
 }
 

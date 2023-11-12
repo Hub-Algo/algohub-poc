@@ -21,7 +21,8 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
   const { signer, activeAddress } = useWallet()
 
   const appDetails = {
-    resolveBy: 'creatorAndName',
+    resolveBy: 'id',
+    id: 478556883,
     sender: { signer, addr: activeAddress } as TransactionSignerAccount,
     creatorAddress: activeAddress,
     findExistingUsing: algod.indexer,

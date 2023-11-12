@@ -14,23 +14,23 @@ import algod from '../../../core/algosdk/AlgodManager'
 import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { useWallet } from '@txnlab/use-wallet'
-import AlgohubMasterGetAllCampaignApps from '../../algohub-master-pre-generated/AlgohubMasterGetAllCampaignApps'
-import { AlgohubMasterClient } from '../../../contracts/AlgohubMaster'
-import AlgohubMasterCreateCampaign from '../../algohub-master-pre-generated/AlgohubMasterCreateCampaign'
-import AlgohubMasterCreateApplication from '../../algohub-master-pre-generated/AlgohubMasterCreateApplication'
+import { AlgohubClient } from '../../../contracts/AlgohubClient'
+import AlgohubGetAllCampaignApps from '../../algohub-pre-generated/AlgohubGetAllCampaignApps'
+import AlgohubCreateCampaign from '../../algohub-pre-generated/AlgohubCreateCampaign'
 
 function CampaignApplicationForm() {
   const { activeAddress, signer } = useWallet()
   const appDetails = {
-    resolveBy: 'creatorAndName',
+    resolveBy: 'id',
+    id: 478556883,
     sender: { signer, addr: activeAddress } as TransactionSignerAccount,
     creatorAddress: activeAddress,
     findExistingUsing: algod.indexer,
   } as AppDetails
 
-  const algohubClient = new AlgohubMasterClient(appDetails, algod.client)
+  const algohubClient = new AlgohubClient(appDetails, algod.client)
 
-  const [view, setView] = useState<CampaignApplicationFormView>(CampaignApplicationFormView.FundraisingGoal)
+  const [view, setView] = useState<CampaignApplicationFormView>(CampaignApplicationFormView.ContactInfo)
   const [formData, setFormData] = useState({})
   const [hasSubmitted, setHasSubmitted] = useState(false)
   const [shouldDisplayConfirmationPage, setShouldDisplayConfirmationPage] = useState(false)
@@ -45,9 +45,9 @@ function CampaignApplicationForm() {
         <div className={'flex flex-col items-center justify-center text-green-600 font-semibold mt-32 gap-8'}>
           <p>{'Your campaign application has been submitted!'}</p>
 
-          <AlgohubMasterGetAllCampaignApps onSuccess={(res) => console.log(res)} typedClient={algohubClient}>
+          <AlgohubGetAllCampaignApps onSuccess={(res) => console.log(res)} typedClient={algohubClient}>
             {'Get all apps'}
-          </AlgohubMasterGetAllCampaignApps>
+          </AlgohubGetAllCampaignApps>
           <Link className={'btn btn-success'} to={routes.BASE}>
             {'Go back to main page'}
           </Link>
@@ -56,33 +56,22 @@ function CampaignApplicationForm() {
         <div className={'flex flex-col items-center justify-center text-green-600 font-semibold mt-32 gap-8'}>
           <h2>{'Confirm your campaign application!'}</h2>
 
-          <AlgohubMasterCreateApplication
-            buttonClass="btn m-2"
-            buttonLoadingNode={<span className="loading loading-spinner" />}
-            buttonNode="Call createApplication"
-            typedClient={algohubClient}
-            algoToVoteRatio={1}
-            vipVoteWeight={1}
-            votingPeriod={86400}
-          />
-
-          {activeAddress && (
-            /*  Object.keys(formData).length === 6 && */ <AlgohubMasterCreateCampaign
+          {activeAddress && Object.keys(formData).length === 6 && (
+            <AlgohubCreateCampaign
               typedClient={algohubClient}
-              votersAsa={68000392}
+              votersAsa={478560182}
               price={1000}
               maxBuyCap={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount}
               softCap={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount}
               hardCap={formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount}
-              duration={86400}
+              duration={86400} // 1 day
               metadataUrl={''}
-              idoAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId ?? 29468419}
-              buyAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId ?? 29468419}
-              adminAccount={activeAddress}
+              idoAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId}
+              buyAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId}
               onSuccess={() => setHasSubmitted(true)}
             >
               {'Submit application'}
-            </AlgohubMasterCreateCampaign>
+            </AlgohubCreateCampaign>
           )}
         </div>
       )

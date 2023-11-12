@@ -7,9 +7,6 @@ import Tab from '../components/common/tab/Tab'
 import { UserInterface } from '../interfaces/userInterface'
 import { CampaignOutletInterface } from './CampaignDetails'
 import CampaignList from '../components/campaign/list/CampaignList'
-import AppCalls from '../components/pre-generated/AppCalls'
-import { useState } from 'react'
-import Button from '../components/common/button/Button'
 
 export interface UserDataOutletInterface {
   userData: UserInterface
@@ -18,7 +15,6 @@ export interface UserDataOutletInterface {
 function Profile() {
   const { userData } = useOutletContext() as UserDataOutletInterface
   const { campaignList } = useOutletContext() as CampaignOutletInterface
-  const [modalState, setModalState] = useState(false)
 
   const tabItems: TabItem[] = [
     { id: 'Invested campaigns', content: 'Invested campaigns' },
@@ -35,8 +31,6 @@ function Profile() {
 
   return (
     <div className=" flex flex-col gap-10 bg-gray-900">
-      <Button onClick={() => setModalState(true)}>open modal</Button>
-      <AppCalls openModal={modalState} setModalState={setModalState} />
       <PageContainer>
         <Breadcrumbs pathList={['Home', 'Profile']} />
         <div className="flex flex-col">
