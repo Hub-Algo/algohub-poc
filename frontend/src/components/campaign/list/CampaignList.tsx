@@ -38,19 +38,19 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         imageProps={{ src: 'https://pbs.twimg.com/profile_banners/1502651569053044737/1658777150/1500x500', alt: 'gunny-tps' }}
         campaign_id={campaign.campaign_id}
       >
-        <h2 className={'card-title'}>{campaign.campaign_title}</h2>
-        <div className="flex">
-          <p>Goal:</p>
+        <h2 className={'card-title font-oswald'}>{campaign.campaign_title}</h2>
+        <div className="flex items-center">
+          <p className="text-lg font-bold">Goal:</p>
           <h3>${campaign.hard_goal}</h3>
         </div>
         <ProgressBar hard_goal={campaign.hard_goal} invested_amount={campaign.invested_amount} />
-        <div className={'mb-8'}>
+        <div className={'bg-gray-950 p-2 rounded-md'}>
           <div className={'flex gap-4 w-max'}>
-            <p>{'Start date'}</p> <p>{'02/12/23'}</p>
+            <p>{'Start date'}</p> <p>{campaign.start_date}</p>
           </div>
 
           <div className={'flex gap-4 w-max'}>
-            <p>{'End date'}</p> <p>{'02/01/24'}</p>
+            <p>{'End date'}</p> <p>{campaign.end_date}</p>
           </div>
         </div>
 
@@ -67,7 +67,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
   })
 
   return (
-    <div className={'flex gap-4 md:gap-14 items-center h-96 w-full justify-between bg-gray-950 px-2 mt-5'}>
+    <div className={'flex gap-4 md:gap-14 items-center w-full justify-between bg-gray-950 px-2 mt-5'}>
       <Button
         aria-label={'previous-button'}
         onClick={handleDisplayPrevious}
