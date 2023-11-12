@@ -39,7 +39,7 @@ export async function deploy() {
 
   const factory = await campaignFactory.deploy({
     onUpdate: 'append',
-    // onSchemaBreak: 'replace',
+    onSchemaBreak: 'replace',
     version: '0.0.1',
     createCall: (calls) =>
       calls.createApplication({
