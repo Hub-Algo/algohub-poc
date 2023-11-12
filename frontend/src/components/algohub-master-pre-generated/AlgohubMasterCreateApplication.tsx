@@ -2,6 +2,7 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { AlgohubMaster, AlgohubMasterClient } from '../../contracts/AlgohubMaster'
+import Button from '../common/button/Button'
 
 /* Example usage
 <AlgohubMasterCreateApplication
@@ -46,9 +47,9 @@ const AlgohubMasterCreateApplication = (props: Props) => {
   }
 
   return (
-    <button className={props.buttonClass} onClick={callMethod}>
-      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
-    </button>
+    <Button customClassName={props.buttonClass} onClick={callMethod} shouldDisplaySpinner={loading}>
+      {props.buttonNode}
+    </Button>
   )
 }
 

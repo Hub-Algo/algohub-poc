@@ -7,11 +7,11 @@ import Button from '../../../../common/button/Button'
 interface CampaignApplicatioFormTeamInfoViewProps {
   onClickPrevButton: (view: CampaignApplicationFormView) => void
   onClickNextButton: (data: CampaignApplicationFormData) => void
-  savedState?: NonNullable<CampaignApplicationTeamInfo>
+  savedState?: CampaignApplicationTeamInfo
 }
 
 function CampaignApplicatioFormTeamInfoView({ onClickNextButton, onClickPrevButton, savedState }: CampaignApplicatioFormTeamInfoViewProps) {
-  const [state, setState] = useState<CampaignApplicationTeamInfo>(savedState ?? null)
+  const [state, setState] = useState<CampaignApplicationTeamInfo | null>(savedState ?? null)
 
   const isDisabled = !state?.employeeNumber || !state.founder
 

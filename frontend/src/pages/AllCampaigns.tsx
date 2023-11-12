@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { CampaignInterface } from '../interfaces/campaign-interface'
 import { filterCampaignByCategory } from '../services/campaignServices'
 import CampaignList from '../components/campaign/list/CampaignList'
-import CampaignFilter from '../components/campaign/campaign-filter/CampaignFilter'
+import CampaignFilter from '../components/campaign/filter/CampaignFilter'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import PageContainer from '../components/PageContainer'
 

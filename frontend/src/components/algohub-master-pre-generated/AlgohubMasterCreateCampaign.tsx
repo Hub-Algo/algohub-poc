@@ -2,6 +2,7 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { AlgohubMaster, AlgohubMasterClient } from '../../contracts/AlgohubMaster'
+import Button from '../common/button/Button'
 
 /* Example usage
 <AlgohubMasterCreateCampaign
@@ -25,9 +26,9 @@ type AlgohubMasterCreateCampaignArgs =
   AlgohubMaster['methods']['createCampaign(asset,account,asset,asset,uint64,uint64,uint64,uint64,uint64,string)uint64']['argsObj']
 
 type Props = {
-  buttonClass: string
+  buttonClass?: string
   buttonLoadingNode?: ReactNode
-  buttonNode: ReactNode
+  children: ReactNode
   typedClient: AlgohubMasterClient
   votersAsa: AlgohubMasterCreateCampaignArgs['votersAsa']
   adminAccount: AlgohubMasterCreateCampaignArgs['adminAccount']
@@ -39,6 +40,7 @@ type Props = {
   hardCap: AlgohubMasterCreateCampaignArgs['hardCap']
   duration: AlgohubMasterCreateCampaignArgs['duration']
   metadataUrl: AlgohubMasterCreateCampaignArgs['metadataUrl']
+  onSuccess?: VoidFunction
 }
 
 const AlgohubMasterCreateCampaign = (props: Props) => {
@@ -49,28 +51,39 @@ const AlgohubMasterCreateCampaign = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling createCampaign`)
-    await props.typedClient.createCampaign(
-      {
-        votersAsa: props.votersAsa,
-        adminAccount: props.adminAccount,
-        idoAsa: props.idoAsa,
-        buyAsa: props.buyAsa,
-        price: props.price,
-        maxBuyCap: props.maxBuyCap,
-        softCap: props.softCap,
-        hardCap: props.hardCap,
-        duration: props.duration,
-        metadataUrl: props.metadataUrl,
-      },
-      { sender },
-    )
-    setLoading(false)
+    await props.typedClient
+      .createCampaign(
+        {
+          votersAsa: props.votersAsa,
+          adminAccount: props.adminAccount,
+          idoAsa: props.idoAsa,
+          buyAsa: props.buyAsa,
+          price: props.price,
+          maxBuyCap: props.maxBuyCap,
+          softCap: props.softCap,
+          hardCap: props.hardCap,
+          duration: props.duration,
+          metadataUrl: props.metadataUrl,
+        },
+        { sender },
+      )
+      .then(() => {
+        setLoading(false)
+
+        if (props.onSuccess) {
+          props.onSuccess()
+        }
+      })
+      .catch((e) => {
+        setLoading(false)
+        console.error(e)
+      })
   }
 
   return (
-    <button className={props.buttonClass} onClick={callMethod}>
-      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
-    </button>
+    <Button customClassName={props.buttonClass} onClick={callMethod} shouldDisplaySpinner={loading}>
+      {props.children}
+    </Button>
   )
 }
 

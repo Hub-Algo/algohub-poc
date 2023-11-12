@@ -2,6 +2,8 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import Button from '../common/button/Button'
+import { microAlgos } from '@algorandfoundation/algokit-utils'
 
 /* Example usage
 <CampaignCreateCampaign
@@ -26,9 +28,7 @@ type CampaignCreateCampaignArgs =
   Campaign['methods']['createCampaign(account,asset,asset,asset,uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
 
 type Props = {
-  buttonClass: string
-  buttonLoadingNode?: ReactNode
-  buttonNode: ReactNode
+  children: ReactNode
   typedClient: CampaignClient
   adminAccount: CampaignCreateCampaignArgs['adminAccount']
   votersAsa: CampaignCreateCampaignArgs['votersAsa']
@@ -41,6 +41,8 @@ type Props = {
   votingPeriod: CampaignCreateCampaignArgs['votingPeriod']
   duration: CampaignCreateCampaignArgs['duration']
   metadataUrl: CampaignCreateCampaignArgs['metadataUrl']
+  customClassName?: string
+  onSuccess?: VoidFunction
 }
 
 const CampaignCreateCampaign = (props: Props) => {
@@ -65,15 +67,24 @@ const CampaignCreateCampaign = (props: Props) => {
         duration: props.duration,
         metadataUrl: props.metadataUrl,
       },
-      { sender },
+      {
+        sender,
+        sendParams: {
+          fee: microAlgos(8_000),
+        },
+      },
     )
     setLoading(false)
+
+    if (props.onSuccess) {
+      props.onSuccess()
+    }
   }
 
   return (
-    <button className={props.buttonClass} onClick={callMethod}>
-      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
-    </button>
+    <Button customClassName={props.customClassName} onClick={callMethod} shouldDisplaySpinner={loading}>
+      {props.children}
+    </Button>
   )
 }
 

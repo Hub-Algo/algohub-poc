@@ -10,11 +10,11 @@ import Button from '../../../../common/button/Button'
 
 interface CampaignApplicationFormContactInfoViewProps {
   onClickNextButton: (data: CampaignApplicationFormData) => void
-  savedState?: NonNullable<CampaignApplicationContactInfo>
+  savedState?: CampaignApplicationContactInfo
 }
 
 function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState }: CampaignApplicationFormContactInfoViewProps) {
-  const [state, setState] = useState<CampaignApplicationContactInfo>(savedState ?? null)
+  const [state, setState] = useState<CampaignApplicationContactInfo | null>(savedState ?? null)
 
   const isDisabled = !state?.email || !state.name || !state.surname || !state.role
 

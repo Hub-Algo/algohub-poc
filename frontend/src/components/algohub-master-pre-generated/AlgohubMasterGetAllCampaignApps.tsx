@@ -2,6 +2,8 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { AlgohubMasterClient } from '../../contracts/AlgohubMaster'
+import Button from '../common/button/Button'
+import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
 
 /* Example usage
 <AlgohubMasterGetAllCampaignApps
@@ -12,10 +14,11 @@ import { AlgohubMasterClient } from '../../contracts/AlgohubMaster'
 />
 */
 type Props = {
-  buttonClass: string
+  buttonClass?: string
   buttonLoadingNode?: ReactNode
-  buttonNode: ReactNode
+  children: ReactNode
   typedClient: AlgohubMasterClient
+  onSuccess?: (response: AppCallTransactionResultOfType<bigint[]>) => void
 }
 
 const AlgohubMasterGetAllCampaignApps = (props: Props) => {
@@ -26,14 +29,18 @@ const AlgohubMasterGetAllCampaignApps = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling getAllCampaignApps`)
-    await props.typedClient.getAllCampaignApps({}, { sender })
+    const response = await props.typedClient.getAllCampaignApps({}, { sender })
     setLoading(false)
+
+    if (props.onSuccess) {
+      props.onSuccess(response)
+    }
   }
 
   return (
-    <button className={props.buttonClass} onClick={callMethod}>
-      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
-    </button>
+    <Button customClassName={props.buttonClass} onClick={callMethod} shouldDisplaySpinner={loading}>
+      {props.children}
+    </Button>
   )
 }
 
