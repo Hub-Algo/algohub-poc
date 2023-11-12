@@ -51,9 +51,9 @@ export async function deploy() {
   });
   // If app was just created fund the app account
   if (['create', 'replace'].includes(factory.operationPerformed)) {
-    algokit.transferAlgos(
+    await algokit.transferAlgos(
       {
-        amount: algokit.algos(1),
+        amount: algokit.algos(0.5),
         from: deployer,
         to: factory.appAddress,
       },
