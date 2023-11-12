@@ -1,4 +1,5 @@
 import * as algokit from '@algorandfoundation/algokit-utils';
+import { microAlgos } from '@algorandfoundation/algokit-utils';
 import { AlgohubMasterClient } from '../clients/AlgohubMaster';
 
 const ALGO_TO_VOTE_RATIO: number = 10;
@@ -38,6 +39,8 @@ export async function deploy() {
 
   const factory = await campaignFactory.deploy({
     onUpdate: 'append',
+    // onSchemaBreak: 'replace',
+    version: '0.0.1',
     createCall: (calls) =>
       calls.createApplication({
         algoToVoteRatio: ALGO_TO_VOTE_RATIO,
@@ -56,7 +59,15 @@ export async function deploy() {
       algod
     );
   }
-  await campaignFactory.bootstrap({ voteAsaTotal: TOTAL_VOTERS });
+  const bootsrapResult = await campaignFactory.bootstrap(
+    { voteAsaTotal: TOTAL_VOTERS },
+    {
+      sendParams: {
+        fee: microAlgos(3_000),
+      },
+    }
+  );
+  console.log('VoteASA -->', bootsrapResult.return);
 
   const method = 'getAllCampaignApps';
   const response = await campaignFactory.getAllCampaignApps({});

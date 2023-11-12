@@ -123,7 +123,13 @@
     },
     {
       "name": "claim",
-      "args": [],
+      "args": [
+        {
+          "name": "idoAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
       "desc": "",
       "returns": {
         "type": "void",
@@ -224,16 +230,7 @@
       "args": [],
       "desc": "",
       "returns": {
-        "type": "(uint64,uint64,uint64,uint64,uint64,uint64,string)",
-        "desc": ""
-      }
-    },
-    {
-      "name": "getVestingSchedule",
-      "args": [],
-      "desc": "",
-      "returns": {
-        "type": "(uint64)",
+        "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)",
         "desc": ""
       }
     }
