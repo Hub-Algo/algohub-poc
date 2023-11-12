@@ -438,60 +438,35 @@ describe('Algohub App', () => {
   // TODO: Do the voing tests here
 
   test('Campaign Contract - buy()', async () => {
-    try {
-      const buyCost = campaign.price * campaign.maxBuyCap;
-      const buyXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
-        from: sender1.addr,
-        to: campaignContractAddr,
-        amount: buyCost,
-        suggestedParams: await algokit.getTransactionParams(undefined, algod),
-        assetIndex: Number(usdcAsa),
-      });
+    const buyCost = campaign.price * campaign.maxBuyCap;
+    const buyXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
+      from: sender1.addr,
+      to: campaignContractAddr,
+      amount: buyCost,
+      suggestedParams: await algokit.getTransactionParams(undefined, algod),
+      assetIndex: Number(usdcAsa),
+    });
 
-      const usdcBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa)).do();
-      expect(BigInt(usdcBalanceBefore['asset-holding'].amount)).toBe(BigInt(1000));
+    const usdcBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa)).do();
+    expect(BigInt(usdcBalanceBefore['asset-holding'].amount)).toBe(BigInt(1000));
 
-      await algod.setBlockOffsetTimestamp(votingPeriod).do();
+    await algod.setBlockOffsetTimestamp(votingPeriod).do();
 
-      // const purchaseBoxPayment = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-      //   from: sender1.addr,
-      //   to: campaignContractAddr,
-      //   amount: 15_700,
-      //   suggestedParams: await algokit.getTransactionParams(undefined, algod),
-      // });
-
-      // await campaignContract.appClient.fundAppAccount(algokit.microAlgos(1_000_000));
-      // buyXferTxn
-      // algosdk.ABITupleType.from('(string)').decode(Buffer.from(`p${sender1.addr}`));
-      // const contactTupleType = algosdk.ABITupleType.from('(string)');
-      // const decodedAddressWithPrefix = contactTupleType.decode(Buffer.from(`p${sender1.addr}`)).valueOf();
-      // console.log(algosdk.decodeAddress(sender1.addr).publicKey);
-      // console.log(algosdk.encodeAddress(Buffer.from(sender1.addr)));
-      // algosdk.encodeObj({ x: `p${algosdk.encodeAddress(Buffer.from(sender1.addr))}` });
-      await campaignContract.buy(
-        { buyAsaXfer: buyXferTxn, buyAsa: usdcAsa, buyAmount: campaign.maxBuyCap },
-        {
-          sender: sender1,
-          boxes: [
-            // { appIndex: 0, name: new Uint8Array(Buffer.from(`p${algosdk.decodeAddress(sender1.addr).publicKey}`)) },
-            {
-              appIndex: 0,
-              name: new Uint8Array(
-                Buffer.from(`${Buffer.from('p').toString('hex')}${algosdk.encodeAddress(Buffer.from(sender1.addr))}`)
-              ),
-            },
-            // { appIndex: 0, name: new Uint8Array(Buffer.from(`p${algosdk.encodeAddress(Buffer.from(sender1.addr))}`)) },
-          ],
-          // boxes: [{ appIndex: 0, name: algosdk.decodeAddress(sender1.addr).publicKey }],
-        }
-      );
-      // const usdcBalanceAfter = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa)).do();
-      // expect(BigInt(usdcBalanceAfter['asset-holding'].amount)).toBe(
-      //   BigInt(usdcBalanceBefore['asset-holding'].amount) - BigInt(buyCost)
-      // );
-    } catch (e) {
-      console.log(e);
-      throw Error(e);
-    }
+    await campaignContract.buy(
+      { buyAsaXfer: buyXferTxn, buyAsa: usdcAsa, buyAmount: campaign.maxBuyCap },
+      {
+        sender: sender1,
+        boxes: [
+          {
+            appIndex: 0,
+            name: new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey])),
+          },
+        ],
+      }
+    );
+    const usdcBalanceAfter = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa)).do();
+    expect(BigInt(usdcBalanceAfter['asset-holding'].amount)).toBe(
+      BigInt(usdcBalanceBefore['asset-holding'].amount) - BigInt(buyCost)
+    );
   });
 });

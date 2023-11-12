@@ -155,11 +155,11 @@ export default class Campaign extends Contract {
       xferAsset: buyAsa,
     });
 
-    // if (this.purchases(this.txn.sender).exists) {
-    //   this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + buyAmount;
-    // } else {
-    //   this.purchases(this.txn.sender).value = buyAmount;
-    // }
+    if (this.purchases(this.txn.sender).exists) {
+      this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + buyAmount;
+    } else {
+      this.purchases(this.txn.sender).value = buyAmount;
+    }
   }
 
   claim(idoAsa: Asset): void {

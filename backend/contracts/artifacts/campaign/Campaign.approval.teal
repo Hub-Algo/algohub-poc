@@ -507,6 +507,47 @@ if1_end:
 	frame_dig -2 // buyAsa: asset
 	==
 	assert
+
+	// if2_condition
+	// contracts/campaign/campaign.algo.ts:158
+	// this.purchases(this.txn.sender).exists
+	byte 0x70 // "p"
+	txn Sender
+	concat
+	box_len
+	swap
+	pop
+	bz if2_else
+
+	// if2_consequent
+	// contracts/campaign/campaign.algo.ts:159
+	// this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + buyAmount
+	byte 0x70 // "p"
+	txn Sender
+	concat
+	byte 0x70 // "p"
+	txn Sender
+	concat
+	box_get
+	assert
+	btoi
+	frame_dig -3 // buyAmount: uint64
+	+
+	itob
+	box_put
+	b if2_end
+
+if2_else:
+	// contracts/campaign/campaign.algo.ts:161
+	// this.purchases(this.txn.sender).value = buyAmount
+	byte 0x70 // "p"
+	txn Sender
+	concat
+	frame_dig -3 // buyAmount: uint64
+	itob
+	box_put
+
+if2_end:
 	retsub
 
 // claim(asset)void
@@ -813,13 +854,13 @@ vote:
 	+
 	app_global_put
 
-	// if2_condition
+	// if3_condition
 	// contracts/campaign/campaign.algo.ts:227
 	// inFavor
 	frame_dig -1 // inFavor: bool
-	bz if2_end
+	bz if3_end
 
-	// if2_consequent
+	// if3_consequent
 	// contracts/campaign/campaign.algo.ts:228
 	// this.votesInFavor.value = this.votesInFavor.value + 1
 	byte 0x766f746573496e4661766f72 // "votesInFavor"
@@ -829,7 +870,7 @@ vote:
 	+
 	app_global_put
 
-if2_end:
+if3_end:
 	retsub
 
 // getVotes()(uint64,uint64)
