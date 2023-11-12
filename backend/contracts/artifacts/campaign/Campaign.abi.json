@@ -137,7 +137,7 @@
       }
     },
     {
-      "name": "withdrawPurchase",
+      "name": "withdrawInvestment",
       "args": [],
       "desc": "",
       "returns": {
@@ -186,6 +186,21 @@
       "desc": "",
       "returns": {
         "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getAccountTotalPurchases",
+      "args": [
+        {
+          "name": "account",
+          "type": "account",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
         "desc": ""
       }
     },

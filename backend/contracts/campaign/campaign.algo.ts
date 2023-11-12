@@ -43,13 +43,10 @@ export default class Campaign extends Contract {
   votesInFavor = GlobalStateKey<number>();
 
   inFavor = BoxMap<Address, boolean>({ prefix: 'v' });
-  // inFavor = GlobalStateMap<Address, boolean>({ maxKeys: 50, prefix: 'v' });
 
   purchases = BoxMap<Address, number>({ prefix: 'p' });
-  // purchases = GlobalStateMap<Address, number>({ maxKeys: 50, prefix: 'p' });
 
   claimedAmount = BoxMap<Address, number>({ prefix: 'c' });
-  // claimedAmount = GlobalStateMap<Address, number>({ maxKeys: 50, prefix: 'c' });
 
   // eslint-disable-next-line no-unused-vars
   createApplication(): void {
@@ -70,7 +67,8 @@ export default class Campaign extends Contract {
     return this.isApprovedCampaign.value;
   }
 
-  private isHypelisted(): boolean {
+  // eslint-disable-next-line no-unused-vars
+  private isHypelisted(account: Account): boolean {
     // Check if caller is hypelisted
     return true;
   }
@@ -81,6 +79,12 @@ export default class Campaign extends Contract {
       xferAsset: asaToOptIn,
       assetAmount: 0,
     });
+  }
+
+  private convertToAsaAmount(amount: number, asaToCovertTo: Asset): number {
+    if (asaToCovertTo === this.buyAsaId.value) return amount / this.campaign.value.price;
+    if (asaToCovertTo === this.idoAsaId.value) return amount * this.campaign.value.price;
+    return 0;
   }
 
   createCampaign(
@@ -94,14 +98,18 @@ export default class Campaign extends Contract {
     hardCap: number,
     votingPeriod: number,
     duration: number,
-    // vestingSchedule: number,
+    // vestingSchedule: VestingDetails[],
     metadataUrl: string
   ): void {
     assert(!this.campaign.exists);
     this.admin.value = adminAccount;
+
     this.votersAsaId.value = votersAsa;
     this.idoAsaId.value = idoAsa;
     this.buyAsaId.value = buyAsa;
+    this.optInToAsa(idoAsa);
+    this.optInToAsa(buyAsa);
+
     this.campaign.value = {
       price: price,
       maxBuyCap: maxBuyCap,
@@ -113,12 +121,8 @@ export default class Campaign extends Contract {
       metadataUrl: metadataUrl,
     };
 
-    this.optInToAsa(idoAsa);
-    this.optInToAsa(buyAsa);
     // TODO: Set the vesting schedule logic
-    // this.vestingSchedule.value = {
-    //   x: vestingSchedule,
-    // };
+    // this.vestingSchedule.value = vestingSchedule;
   }
 
   depositIdoAsa(idoXfer: AssetTransferTxn, idoAsa: Asset): void {
@@ -134,26 +138,31 @@ export default class Campaign extends Contract {
     });
   }
 
-  // purchaseBoxPayment: PayTxn,
   // eslint-disable-next-line no-unused-vars
   buy(buyAsaXfer: AssetTransferTxn, buyAsa: Asset, buyAmount: number): void {
     assert(this.campaign.exists);
     assert(this.isApproved());
-    // TODO: Allow hypelisted addresses to buy before start time
-    // assert(this.campaign.value.startTime < globals.latestTimestamp);
-    // assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // Check amount to buy is not more than max buy cap
+    assert(this.campaign.value.maxBuyCap >= buyAmount);
+    // check that hardcap is not reached
+    assert(this.campaign.value.hardCap >= this.campaign.value.purchasedAmount + buyAmount);
+    // Allow hypelisted addresses to buy before start time
+    if (!this.isHypelisted(this.txn.sender)) {
+      assert(this.campaign.value.startTime < globals.latestTimestamp);
+    }
+    // check campaing is not finished
+    assert(this.campaign.value.endTime > globals.latestTimestamp);
     if (!this.isApprovedCampaign.value) {
       this.isApprovedCampaign.value = true;
     }
-    // TODO: Check if there are tokens to be bought, i.e. hardcap is not reached
-    const buyAsaToTransfer = buyAmount * this.campaign.value.price;
-    // assert(this.campaign.value.maxBuyCap >= buyAsaToTransfer);
+    const buyAsaToTransfer = buyAmount / this.campaign.value.price;
     verifyTxn(buyAsaXfer, {
       assetAmount: buyAsaToTransfer,
       assetReceiver: this.app.address,
       sender: this.txn.sender,
       xferAsset: buyAsa,
     });
+    this.campaign.value.purchasedAmount = this.campaign.value.purchasedAmount + buyAmount;
 
     if (this.purchases(this.txn.sender).exists) {
       this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + buyAmount;
@@ -169,7 +178,7 @@ export default class Campaign extends Contract {
     assert(this.campaign.value.endTime < globals.latestTimestamp);
     assert(this.purchases(this.txn.sender).exists);
     // assert(this.claimedAmount(this.txn.sender).value === 0);
-    const amountForClaim = this.purchases(this.txn.sender).value * this.campaign.value.price;
+    const totalAmountToClaim = this.purchases(this.txn.sender).value / this.campaign.value.price;
 
     // TODO: Send whatever they are eligible to based on vesting schedule
     sendAssetTransfer({
@@ -178,10 +187,15 @@ export default class Campaign extends Contract {
       xferAsset: idoAsa,
       assetAmount: amountForClaim,
     });
-    // this.claimedAmount(this.txn.sender).value = amountForClaim;
+
+    if (this.claimedAmount(this.txn.sender).exists) {
+      this.claimedAmount(this.txn.sender).value = this.claimedAmount(this.txn.sender).value + totalAmountToClaim;
+    } else {
+      this.purchases(this.txn.sender).value = totalAmountToClaim;
+    }
   }
 
-  withdrawPurchase(): void {
+  withdrawInvestment(): void {
     assert(this.campaign.exists);
     assert(!this.isApproved());
     assert(this.campaign.value.startTime > globals.latestTimestamp);
@@ -227,6 +241,10 @@ export default class Campaign extends Contract {
     if (inFavor) {
       this.votesInFavor.value = this.votesInFavor.value + 1;
     }
+  }
+
+  getAccountTotalPurchases(account: Account): number {
+    return this.purchases(account).value;
   }
 
   getVotes(): [number, number] {

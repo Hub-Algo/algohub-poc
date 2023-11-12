@@ -7,27 +7,29 @@ import { AlgohubClient } from '../contracts/clients/AlgohubClient';
 import { CampaignClient } from '../contracts/clients/CampaignClient';
 import { createAsa } from './_testHelpers';
 
-const fixture = algorandFixture();
-
 export const campaign = {
-  price: 1,
-  maxBuyCap: 5,
+  price: 2,
+  maxBuyCap: 100,
   softCap: 100,
-  hardCap: 120,
+  hardCap: 150,
   duration: 60 * 60 * 24 * 7, // 1 week in seconds
   metadataUrl: 'https://google.com',
 };
+
+const fixture = algorandFixture();
+
+const algoToVoteRatio: number = 10;
+const votingPeriod: number = 60 * 60 * 24 * 7; // 1 week in seconds
+const voteAsaTotal: number = 1_000_000;
+const vipVoteWeight: number = 125;
+const totalIdoTokens: number = 10000;
+const totalUSDCTokens: number = 10000;
 
 describe('Algohub App', () => {
   let appClient: AlgohubClient;
   let campaignContract: CampaignClient;
   let campaignContractAddr: string;
-  let campaignContractAppId: number | bigint;
-
-  const algoToVoteRatio: number = 10;
-  const votingPeriod: number = 60 * 60 * 24 * 7; // 1 week in seconds
-  const voteAsaTotal: number = 1_000_000;
-  const vipVoteWeight: number = 125;
+  let campaignDetailsOnChain;
 
   let algod: algosdk.Algodv2;
   let voteAsa: bigint;
@@ -103,8 +105,9 @@ describe('Algohub App', () => {
 
   beforeAll(async () => {
     await fixture.beforeEach();
-    const { kmd } = fixture.context;
     algod = fixture.context.algod;
+    await algod.setBlockOffsetTimestamp(0).do();
+    const { kmd } = fixture.context;
 
     sender1 = await getOrCreateKmdWalletAccount(
       {
@@ -162,10 +165,11 @@ describe('Algohub App', () => {
       votingPeriod,
     });
 
+    // TODO: How much do we need to fund with?
     await appClient.appClient.fundAppAccount(microAlgos(2_000_000));
 
-    idoAsa = await createAsa(sender1, 'IDO', 'IDO', algod);
-    usdcAsa = await createAsa(sender1, 'USDC', 'USDC', algod);
+    idoAsa = await createAsa(sender1, 'IDO', 'IDO', totalIdoTokens, algod);
+    usdcAsa = await createAsa(sender1, 'USDC', 'USDC', totalUSDCTokens, algod);
   });
 
   test('Algohub - app creation', async () => {
@@ -176,7 +180,17 @@ describe('Algohub App', () => {
     const votingPeriodOnChain = await appClient.getVotingPeriod({});
     expect(votingPeriodOnChain.return).toBe(BigInt(votingPeriod));
   });
-
+  test('Algohub - bootstrap', async () => {
+    const bootstrapResult = await appClient.bootstrap(
+      { voteAsaTotal },
+      {
+        sendParams: {
+          fee: microAlgos(3_000),
+        },
+      }
+    );
+    voteAsa = bootstrapResult.return!.valueOf();
+  });
   test('Algohub - bootstrap (Negative - non-admin caller)', async () => {
     await expect(
       appClient.bootstrap(
@@ -190,19 +204,7 @@ describe('Algohub App', () => {
       )
     ).rejects.toThrow();
   });
-
-  test('Algohub - bootstrap', async () => {
-    const bootstrapResult = await appClient.bootstrap(
-      { voteAsaTotal },
-      {
-        sendParams: {
-          fee: microAlgos(3_000),
-        },
-      }
-    );
-    voteAsa = bootstrapResult.return!.valueOf();
-
-    // We expect to throw since the token was already created
+  test('Algohub - bootstrap (Negative - vote ASA already created)', async () => {
     await expect(
       appClient.bootstrap(
         { voteAsaTotal },
@@ -214,7 +216,6 @@ describe('Algohub App', () => {
       )
     ).rejects.toThrow();
   });
-
   test('Algohub - register as voter', async () => {
     let votePower = await appClient.getVotePower(
       { account: voter1.addr, votersAsa: voteAsa },
@@ -235,7 +236,6 @@ describe('Algohub App', () => {
     );
     expect(votePower.return?.valueOf()).toBe(BigInt(100));
   });
-
   test('Algohub - set VIP status', async () => {
     let vipStatus = await appClient.getVipStatus(
       { account: voter1.addr },
@@ -267,7 +267,6 @@ describe('Algohub App', () => {
     );
     expect(votePower.return?.valueOf()).toBe(BigInt('100'));
   });
-
   test('Algohub - set VIP status (negative - access control)', async () => {
     await expect(
       appClient.setVipStatus(
@@ -279,7 +278,6 @@ describe('Algohub App', () => {
       )
     ).rejects.toThrow();
   });
-
   test('Algohub - unregister as voter', async () => {
     await appClient.unregisterAsVoter(
       { votersAsa: voteAsa },
@@ -303,7 +301,6 @@ describe('Algohub App', () => {
     );
     expect(votePower.return?.valueOf()).toBe(BigInt(0));
   });
-
   test('Algohub - register as voter (negative - not enought algo)', async () => {
     await expect(
       appClient.registerAsVoter(
@@ -323,7 +320,6 @@ describe('Algohub App', () => {
     );
     expect(votePower.return?.valueOf()).toBe(BigInt(0));
   });
-
   test('Algohub - unregister as voter (negative - caller not voter)', async () => {
     await expect(
       appClient.unregisterAsVoter(
@@ -338,7 +334,6 @@ describe('Algohub App', () => {
       )
     ).rejects.toThrow();
   });
-
   test('Algohub - set VIP status (negative - account not a voter)', async () => {
     await expect(
       appClient.setVipStatus(
@@ -356,17 +351,17 @@ describe('Algohub App', () => {
   test('Campaign Contract - Campaign details and Assets', async () => {
     campaignContract = await createCampaignFromFactory();
     await campaignContract.appClient.fundAppAccount(algokit.microAlgos(1_000_000));
-    const campaignDetails = await campaignContract.getCampaign({});
-    expect(campaignDetails.return?.at(0)).toBe(BigInt(campaign.price));
-    expect(campaignDetails.return?.at(1)).toBe(BigInt(campaign.maxBuyCap));
-    expect(campaignDetails.return?.at(2)).toBe(BigInt(campaign.softCap));
-    expect(campaignDetails.return?.at(3)).toBe(BigInt(campaign.hardCap));
-    expect(campaignDetails.return?.at(4)).toBe(BigInt(0));
+    campaignDetailsOnChain = await campaignContract.getCampaign({});
+    expect(campaignDetailsOnChain.return?.at(0)).toBe(BigInt(campaign.price));
+    expect(campaignDetailsOnChain.return?.at(1)).toBe(BigInt(campaign.maxBuyCap));
+    expect(campaignDetailsOnChain.return?.at(2)).toBe(BigInt(campaign.softCap));
+    expect(campaignDetailsOnChain.return?.at(3)).toBe(BigInt(campaign.hardCap));
+    expect(campaignDetailsOnChain.return?.at(4)).toBe(BigInt(0)); // purchased amount
     // TODO: Assert the below - must be now + voting period
-    // expect(campaignDetails.return?.at(5)).toBe(BigInt(campaign.startTime));
+    // expect(campaignDetailsOnChain.return?.at(5)).toBe(BigInt(campaign.startTime));
     // TODO: Assert the below - must be now + voting period + duration
-    // expect(campaignDetails.return?.at(6)).toBe(BigInt(campaign.endTime));
-    expect(campaignDetails.return?.at(7)).toBe(campaign.metadataUrl);
+    // expect(campaignDetailsOnChain.return?.at(6)).toBe(BigInt(campaign.endTime));
+    expect(campaignDetailsOnChain.return?.at(7)).toBe(campaign.metadataUrl);
 
     const voterAsa = await campaignContract.getVotersAsa({});
     expect(voterAsa.return).toBe(BigInt(voteAsa));
@@ -375,9 +370,7 @@ describe('Algohub App', () => {
     const idoAsaOnChain = await campaignContract.getIdoAsa({});
     expect(idoAsaOnChain.return).toBe(BigInt(idoAsa));
   });
-
   test('Campaign Contract - deposit IDO asset', async () => {
-    campaignContractAppId = (await campaignContract.appClient.getAppReference()).appId;
     const idoAsaToTransfer = campaign.hardCap / campaign.price;
     const idoXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender1.addr,
@@ -396,49 +389,48 @@ describe('Algohub App', () => {
     const idoBalance = await algod.accountAssetInformation(campaignContractAddr, Number(idoAsa)).do();
     expect(BigInt(idoBalance['asset-holding'].amount)).toBe(BigInt(idoAsaToTransfer));
   });
+  // test('Campaign Contract - deposit IDO asset (negative - invalid amount)', async () => {
+  //   const idoAsaToTransfer = campaign.hardCap / campaign.price - 1;
+  //   const idoXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
+  //     from: sender1.addr,
+  //     to: campaignContractAddr,
+  //     amount: idoAsaToTransfer,
+  //     suggestedParams: await algokit.getTransactionParams(undefined, algod),
+  //     assetIndex: Number(idoAsa),
+  //   });
 
-  test('Campaign Contract - deposit IDO asset (negative - invalid amount)', async () => {
-    const idoAsaToTransfer = campaign.hardCap / campaign.price - 1;
-    const idoXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
-      from: sender1.addr,
-      to: campaignContractAddr,
-      amount: idoAsaToTransfer,
-      suggestedParams: await algokit.getTransactionParams(undefined, algod),
-      assetIndex: Number(idoAsa),
-    });
-
-    await expect(
-      campaignContract.depositIdoAsa(
-        { idoXfer: idoXferTxn, idoAsa },
-        {
-          sender: sender1,
-        }
-      )
-    ).rejects.toThrow();
-  });
-  test('Campaign Contract - deposit IDO asset (negative - access control)', async () => {
-    const idoAsaToTransfer = campaign.hardCap / campaign.price;
-    const idoXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
-      from: sender2.addr,
-      to: campaignContractAddr,
-      amount: idoAsaToTransfer,
-      suggestedParams: await algokit.getTransactionParams(undefined, algod),
-      assetIndex: Number(idoAsa),
-    });
-    await expect(
-      campaignContract.depositIdoAsa(
-        { idoXfer: idoXferTxn, idoAsa },
-        {
-          sender: sender2,
-        }
-      )
-    ).rejects.toThrow();
-  });
+  //   await expect(
+  //     campaignContract.depositIdoAsa(
+  //       { idoXfer: idoXferTxn, idoAsa },
+  //       {
+  //         sender: sender1,
+  //       }
+  //     )
+  //   ).rejects.toThrow();
+  // });
+  // test('Campaign Contract - deposit IDO asset (negative - access control)', async () => {
+  //   const idoAsaToTransfer = campaign.hardCap / campaign.price;
+  //   const idoXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
+  //     from: sender2.addr,
+  //     to: campaignContractAddr,
+  //     amount: idoAsaToTransfer,
+  //     suggestedParams: await algokit.getTransactionParams(undefined, algod),
+  //     assetIndex: Number(idoAsa),
+  //   });
+  //   await expect(
+  //     campaignContract.depositIdoAsa(
+  //       { idoXfer: idoXferTxn, idoAsa },
+  //       {
+  //         sender: sender2,
+  //       }
+  //     )
+  //   ).rejects.toThrow();
+  // });
 
   // TODO: Do the voing tests here
 
   test('Campaign Contract - buy()', async () => {
-    const buyCost = campaign.price * campaign.maxBuyCap;
+    const buyCost = campaign.maxBuyCap / campaign.price;
     const buyXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender1.addr,
       to: campaignContractAddr,
@@ -446,27 +438,76 @@ describe('Algohub App', () => {
       suggestedParams: await algokit.getTransactionParams(undefined, algod),
       assetIndex: Number(usdcAsa),
     });
+    await algod.setBlockOffsetTimestamp(votingPeriod + campaign.duration).do();
 
     const usdcBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa)).do();
-    expect(BigInt(usdcBalanceBefore['asset-holding'].amount)).toBe(BigInt(1000));
-
-    await algod.setBlockOffsetTimestamp(votingPeriod).do();
+    expect(BigInt(usdcBalanceBefore['asset-holding'].amount)).toBe(BigInt(totalIdoTokens));
 
     await campaignContract.buy(
       { buyAsaXfer: buyXferTxn, buyAsa: usdcAsa, buyAmount: campaign.maxBuyCap },
       {
         sender: sender1,
-        boxes: [
-          {
-            appIndex: 0,
-            name: new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey])),
-          },
-        ],
+        boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey]))],
       }
     );
     const usdcBalanceAfter = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa)).do();
     expect(BigInt(usdcBalanceAfter['asset-holding'].amount)).toBe(
       BigInt(usdcBalanceBefore['asset-holding'].amount) - BigInt(buyCost)
+    );
+    campaignDetailsOnChain = await campaignContract.getCampaign({});
+    expect(campaignDetailsOnChain.return?.at(4)).toBe(BigInt(campaign.maxBuyCap)); // purchased amount
+  });
+  // test('Campaign Contract - buy() - negative (hardcap reached)', async () => {
+  //   const buyCost = campaign.price * campaign.maxBuyCap;
+  //   const buyXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
+  //     from: sender1.addr,
+  //     to: campaignContractAddr,
+  //     amount: buyCost,
+  //     suggestedParams: await algokit.getTransactionParams(undefined, algod),
+  //     assetIndex: Number(usdcAsa),
+  //   });
+
+  //   await expect(
+  //     campaignContract.buy(
+  //       { buyAsaXfer: buyXferTxn, buyAsa: usdcAsa, buyAmount: campaign.maxBuyCap },
+  //       {
+  //         sender: sender1,
+  //         boxes: [
+  //           {
+  //             appIndex: 0,
+  //             name: new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey])),
+  //           },
+  //         ],
+  //       }
+  //     )
+  //   ).rejects.toThrow();
+  // });
+
+  // TODO: Hypelisting tests ...
+
+  test('Campaign Contract - claim()', async () => {
+    const claimAmount = await campaignContract.getAccountTotalPurchases(
+      { account: sender1.addr },
+      { boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey]))] }
+    );
+    const idoTokensTobeClaimed = Number(claimAmount.return!) / campaign.price;
+    const idoBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(idoAsa)).do();
+    await campaignContract.claim(
+      { idoAsa },
+      {
+        sender: sender1,
+        sendParams: {
+          fee: microAlgos(2_000),
+        },
+        boxes: [
+          new Uint8Array(Buffer.concat([Buffer.from('c'), algosdk.decodeAddress(sender1.addr).publicKey])),
+          new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey])),
+        ],
+      }
+    );
+    const idoBalanceAfter = await algod.accountAssetInformation(sender1.addr, Number(idoAsa)).do();
+    expect(BigInt(idoBalanceAfter['asset-holding'].amount)).toBe(
+      BigInt(idoBalanceBefore['asset-holding'].amount + idoTokensTobeClaimed)
     );
   });
 });

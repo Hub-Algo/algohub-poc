@@ -21,7 +21,13 @@ export const optInAsa = async (account: algosdk.Account, assetIndex: number, alg
   }
 };
 
-export const createAsa = async (creator: algosdk.Account, name: string, unit: string, algod: algosdk.Algodv2) => {
+export const createAsa = async (
+  creator: algosdk.Account,
+  name: string,
+  unit: string,
+  total: number,
+  algod: algosdk.Algodv2
+) => {
   try {
     const suggestedParams = await algod.getTransactionParams().do();
     const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
@@ -35,7 +41,7 @@ export const createAsa = async (creator: algosdk.Account, name: string, unit: st
       freeze: creator.addr,
       clawback: creator.addr,
       assetURL: 'http://path/to/my/asset/details',
-      total: 1000,
+      total,
       decimals: 0,
     });
 
