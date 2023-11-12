@@ -3,7 +3,7 @@ import { algorandFixture } from '@algorandfoundation/algokit-utils/testing';
 import { algos, getOrCreateKmdWalletAccount, microAlgos } from '@algorandfoundation/algokit-utils/.';
 import algosdk, { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk';
 import * as algokit from '@algorandfoundation/algokit-utils';
-import { AlgohubMasterClient } from '../contracts/clients/AlgohubMaster';
+import { AlgohubClient } from '../contracts/clients/AlgohubClient';
 import { CampaignClient } from '../contracts/clients/CampaignClient';
 import { createAsa } from './_testHelpers';
 
@@ -19,7 +19,7 @@ export const campaign = {
 };
 
 describe('Algohub App', () => {
-  let appClient: AlgohubMasterClient;
+  let appClient: AlgohubClient;
   let campaignContract: CampaignClient;
   let campaignContractAddr: string;
   let campaignContractAppId: number | bigint;
@@ -147,7 +147,7 @@ describe('Algohub App', () => {
       kmd
     );
 
-    appClient = new AlgohubMasterClient(
+    appClient = new AlgohubClient(
       {
         sender: deployer,
         resolveBy: 'id',

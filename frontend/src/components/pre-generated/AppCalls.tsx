@@ -4,7 +4,7 @@ import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
 import { useWallet } from '@txnlab/use-wallet'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
-import { AlgohubMasterClient } from '../../contracts/AlgohubMaster'
+import { AlgohubClient } from '../../contracts/Algohub'
 import { CampaignClient } from '../../contracts/CampaignClient'
 import { getAlgodConfigFromViteEnvironment, getIndexerConfigFromViteEnvironment } from '../../core/util/network/getAlgoClientConfigs'
 
@@ -45,7 +45,7 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
     } as AppDetails
 
     const campaignClient = new CampaignClient(appDetails, algodClient)
-    const algohubClient = new AlgohubMasterClient(appDetails, algodClient)
+    const algohubClient = new AlgohubClient(appDetails, algodClient)
 
     // Please note, in typical production scenarios,
     // you wouldn't want to use deploy directly from your frontend.
