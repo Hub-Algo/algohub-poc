@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { CampaignClient } from '../../contracts/CampaignClient'
+import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
 <CampaignClaim
@@ -9,13 +9,17 @@ import { CampaignClient } from '../../contracts/CampaignClient'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call claim"
   typedClient={typedClient}
+  idoAsa={idoAsa}
 />
 */
+type CampaignClaimArgs = Campaign['methods']['claim(asset)void']['argsObj']
+
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
+  idoAsa: CampaignClaimArgs['idoAsa']
 }
 
 const CampaignClaim = (props: Props) => {
@@ -26,7 +30,12 @@ const CampaignClaim = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling claim`)
-    await props.typedClient.claim({}, { sender })
+    await props.typedClient.claim(
+      {
+        idoAsa: props.idoAsa,
+      },
+      { sender },
+    )
     setLoading(false)
   }
 
