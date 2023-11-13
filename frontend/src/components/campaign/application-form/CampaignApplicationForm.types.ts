@@ -15,20 +15,20 @@ export type CampaignApplicationContactInfo = {
   discord?: string
   twitter?: string
   telegram?: string
-} | null
+}
 
 export type CampaignApplicationTeamInfo = {
   employeeNumber: number
   founder: string
   cofounder?: string
-} | null
+}
 
 export type CampaignApplicationCompanyRegistrationInfo = {
   registeredCompanyName: string
   dateOfRegistration: string
   countryOfRegistration: string
   chamberOfCommerceRegistrationNumber: number
-} | null
+}
 
 export type CampaignApplicationProductOverview = {
   productName: string
@@ -67,13 +67,13 @@ export type CampaignApplicationFundRaisingGoal = {
 export type CampaignApplicationFormData =
   | ({
       type: CampaignApplicationFormView.ContactInfo
-    } & NonNullable<CampaignApplicationContactInfo>)
+    } & CampaignApplicationContactInfo)
   | ({
       type: CampaignApplicationFormView.TeamInfo
-    } & NonNullable<CampaignApplicationTeamInfo>)
+    } & CampaignApplicationTeamInfo)
   | ({
       type: CampaignApplicationFormView.CompanyRegistrationInfo
-    } & NonNullable<CampaignApplicationCompanyRegistrationInfo>)
+    } & CampaignApplicationCompanyRegistrationInfo)
   | ({ type: CampaignApplicationFormView.ProductOverview } & CampaignApplicationProductOverview)
   | ({ type: CampaignApplicationFormView.ProductDocumentation } & CampaignApplicationProductDocumentation)
   | ({ type: CampaignApplicationFormView.FundraisingGoal } & CampaignApplicationFundRaisingGoal)

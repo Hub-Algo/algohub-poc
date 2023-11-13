@@ -1,4 +1,3 @@
-import * as algokit from '@algorandfoundation/algokit-utils'
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
 import { useWallet } from '@txnlab/use-wallet'
@@ -6,7 +5,9 @@ import { useSnackbar } from 'notistack'
 import { useState } from 'react'
 import { AlgohubClient } from '../../contracts/AlgohubClient'
 import { CampaignClient } from '../../contracts/CampaignClient'
-import { getAlgodConfigFromViteEnvironment, getIndexerConfigFromViteEnvironment } from '../../core/util/network/getAlgoClientConfigs'
+import algod from '../../core/algosdk/AlgodManager'
+import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
+import AlgohubGetTotalVoters from '../algohub-pre-generated/AlgohubGetTotalVoters'
 
 interface AppCallsInterface {
   openModal: boolean
@@ -17,35 +18,26 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [contractInput, setContractInput] = useState<string>('')
 
-  const algodConfig = getAlgodConfigFromViteEnvironment()
-  const algodClient = algokit.getAlgoClient({
-    server: algodConfig.server,
-    port: algodConfig.port,
-    token: algodConfig.token,
-  })
-
-  const indexerConfig = getIndexerConfigFromViteEnvironment()
-  const indexer = algokit.getAlgoIndexerClient({
-    server: indexerConfig.server,
-    port: indexerConfig.port,
-    token: indexerConfig.token,
-  })
-
-  const { enqueueSnackbar } = useSnackbar()
   const { signer, activeAddress } = useWallet()
 
+  const appDetails = {
+    resolveBy: 'id',
+    id: 478556883,
+    sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+    creatorAddress: activeAddress,
+    findExistingUsing: algod.indexer,
+  } as AppDetails
+
+  const campaignClient = new CampaignClient(appDetails, algod.client)
+  const algohubClient = new AlgohubClient(appDetails, algod.client)
+
+  const { enqueueSnackbar } = useSnackbar()
+
+  const [response, setResponse] = useState<Error | AppCallTransactionResultOfType<bigint[]>>()
+
+  console.log(response)
   const sendAppCall = async () => {
     setLoading(true)
-
-    const appDetails = {
-      resolveBy: 'creatorAndName',
-      sender: { signer, addr: activeAddress } as TransactionSignerAccount,
-      creatorAddress: activeAddress,
-      findExistingUsing: indexer,
-    } as AppDetails
-
-    const campaignClient = new CampaignClient(appDetails, algodClient)
-    const algohubClient = new AlgohubClient(appDetails, algodClient)
 
     // Please note, in typical production scenarios,
     // you wouldn't want to use deploy directly from your frontend.
@@ -72,13 +64,14 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
     })
 
     const algohubResponse = await algohubClient.getAllCampaignApps({}).catch((e: Error) => {
-      enqueueSnackbar(`Error calling the contract: ${e.message}`, { variant: 'error' })
+      console.log(`Error calling the contract: ${e.message}`, { variant: 'error' })
       setLoading(false)
-      return
+      return e
     })
 
+    setResponse(algohubResponse)
     enqueueSnackbar(`Response from the campaign contract. Campaign Details: ${campaignResponse?.return}`, { variant: 'success' })
-    enqueueSnackbar(`Response from the algohub master contract. All Campaigns: ${algohubResponse?.return}`, { variant: 'success' })
+    console.log(`Response from the algohub master contract. All Campaigns: ${algohubResponse}`, { variant: 'success' })
     setLoading(false)
   }
 
@@ -96,8 +89,15 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
             setContractInput(e.target.value)
           }}
         />
+        <AlgohubGetTotalVoters
+          buttonClass="btn m-2"
+          buttonLoadingNode={<span className="loading loading-spinner" />}
+          buttonNode="Call getTotalVoters"
+          typedClient={algohubClient}
+        />
+
         <div className="modal-action ">
-          <button className="btn" onClick={() => setModalState(!openModal)}>
+          <button className="btn" onClick={() => setModalState(false)}>
             Close
           </button>
           <button className={`btn`} onClick={sendAppCall}>

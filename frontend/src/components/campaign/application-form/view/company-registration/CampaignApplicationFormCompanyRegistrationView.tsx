@@ -11,7 +11,7 @@ import Button from '../../../../common/button/Button'
 interface CampaignApplicationFormCompanyRegistrationViewProps {
   onClickNextButton: (data: CampaignApplicationFormData) => void
   onClickPrevButton: (view: CampaignApplicationFormView) => void
-  savedState?: NonNullable<CampaignApplicationCompanyRegistrationInfo>
+  savedState?: CampaignApplicationCompanyRegistrationInfo
 }
 
 function CampaignApplicationFormCompanyRegistrationView({
@@ -19,7 +19,7 @@ function CampaignApplicationFormCompanyRegistrationView({
   onClickPrevButton,
   savedState,
 }: CampaignApplicationFormCompanyRegistrationViewProps) {
-  const [state, setState] = useState<CampaignApplicationCompanyRegistrationInfo>(savedState ?? null)
+  const [state, setState] = useState<CampaignApplicationCompanyRegistrationInfo | null>(savedState ?? null)
 
   const isDisabled =
     !state?.chamberOfCommerceRegistrationNumber || !state.countryOfRegistration || !state.dateOfRegistration || !state.registeredCompanyName

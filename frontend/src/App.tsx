@@ -1,7 +1,7 @@
 import { DeflyWalletConnect } from '@blockshake/defly-connect'
 import { DaffiWalletConnect } from '@daffiwallet/connect'
 import { PeraWalletConnect } from '@perawallet/connect'
-import { PROVIDER_ID, ProvidersArray, WalletProvider, useInitializeProviders, useWallet } from '@txnlab/use-wallet'
+import { Account, PROVIDER_ID, ProvidersArray, WalletProvider, useInitializeProviders, useWallet } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
@@ -21,14 +21,31 @@ import { fetchAllCampaigns } from './services/campaignServices'
 import CampaignApplicationForm from './components/campaign/application-form/CampaignApplicationForm'
 import { userServices } from './services/userServices'
 import AllCampaigns from './pages/AllCampaigns'
+import algod from './core/algosdk/AlgodManager'
+import { AlgohubClient } from './contracts/AlgohubClient'
+import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
+import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
+
+export interface AppState {
+  activeAccount?: Account | null
+  campaignList: CampaignInterface[]
+  userData?: UserInterface
+  algohubClient: AlgohubClient | null
+}
 
 export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
   const [userData, setUserData] = useState<UserInterface>()
+  const { activeAccount, signer, activeAddress } = useWallet()
 
+  const algohubClientAppDetails: AppDetails = {
+    resolveBy: 'id',
+    id: 478556883,
+    sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+  }
+
+  const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : null
   const userService = new userServices()
-
-  const { activeAccount } = useWallet()
 
   let providersArray: ProvidersArray
 
@@ -104,7 +121,7 @@ export default function App() {
       element: (
         <>
           <NavBar userData={userData} resetUserData={resetUserData} />
-          <Outlet context={{ activeAccount, campaignList, userData }} />
+          <Outlet context={{ activeAccount, campaignList, userData, algohubClient } satisfies AppState} />
           <Footer />
         </>
       ),

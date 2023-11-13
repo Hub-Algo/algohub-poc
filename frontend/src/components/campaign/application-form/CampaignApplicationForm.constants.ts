@@ -10,19 +10,19 @@ import {
 
 const CAMPAIGN_APPLICATION_FORM_STATES = Object.values(CampaignApplicationFormView)
 
-const INITIAL_CAMPAIGN_APPLICATION_CONTACT_INFO: NonNullable<CampaignApplicationContactInfo> = {
+const INITIAL_CAMPAIGN_APPLICATION_CONTACT_INFO: CampaignApplicationContactInfo = {
   name: '',
   surname: '',
   role: '',
   email: '',
 }
 
-const INITIAL_CAMPAIGN_APPLICATION_TEAM_INFO: NonNullable<CampaignApplicationTeamInfo> = {
+const INITIAL_CAMPAIGN_APPLICATION_TEAM_INFO: CampaignApplicationTeamInfo = {
   employeeNumber: 0,
   founder: '',
 }
 
-const INITIAL_CAMPAIGN_APPLICATION_COMPANY_REGISTRATION_INFO: NonNullable<CampaignApplicationCompanyRegistrationInfo> = {
+const INITIAL_CAMPAIGN_APPLICATION_COMPANY_REGISTRATION_INFO: CampaignApplicationCompanyRegistrationInfo = {
   registeredCompanyName: '',
   dateOfRegistration: '',
   countryOfRegistration: '',

@@ -1,3 +1,5 @@
+import './_button.scss'
+
 import classNames from 'classnames'
 
 export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled' | 'className'> & {
