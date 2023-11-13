@@ -10,26 +10,11 @@ import CampaignApplicationFormFundRaisingGoal from './view/fund-raising-goal/Cam
 import { Link } from 'react-router-dom'
 import routes from '../../../core/routes'
 import PageContainer from '../../PageContainer'
-import algod from '../../../core/algosdk/AlgodManager'
-import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
-import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
-import { useWallet } from '@txnlab/use-wallet'
-import { AlgohubClient } from '../../../contracts/AlgohubClient'
-import AlgohubGetAllCampaignApps from '../../algohub-pre-generated/AlgohubGetAllCampaignApps'
+import useAppContext from '../../../core/util/useAppContext'
 import AlgohubCreateCampaign from '../../algohub-pre-generated/AlgohubCreateCampaign'
 
 function CampaignApplicationForm() {
-  const { activeAddress, signer } = useWallet()
-  const appDetails = {
-    resolveBy: 'id',
-    id: 478556883,
-    sender: { signer, addr: activeAddress } as TransactionSignerAccount,
-    creatorAddress: activeAddress,
-    findExistingUsing: algod.indexer,
-  } as AppDetails
-
-  const algohubClient = new AlgohubClient(appDetails, algod.client)
-
+  const state = useAppContext()
   const [view, setView] = useState<CampaignApplicationFormView>(CampaignApplicationFormView.ContactInfo)
   const [formData, setFormData] = useState({})
   const [hasSubmitted, setHasSubmitted] = useState(false)
@@ -45,9 +30,6 @@ function CampaignApplicationForm() {
         <div className={'flex flex-col items-center justify-center text-green-600 font-semibold mt-32 gap-8'}>
           <p>{'Your campaign application has been submitted!'}</p>
 
-          <AlgohubGetAllCampaignApps onSuccess={(res) => console.log(res)} typedClient={algohubClient}>
-            {'Get all apps'}
-          </AlgohubGetAllCampaignApps>
           <Link className={'btn btn-success'} to={routes.BASE}>
             {'Go back to main page'}
           </Link>
@@ -56,9 +38,9 @@ function CampaignApplicationForm() {
         <div className={'flex flex-col items-center justify-center text-green-600 font-semibold mt-32 gap-8'}>
           <h2>{'Confirm your campaign application!'}</h2>
 
-          {activeAddress && Object.keys(formData).length === 6 && (
+          {state?.algohubClient && Object.keys(formData).length === 6 && (
             <AlgohubCreateCampaign
-              typedClient={algohubClient}
+              typedClient={state?.algohubClient}
               votersAsa={478560182}
               price={1000}
               maxBuyCap={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount}

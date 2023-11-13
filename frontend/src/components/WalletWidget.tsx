@@ -7,6 +7,7 @@ import routes from '../core/routes'
 import Dropdown from './common/dropdown/Dropdown'
 import { Option } from './common/dropdown/Dropdown.types'
 import Toast from './common/toast/Toast'
+import useAppContext from '../core/util/useAppContext'
 
 interface WalletWidgetPropsInterface {
   username: string | undefined
@@ -19,7 +20,8 @@ type WalletWidgetType = Option & {
 }
 
 const WalletWidget = ({ username, walletAddress, resetUserData }: WalletWidgetPropsInterface) => {
-  const { providers, activeAccount } = useWallet()
+  const { providers } = useWallet()
+  const state = useAppContext()
   const navigate = useNavigate()
 
   const peraOnrampRef = useRef<null | PeraOnramp>(null)
@@ -27,7 +29,7 @@ const WalletWidget = ({ username, walletAddress, resetUserData }: WalletWidgetPr
 
   function handlePeraOnRampClick() {
     if (peraOnrampRef.current) {
-      peraOnrampRef.current.addFunds({ accountAddress: activeAccount?.address ?? '' }).then(closeModal)
+      peraOnrampRef.current.addFunds({ accountAddress: state?.activeAccount?.address ?? '' }).then(closeModal)
     }
   }
 
@@ -39,7 +41,7 @@ const WalletWidget = ({ username, walletAddress, resetUserData }: WalletWidgetPr
 
   useEffect(() => {
     const onramp = new PeraOnramp({
-      optInEnabled: Boolean(activeAccount?.address),
+      optInEnabled: Boolean(state?.activeAccount?.address),
     })
 
     onramp.on({
@@ -47,7 +49,7 @@ const WalletWidget = ({ username, walletAddress, resetUserData }: WalletWidgetPr
     })
 
     peraOnrampRef.current = onramp
-  }, [activeAccount?.address, executeAssetOptin])
+  }, [state?.activeAccount?.address, executeAssetOptin])
 
   const links: WalletWidgetType[] = [
     { id: 'disconnect', content: 'Disconnect', path: routes.BASE },
@@ -73,7 +75,7 @@ const WalletWidget = ({ username, walletAddress, resetUserData }: WalletWidgetPr
   }
 
   function handleDisconnect() {
-    const provider = providers?.filter((provider) => provider.metadata.id === activeAccount?.providerId)
+    const provider = providers?.filter((provider) => provider.metadata.id === state.activeAccount?.providerId)
 
     if (!provider) {
       return
