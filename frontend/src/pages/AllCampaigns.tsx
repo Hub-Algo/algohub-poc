@@ -31,7 +31,7 @@ const AllCampaigns = () => {
   }
 
   return (
-    <div>
+    <div className="bg-gray-950">
       <PageContainer>
         <Breadcrumbs pathList={['Home', 'All categories']} />
         <CampaignFilter handleFilterCampaigns={handleFilterCampaigns} />

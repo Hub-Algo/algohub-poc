@@ -74,7 +74,7 @@ export default function App() {
     // const user = await userService.signupUser(walletAddress)
     const usdcDecimals = 6
     //Asset needs type
-    const usdcBalance = userAssets.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0].amount / 10 ** usdcDecimals
+    const usdcBalance = userAssets.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0]?.amount / 10 ** usdcDecimals
 
     const { data } = await axios.get(`https://mainnet-api.algonode.cloud/v2/accounts/${walletAddress}`)
 
@@ -88,7 +88,7 @@ export default function App() {
     setUserData({
       wallet_address: walletAddress,
       username,
-      usdc_balance: Number(usdcBalance.toFixed(2)),
+      usdc_balance: usdcBalance ? Number(usdcBalance.toFixed(2)) : 0,
       algo_balance: Number(algoBalance),
     })
   }
@@ -101,8 +101,6 @@ export default function App() {
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
     }
-    // TODO: Remove this hook once we set fetchAndAppendUserData inside a useCallback
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeAccount])
 
   const algodConfig = getAlgodConfigFromViteEnvironment()

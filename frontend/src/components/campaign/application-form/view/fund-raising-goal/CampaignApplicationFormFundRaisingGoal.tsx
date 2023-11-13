@@ -37,17 +37,17 @@ function CampaignApplicationFormFundRaisingGoal({
       className={'text-gray-900 flex flex-col gap-4 my-20'}
     >
       <div className={'flex flex-col items-center gap-4'}>
-        <h2 className={'font-semibold text-xl mb-10'}>{'Fund-Raising Goal'}</h2>
+        <h2 className={'font-semibold text-3xl mb-10 text-gray-100'}>{'Fund-Raising Goal'}</h2>
 
-        <p className={'max-w-2xl mb-5'}>
+        <p className={'max-w-2xl mb-5 text-gray-100'}>
           {
             'In this section, you will be asked to provide the funding goal(s) you are seeking to reach on the AlgoHub platform; along with the financial plan depicting exactly how the raised funds will be employed by the requesting company. '
           }
         </p>
 
         <div className="flex flex-col gap-4 max-w-md">
-          <p className={'font-medium'}>{'Minimum Funding Target'}</p>
-          <p>
+          <p className={'font-medium text-gray-100'}>{'Minimum Funding Target'}</p>
+          <p className="text-gray-100">
             {
               'This will be the minimum amount of funds required for the campaign to be considered successful. In the event that this target is not met within the specified timeframe, it will trigger the automatic termination of the token sale, followed by the prompt refund of all collected capital to the respective investors.'
             }
@@ -57,9 +57,9 @@ function CampaignApplicationFormFundRaisingGoal({
         </div>
 
         <div className="flex flex-col gap-4 max-w-md">
-          <p className="font-medium">{'Maximum Funding Target (if applicable)'}</p>
+          <p className="font-medium text-gray-100">{'Maximum Funding Target (if applicable)'}</p>
 
-          <p>
+          <p className="text-gray-100">
             {
               'In the event that this target is met within the specified timeframe, the token sales will be considered completed, with no possibility to raise additional funds beyond the Maximum Funding Target. '
             }
@@ -85,9 +85,9 @@ function CampaignApplicationFormFundRaisingGoal({
         />
 
         <div className="max-w-md gap-4 flex flex-col">
-          <p>{'In other to prevent spam applications, AlgoHub applies an application fee of 100 USDC.'}</p>
+          <p className="text-gray-100">{'In other to prevent spam applications, AlgoHub applies an application fee of 100 USDC.'}</p>
 
-          <label className={'gap-2 flex'}>
+          <label className={'gap-2 flex text-gray-100'}>
             <input type={'checkbox'} value={'yes'} onChange={handleSetApplicationFeeConsent} checked={state?.hasConcentToApplicationFee} />
 
             {
@@ -97,9 +97,9 @@ function CampaignApplicationFormFundRaisingGoal({
         </div>
 
         <div className="max-w-md gap-4 flex flex-col">
-          <p>{'AlgoHub applies a fundraise fee equal to 6% of the raised capital.'}</p>
+          <p className="text-gray-100">{'AlgoHub applies a fundraise fee equal to 6% of the raised capital.'}</p>
 
-          <label className={'gap-2 flex'}>
+          <label className={'gap-2 flex text-gray-100'}>
             <input type={'checkbox'} value={'yes'} onChange={handleSetFundraiseFeeConsent} checked={state?.hasConcentToFundraiseFee} />
 
             {
@@ -109,9 +109,9 @@ function CampaignApplicationFormFundRaisingGoal({
         </div>
 
         <div className="max-w-md gap-4 flex flex-col">
-          <p>{`By submitting this application form, you agree to AlgoHub's terms of service`}</p>
+          <p className="text-gray-100">{`By submitting this application form, you agree to AlgoHub's terms of service`}</p>
 
-          <label className={'gap-2 flex'}>
+          <label className={'gap-2 flex text-gray-100'}>
             <input
               type={'checkbox'}
               value={'yes'}
@@ -124,19 +124,19 @@ function CampaignApplicationFormFundRaisingGoal({
         </div>
 
         <div className="max-w-md gap-4 flex flex-col mt-10">
-          <p>
+          <p className="text-gray-100">
             {
               'By submitting this form, you confirm that the information provided is accurate and complete to the best of your knowledge. You acknowledge that any deliberate misrepresentation may result in the rejection of the submitted application at any stage of the process, subject to the sole and absolute discretion of the AlgoHub team.'
             }
           </p>
 
-          <p>
+          <p className="text-gray-100">
             {
               'You further understand and agree that the submission of this form does not guarantee acceptance, and that AlgoHub reserves the right to reject any application for any reason without explanation.'
             }
           </p>
 
-          <label className={'gap-2 flex'}>
+          <label className={'gap-2 flex text-gray-100'}>
             <input type={'checkbox'} value={'yes'} onChange={handleSetHasConfirmed} checked={state?.hasConfirmedDataAccuracy} />
 
             {'I confirm that the information I have provided is accurate and complete.'}
@@ -145,11 +145,11 @@ function CampaignApplicationFormFundRaisingGoal({
       </div>
 
       <div className={'flex justify-between mt-10'}>
-        <Button type="button" onClick={handleClickPrevButton}>
+        <Button type="button" buttonColor="orange" onClick={handleClickPrevButton}>
           {'Prev'}
         </Button>
 
-        <Button type="submit" isDisabled={isDisabled}>
+        <Button type="submit" buttonColor="orange" isDisabled={isDisabled}>
           {'Submit'}
         </Button>
       </div>

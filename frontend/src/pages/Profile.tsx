@@ -38,15 +38,21 @@ function Profile() {
         </div>
       </PageContainer>
       <Tab items={tabItems}>
-        <CampaignList campaigns={campaignList} />
-
-        <div>{'Voting History content'}</div>
-
-        <div>
-          <p>{'Details'}</p>
+        <div className="h-96 flex items-center justify-center">
+          <p className="text-3xl text-gray-300">Comming soon</p>
         </div>
 
-        <div>{'Settings'}</div>
+        <div className="h-96 flex items-center justify-center">
+          <p className="text-3xl text-gray-300">Comming soon</p>
+        </div>
+
+        <div className="h-96 flex items-center justify-center">
+          <p className="text-3xl text-gray-300">Comming soon</p>
+        </div>
+
+        <div className="h-96 flex items-center justify-center">
+          <p className="text-3xl text-gray-300">Comming soon</p>
+        </div>
       </Tab>
     </div>
   )

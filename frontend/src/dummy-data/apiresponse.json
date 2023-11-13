@@ -1,0 +1,67 @@
+{
+  "applications": [
+    {
+      "created-at-round": 34524861,
+      "deleted": false,
+      "id": 478556883,
+      "params": {
+        "approval-program": "CSAGAAEGBAgFJgoLdm90ZXJzQXNhSWQEFR98dRBhbGdvaHViQ2FtcGFpZ25zCnRvdGFsVm90ZXMBABBhbGdvVG9Wb3RlUmF0aW9uDXZpcFZvdGVXZWlnaHQMdm90aW5nUGVyaW9kAAgAAAAAAAAAATEYIg0kCzEZCI0HCFsAAAAAAAAAAAAACGkANhoDFzYaAhc2GgEXiAACI0OKAwAnBYv/ZycGi/5nJweL/WeJigMAsSWyEIv/shSL/rIRi/2yEiKyAbOJigIAIov+i/+I/92JJwg2GgEXiAACI0OKAgAxADYyAHIHRBJENjIAKGVMSBREsYEDshCAC0FsZ29IdWJWb3RlsiaABEFIVjGyJYESsiOL/7IiMgqyKzIKsiwyCrIqIrIBs7Q8jP4oi/5ni/4yCoj/kIv+FilMULCJNhoDF8AwNhoCSRUjEkQiUzYaARfAHIgAAiNDigMANjIAKGVMSEQxADIJEkSL/yhkcABEIxJEi/+L/icEIk8CVL+JJwhJNhoJVwIANhoIFzYaBxc2GgYXNhoFFzYaBBc2GgMXwDA2GgIXwDA2GgEXwDCIAAIjQ4oLADYyAChlTEhEsSSyEIAEuER7NrIagAEJsh+A/QgJIAMBAAQmDAhjYW1wYWlnbhJpc0FwcHJvdmVkQ2FtcGFpZ24ABBUffHULdm90ZXJzQXNhSWQFYWRtaW4IaWRvQXNhSWQIYnV5QXNhSWQKdm90ZXNUb3RhbAx2b3Rlc0luRmF2b3IBAAFwMRgjDYEGCzEZCI0HA0sAAAAAAAAAAAAAA1kAiAACIkOKAAAnBCNnJwYjZycHI2cpIycKI08CVGeJigABKWQjUxRBAAIiiSlkI1OJigABIomKAQCxJLIQMgqyFIv/shEjshIjsgGziTYaC1cCADYaChc2GgkXNhoIFzYaBxc2GgYXNhoFFzYaBBfAMDYaAxfAMDYaAhfAMDYaARfAHIgAAiJDigsANjIAKGVMSBREJwWL/2cnBIv+ZycGi/1nJweL/GcoKiqAAgA6i/sWiAMSi/oWiAMMi/kWiAMGi/gWiAMAgAgAAAAAAAAAAIgC8zIHi/cIFogC6jIHi/cIi/YIFogC3ov1SRUWVwYCTFCIAt5IUGeL/Yj/OIv8iP8ziSo2GgEXwDAxFiIJSTgQJBJEiAACIkOKAwA2MgAoZUxIRDEAJwVkEkQoZDUANABXGAgXKGQ1ADQAVwAIFwqM/Yv/OBKL/RJEi/84FDIKEkSL/zgAMQASRIv/OBGL/hJEiSo2GgIXNhoBF8AwMRYiCUk4ECQSRIgAAiJDigQANjIAKGVMSESI/pNEKWQjUxRBAAkpIicKI08CVGeL/ShkNQA0AFcACBcLjPyL/zgSi/wSRIv/OBQyChJEi/84ADEAEkSL/zgRi/4SRIkqNhoBF8AwiAACIkOKAgA2MgAoZUxIRIj+N0QoZDUANABXMAgXMgcMRCcLMQBQvUxIRCcLMQBQvkQXKGQ1ADQAVwAIFwuM/rEkshAyCrIAMQCyFIv/shGL/rISI7IBs4mIAAIiQ4oAADYyAChlTEhEiP3eFEQoZDUANABXKAgXMgcNRImIAAIiQ4oAADYyAChlTEhEMQAnBWQSRChkNQA0AFcwCBcyBw1EiTYaARfAMIgAAiJDigEANjIAKGVMSEQxACcFZBJEKGQ1ADQAVzAIFzIHDUSJNhoCF8AwNhoBSRUiEkQjU4gAAiJDigIANjIAKGVMSEQoZDUANABXKAgXMgcNRDEAJwRkcABEIhJEJwgnCGQiCGeL/0EACCcJJwlkIghniYgAAiJDigAAJwlkFicIZBZQK0xQsImIAAIiQ4oAACcEZBYrTFCwiYgAAiJDigAAJwZkFitMULCJiAACIkOKAAAnB2QWK0xQsImIAAIiQ4oAAChkK0xQsImABLhEezY2GgCOAfypAIAEhxdlE4AEpiJIjoAEA0uF4YAE2Qen6oAEoQ1ZD4AELYsI8YAEd+BpI4AEQJjD9oAEwd81AYAELqfumYAEkb2xcoAEFHwIO4AEOhPbPjYaAI4N/If9Pv2e/gj+aP6M/rL+3v8t/0P/VP9l/3YAigQDi/yL/1CL/Yv+iYoEA4v8i/5QjPyL/0kVi/4XCBZXBgKM/ov9TFCM/Yv8i/2L/omyHiSyNSWyNCKyAbO0PYz2sSOyEIHgpxKyCIv2cghEsgcisgGzNjIAKmVMSEEAGipkVwIAi/YWUCpMSRUhBAoWVwYCTFBnQgAUi/YWjPUqi/VJFSEEChZXBgJMUGexJLIQgASHF2UTshqL9rIYMQCyHCcJshooZLIwgAgAAAAAAAAAALIai/6yMCcJshqL/bIwgAgAAAAAAAAAArIai/wWshqL+xayGov6FrIai/kWshonB2QWshqL+BayGov3SRUWVwYCTFCyGiKyAbOL9hYpTFCwiTYaARfAMIgAAiNDigEANjIAKGVMSEQxAChkcABEIhJEMQBzAEQnBWQPRLElshAoZLIRMQCyFCOyEiKyAbOxIQWyEChksi0xALIuI7IvIrIBsysrZCMIZ4k2GgEXwDCIAAIjQ4oBADYyAChlTEhEMQAoZHAATEgjEkSxIQWyEChksi0xALIuIrIvIrIBs7ElshAxALITKGSyETIKshQjshIisgGzKytkIwlnMQAiJwQiTwJUv4mIAAIjQ4oAADYyACplTEhBAAgqZFcCAEIAAicISRUhBAoWVwYCTFApTFCwiYgAAiNDigAAJwVkFicGZBZQK2QWUClMULCJNhoCF8AwNhoBF8AciAACI0OKAgCL/yhkcABMSCISQQAQgAwVH3x1AAAAAAAAAACwiYv/vUxIQQASi/++RCJTQQAJJwZkFilMULCJgAwVH3x1AAAAAAAAAGSwiYgAAiNDigAAJwdkFilMULCJiAACI0OKAAArZBYpTFCwiTYaARfAHIgAAiNDigEAi/+9TEhBABGL/75EIlMnBCJPAlQpTFCwiSInBCJPAlQpTFCwiTYaARfAMIgAAiNDigEAKGQWKUxQsImABOHAxNk2GgCOAfeZAIAEth9i1YAEPrhJOYAEVi/c5IAESlwVT4AERthYVYAEsQ5bkYAEC6nkIoAEFySogIAEx+TAuIAEHf3PDYAEC2JI14AEgNGtFzYaAI4M93v35/gp/c3+Jf6C/q7+yP8j/zT/RP93AA==",
+        "clear-state-program": "CQ==",
+        "creator": "QEOEWPFNOX3KCH5TQSHCPE522V464EGTWBLZVK6AG4OAGZJMF34GIDM4NU",
+        "extra-program-pages": 1,
+        "global-state": [
+          {
+            "key": "dm90ZXJzQXNhSWQ=",
+            "value": {
+              "bytes": "",
+              "type": 2,
+              "uint": 478560182
+            }
+          },
+          {
+            "key": "dm90aW5nUGVyaW9k",
+            "value": {
+              "bytes": "",
+              "type": 2,
+              "uint": 3600
+            }
+          },
+          {
+            "key": "dmlwVm90ZVdlaWdodA==",
+            "value": {
+              "bytes": "",
+              "type": 2,
+              "uint": 125
+            }
+          },
+          {
+            "key": "YWxnb1RvVm90ZVJhdGlvbg==",
+            "value": {
+              "bytes": "",
+              "type": 2,
+              "uint": 10
+            }
+          },
+          {
+            "key": "YWxnb2h1YkNhbXBhaWducw==",
+            "value": {
+              "bytes": "AAIAAAAAHIb0igAAAAAchwo9",
+              "type": 1,
+              "uint": 0
+            }
+          }
+        ],
+        "global-state-schema": {
+          "num-byte-slice": 1,
+          "num-uint": 5
+        },
+        "local-state-schema": {
+          "num-byte-slice": 0,
+          "num-uint": 0
+        }
+      }
+    }
+  ],
+  "current-round": 34546858,
+  "next-token": "478556883"
+}
