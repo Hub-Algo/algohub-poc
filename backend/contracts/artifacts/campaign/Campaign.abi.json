@@ -4,7 +4,13 @@
   "methods": [
     {
       "name": "createApplication",
-      "args": [],
+      "args": [
+        {
+          "name": "algohubApp",
+          "type": "application",
+          "desc": ""
+        }
+      ],
       "desc": "",
       "returns": {
         "type": "void",
@@ -67,6 +73,26 @@
         {
           "name": "metadataUrl",
           "type": "string",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "setVestingSchedule",
+      "args": [
+        {
+          "name": "vestingPercentages",
+          "type": "uint64[]",
+          "desc": ""
+        },
+        {
+          "name": "vestingDurations",
+          "type": "uint64[]",
           "desc": ""
         }
       ],
@@ -267,6 +293,15 @@
       "desc": "",
       "returns": {
         "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getVestingSchedule",
+      "args": [],
+      "desc": "",
+      "returns": {
+        "type": "(uint64,uint64[],uint64[])",
         "desc": ""
       }
     }

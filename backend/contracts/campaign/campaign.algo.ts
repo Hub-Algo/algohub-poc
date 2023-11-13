@@ -1,8 +1,9 @@
 import { Contract } from '@algorandfoundation/tealscript';
 
 type VestingDetails = {
-  percentage: number; // percentage of tokens to be available
-  duration: number; // seconds after end timestamp
+  vestingPeriods: number;
+  percentages: number[]; // percentage of tokens to be available
+  durations: number[]; // seconds after end timestamp
 };
 
 type CampaignObj = {
@@ -25,6 +26,8 @@ type AlgohubVotes = {
 
 // eslint-disable-next-line no-unused-vars
 export default class Campaign extends Contract {
+  algohub = GlobalStateKey<Application>();
+
   admin = GlobalStateKey<Account>();
 
   idoAsaId = GlobalStateKey<Asset>();
@@ -35,7 +38,7 @@ export default class Campaign extends Contract {
 
   campaign = GlobalStateKey<CampaignObj>();
 
-  vestingSchedule = GlobalStateKey<VestingDetails[]>();
+  vestingSchedule = GlobalStateKey<VestingDetails>();
 
   isApprovedCampaign = GlobalStateKey<boolean>();
 
@@ -50,7 +53,8 @@ export default class Campaign extends Contract {
   claimedAmount = BoxMap<Address, number>({ prefix: 'c' });
 
   // eslint-disable-next-line no-unused-vars
-  createApplication(): void {
+  createApplication(algohubApp: Application): void {
+    this.algohub.value = algohubApp;
     this.votersAsaId.value = Asset.zeroIndex;
     this.idoAsaId.value = Asset.zeroIndex;
     this.buyAsaId.value = Asset.zeroIndex;
@@ -60,6 +64,13 @@ export default class Campaign extends Contract {
   /// ========================
   /// ==== Private Methods ===
   /// ========================
+  private expandOpcodeBugdet(): void {
+    sendMethodCall<[], void>({
+      applicationID: this.algohub.value,
+      name: 'expandOpcodeBudget',
+    });
+  }
+
   private isApproved(): boolean {
     if (!this.isApprovedCampaign.value) {
       // TODO: Check quorum + voting logic
@@ -99,7 +110,6 @@ export default class Campaign extends Contract {
     hardCap: number,
     votingPeriod: number,
     duration: number,
-    // vestingSchedule: VestingDetails[],
     metadataUrl: string
   ): void {
     assert(!this.campaign.exists);
@@ -122,9 +132,16 @@ export default class Campaign extends Contract {
       endTime: globals.latestTimestamp + votingPeriod + duration,
       metadataUrl: metadataUrl,
     };
+  }
 
-    // TODO: Set the vesting schedule logic
-    // this.vestingSchedule.value = vestingSchedule;
+  setVestingSchedule(vestingPercentages: number[], vestingDurations: number[]): void {
+    assert(!this.campaign.exists);
+    assert(vestingDurations.length === vestingPercentages.length);
+    this.vestingSchedule.value = {
+      vestingPeriods: vestingDurations.length,
+      percentages: vestingPercentages,
+      durations: vestingDurations,
+    };
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -183,30 +200,49 @@ export default class Campaign extends Contract {
     }
   }
 
+  private calculateAllowedClaimAmountBasedOnVestingSchedule(totalAmount: number): number {
+    const durationAfterEndTime = globals.latestTimestamp - this.campaign.value.endTime;
+    let durationInVestingPeriod = 0;
+    let totalPercentageEligibleForClaim = 0;
+    for (let i = 0; i < this.vestingSchedule.value.vestingPeriods; i + 1) {
+      if (durationAfterEndTime > durationInVestingPeriod) {
+        durationInVestingPeriod = durationInVestingPeriod + this.vestingSchedule.value.durations[i];
+        totalPercentageEligibleForClaim = totalPercentageEligibleForClaim + this.vestingSchedule.value.percentages[i];
+      }
+    }
+    const eligibleAmountToClaim = (totalAmount * totalPercentageEligibleForClaim) / 100;
+
+    return eligibleAmountToClaim;
+  }
+
   // eslint-disable-next-line no-unused-vars
   claim(idoAsa: Asset): void {
+    // this.expandOpcodeBugdet();
     // can claim after the campaign is over and according to the vesting schedule
     assert(this.campaign.exists);
+    assert(this.vestingSchedule.exists);
     assert(this.isApproved());
     assert(this.campaign.value.endTime < globals.latestTimestamp);
     assert(this.purchases(this.txn.sender).exists);
-    // assert(this.claimedAmount(this.txn.sender).value === 0);
-
-    const totalAmountToClaim = this.purchases(this.txn.sender).value / this.campaign.value.price;
-
-    // TODO: Send whatever they are eligible to based on vesting schedule
-    // const eligibleAmountToClaim = xxx;
+    const totalClaimableAmount = this.purchases(this.txn.sender).value / this.campaign.value.price;
+    const alreadyClaimedAmount = this.claimedAmount(this.txn.sender).exists
+      ? this.claimedAmount(this.txn.sender).value
+      : 0;
+    assert(totalClaimableAmount > alreadyClaimedAmount);
+    const totalAmountToClaim = totalClaimableAmount - alreadyClaimedAmount;
+    // const eligibleAmountToClaim = this.calculateAllowedClaimAmountBasedOnVestingSchedule(totalAmountToClaim);
+    const eligibleAmountToClaim = totalAmountToClaim;
     sendAssetTransfer({
       sender: this.app.address,
       assetReceiver: this.txn.sender,
       xferAsset: this.idoAsaId.value,
-      assetAmount: totalAmountToClaim,
+      assetAmount: eligibleAmountToClaim,
     });
 
     if (this.claimedAmount(this.txn.sender).exists) {
-      this.claimedAmount(this.txn.sender).value = this.claimedAmount(this.txn.sender).value + totalAmountToClaim;
+      this.claimedAmount(this.txn.sender).value = this.claimedAmount(this.txn.sender).value + eligibleAmountToClaim;
     } else {
-      this.claimedAmount(this.txn.sender).value = totalAmountToClaim;
+      this.claimedAmount(this.txn.sender).value = eligibleAmountToClaim;
     }
   }
 
@@ -319,9 +355,9 @@ export default class Campaign extends Contract {
     return this.campaign.value;
   }
 
-  // getVestingSchedule(): VestingDetails[] {
-  //   return this.vestingSchedule.value;
-  // }
+  getVestingSchedule(): VestingDetails {
+    return this.vestingSchedule.value;
+  }
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -404,14 +440,17 @@ export class Algohub extends Contract {
     softCap: number,
     hardCap: number,
     duration: number,
-    metadataUrl: string
+    metadataUrl: string,
+    vestingPercentages: number[],
+    vestingDurations: number[]
   ): Application {
     assert(this.votersAsaId.exists);
-    sendMethodCall<[], void>({
+    sendMethodCall<[Application], void>({
       name: 'createApplication',
+      methodArgs: [this.app],
       clearStateProgram: Campaign.clearProgram(),
       approvalProgram: Campaign.approvalProgram(),
-      globalNumByteSlice: 6,
+      globalNumByteSlice: 8,
       globalNumUint: 4,
     });
 
@@ -427,6 +466,12 @@ export class Algohub extends Contract {
       const newApp: Application[] = [campaignApp];
       this.algohubCampaigns.value = newApp;
     }
+
+    sendMethodCall<[number[], number[]], void>({
+      applicationID: campaignApp,
+      name: 'setVestingSchedule',
+      methodArgs: [vestingPercentages, vestingDurations],
+    });
 
     sendMethodCall<[Account, Asset, Asset, Asset, number, number, number, number, number, number, string], void>({
       applicationID: campaignApp,
@@ -491,6 +536,8 @@ export class Algohub extends Contract {
     this.totalVotes.value = this.totalVotes.value - 1;
     this.vipVoters(this.txn.sender).value = false;
   }
+
+  expandOpcodeBudget(): void {}
 
   /// ========================
   /// ==== Getter Methods ====
