@@ -9,6 +9,8 @@ import Button from '../../../../common/button/Button'
 import { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk'
 import Toast, { ToastProps } from '../../../../common/toast/Toast'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import routes from '../../../../../core/routes'
 
 function CampaignApplicationDepositIdoAsa() {
   const { signer } = useWallet()
@@ -40,9 +42,21 @@ function CampaignApplicationDepositIdoAsa() {
           : 0
       }`}</p>
 
-      <Button onClick={handleDepositIdoAsa} isDisabled={!idoAsaId} customClassName={'w-full'} size="lg" shouldDisplaySpinner={loading}>
+      <Button
+        onClick={handleDepositIdoAsa}
+        isDisabled={!idoAsaId || toastProps.type === 'success'}
+        customClassName={'w-full'}
+        size="lg"
+        shouldDisplaySpinner={loading}
+      >
         {'Deposit Ido Asa'}
       </Button>
+
+      {toastProps.type === 'success' && (
+        <Link to={routes.BASE} className="btn btn-success btn-lg">
+          {'Go back to main page'}
+        </Link>
+      )}
 
       <Toast type={toastProps.type}>{toastProps.message}</Toast>
     </div>
