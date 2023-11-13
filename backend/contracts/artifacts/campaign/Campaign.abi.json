@@ -97,6 +97,15 @@
       }
     },
     {
+      "name": "lockApprovedStatus",
+      "args": [],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
       "name": "buy",
       "args": [
         {
@@ -138,7 +147,13 @@
     },
     {
       "name": "withdrawInvestment",
-      "args": [],
+      "args": [
+        {
+          "name": "buyAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
       "desc": "",
       "returns": {
         "type": "void",
@@ -147,7 +162,13 @@
     },
     {
       "name": "withdrawIdoAsa",
-      "args": [],
+      "args": [
+        {
+          "name": "idoAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
       "desc": "",
       "returns": {
         "type": "void",
@@ -245,7 +266,7 @@
       "args": [],
       "desc": "",
       "returns": {
-        "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)",
+        "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)",
         "desc": ""
       }
     }

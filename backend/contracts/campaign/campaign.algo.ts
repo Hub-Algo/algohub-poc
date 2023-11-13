@@ -2,7 +2,7 @@ import { Contract } from '@algorandfoundation/tealscript';
 
 type VestingDetails = {
   percentage: number; // percentage of tokens to be available
-  time: number; // seconds after end timestamp
+  duration: number; // seconds after end timestamp
 };
 
 type CampaignObj = {
@@ -11,6 +11,7 @@ type CampaignObj = {
   softCap: number;
   hardCap: number;
   purchasedAmount: number;
+  withdrawnAmount: number;
   startTime: number;
   endTime: number;
   metadataUrl: string;
@@ -81,9 +82,9 @@ export default class Campaign extends Contract {
     });
   }
 
-  private convertToAsaAmount(amount: number, asaToCovertTo: Asset): number {
-    if (asaToCovertTo === this.buyAsaId.value) return amount / this.campaign.value.price;
-    if (asaToCovertTo === this.idoAsaId.value) return amount * this.campaign.value.price;
+  private convertToAsaAmount(purchaseAmount: number, asaToCovertTo: Asset): number {
+    if (asaToCovertTo === this.buyAsaId.value) return purchaseAmount / this.campaign.value.price;
+    if (asaToCovertTo === this.idoAsaId.value) return purchaseAmount * this.campaign.value.price;
     return 0;
   }
 
@@ -116,6 +117,7 @@ export default class Campaign extends Contract {
       softCap: softCap,
       hardCap: hardCap,
       purchasedAmount: 0,
+      withdrawnAmount: 0,
       startTime: globals.latestTimestamp + votingPeriod,
       endTime: globals.latestTimestamp + votingPeriod + duration,
       metadataUrl: metadataUrl,
@@ -125,6 +127,7 @@ export default class Campaign extends Contract {
     // this.vestingSchedule.value = vestingSchedule;
   }
 
+  // eslint-disable-next-line no-unused-vars
   depositIdoAsa(idoXfer: AssetTransferTxn, idoAsa: Asset): void {
     // TODO: Allow deposit only once
     assert(this.campaign.exists);
@@ -134,33 +137,42 @@ export default class Campaign extends Contract {
       assetAmount: idoAsaToTransfer,
       assetReceiver: this.app.address,
       sender: this.txn.sender,
-      xferAsset: idoAsa,
+      xferAsset: this.idoAsaId.value,
     });
+  }
+
+  lockApprovedStatus(): void {
+    assert(this.campaign.exists);
+    assert(this.isApproved());
+    assert(!this.isApprovedCampaign.value);
+    this.isApprovedCampaign.value = true;
   }
 
   // eslint-disable-next-line no-unused-vars
   buy(buyAsaXfer: AssetTransferTxn, buyAsa: Asset, buyAmount: number): void {
     assert(this.campaign.exists);
     assert(this.isApproved());
+    // check campaing is not finished
+    assert(this.campaign.value.endTime > globals.latestTimestamp);
     // Check amount to buy is not more than max buy cap
     assert(this.campaign.value.maxBuyCap >= buyAmount);
-    // check that hardcap is not reached
-    assert(this.campaign.value.hardCap >= this.campaign.value.purchasedAmount + buyAmount);
     // Allow hypelisted addresses to buy before start time
     if (!this.isHypelisted(this.txn.sender)) {
       assert(this.campaign.value.startTime < globals.latestTimestamp);
     }
-    // check campaing is not finished
-    assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // check that hardcap is not reached
+    assert(this.campaign.value.hardCap >= this.campaign.value.purchasedAmount + buyAmount);
+    // TODO: allow set approve campaign in case buy cannot be called due to hardcap reached
     if (!this.isApprovedCampaign.value) {
       this.isApprovedCampaign.value = true;
     }
-    const buyAsaToTransfer = buyAmount / this.campaign.value.price;
+
+    const buyAsaToTransfer = buyAmount * this.campaign.value.price;
     verifyTxn(buyAsaXfer, {
       assetAmount: buyAsaToTransfer,
       assetReceiver: this.app.address,
       sender: this.txn.sender,
-      xferAsset: buyAsa,
+      xferAsset: this.buyAsaId.value,
     });
     this.campaign.value.purchasedAmount = this.campaign.value.purchasedAmount + buyAmount;
 
@@ -171,6 +183,7 @@ export default class Campaign extends Contract {
     }
   }
 
+  // eslint-disable-next-line no-unused-vars
   claim(idoAsa: Asset): void {
     // can claim after the campaign is over and according to the vesting schedule
     assert(this.campaign.exists);
@@ -178,48 +191,87 @@ export default class Campaign extends Contract {
     assert(this.campaign.value.endTime < globals.latestTimestamp);
     assert(this.purchases(this.txn.sender).exists);
     // assert(this.claimedAmount(this.txn.sender).value === 0);
+
     const totalAmountToClaim = this.purchases(this.txn.sender).value / this.campaign.value.price;
 
     // TODO: Send whatever they are eligible to based on vesting schedule
+    // const eligibleAmountToClaim = xxx;
     sendAssetTransfer({
       sender: this.app.address,
       assetReceiver: this.txn.sender,
-      xferAsset: idoAsa,
-      assetAmount: amountForClaim,
+      xferAsset: this.idoAsaId.value,
+      assetAmount: totalAmountToClaim,
     });
 
     if (this.claimedAmount(this.txn.sender).exists) {
       this.claimedAmount(this.txn.sender).value = this.claimedAmount(this.txn.sender).value + totalAmountToClaim;
     } else {
-      this.purchases(this.txn.sender).value = totalAmountToClaim;
+      this.claimedAmount(this.txn.sender).value = totalAmountToClaim;
     }
   }
 
-  withdrawInvestment(): void {
+  // eslint-disable-next-line no-unused-vars
+  withdrawInvestment(buyAsa: Asset): void {
+    // if a wallet bought tokens during the voting period due to hypelisting
+    // they can withdraw their tokens if the campaign did not collected required votes
     assert(this.campaign.exists);
     assert(!this.isApproved());
     assert(this.campaign.value.startTime > globals.latestTimestamp);
-    // if a wallet bought tokens during the voting period due to hypelisting
-    // they can withdraw their tokens if the campaign did not collected required votes
+    assert(this.purchases(this.txn.sender).exists);
+
+    sendAssetTransfer({
+      sender: this.app.address,
+      assetReceiver: this.txn.sender,
+      xferAsset: this.buyAsaId.value,
+      assetAmount: this.convertToAsaAmount(this.purchases(this.txn.sender).value, this.buyAsaId.value),
+    });
   }
 
-  withdrawIdoAsa(): void {
-    assert(this.campaign.exists);
-    verifyTxn(this.txn, { sender: this.admin.value });
-    assert(this.campaign.value.endTime > globals.latestTimestamp);
+  withdrawIdoAsa(idoAsa: Asset): void {
     // to be called only by contract cretator
     // when the campaign reached their softcap but not the hardcap
-    // in this case, the contract holds IDO tokens which the creator
-    // should be able to withdraw from the contract as they were not sold
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  withdrawSales(buyAsa: Asset): void {
+    // OR in case the campaign was not approved
+    // in both cases the contract holds IDO tokens which the creator
+    // should be able to withdraw
+    // in former case, can withdraw whatever Ido tokens were not sold
+    // in latter case, can withdraw all the Ido tokens
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
-    assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // TODO: Add check for end time
+    // assert(this.campaign.value.endTime > globals.latestTimestamp);
+    if (this.isApproved()) {
+      const totalUnsoldAmount = this.campaign.value.hardCap - this.campaign.value.purchasedAmount;
+      assert(totalUnsoldAmount > 0);
+      sendAssetTransfer({
+        sender: this.app.address,
+        assetReceiver: this.txn.sender,
+        xferAsset: idoAsa,
+        assetAmount: totalUnsoldAmount / this.campaign.value.price, // this.convertToAsaAmount(totalUnsoldAmount, this.idoAsaId.value),
+      });
+    } else {
+      sendAssetTransfer({
+        sender: this.app.address,
+        assetReceiver: this.txn.sender,
+        xferAsset: idoAsa,
+        assetAmount: this.app.address.assetBalance(idoAsa),
+      });
+    }
+  }
+
+  withdrawSales(buyAsa: Asset): void {
     // to be called only by the contract creator after the campaign is over
     // to allow them to withdaw all or part of the sale/buy tokens.
+    assert(this.campaign.exists);
+    verifyTxn(this.txn, { sender: this.admin.value });
+    // TODO: Add check for end time
+    // assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // TODO: We might want to add vesting period here as well
+    sendAssetTransfer({
+      sender: this.app.address,
+      assetReceiver: this.txn.sender,
+      xferAsset: buyAsa,
+      assetAmount: this.app.address.assetBalance(buyAsa),
+    });
   }
 
   // eslint-disable-next-line no-unused-vars
