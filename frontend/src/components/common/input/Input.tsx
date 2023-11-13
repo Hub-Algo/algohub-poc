@@ -18,7 +18,12 @@ function Input({ labels, isDisabled, customClassName, ...rest }: InputProps) {
         </label>
       )}
 
-      <input className={classNames('input input-bordered w-full text-gray-900')} {...rest} />
+      <input
+        className={classNames(
+          'input input-bordered w-full text-gray-100 bg-gray-950 border-px border-gray-800 focus:border-orange-500 transition-all',
+        )}
+        {...rest}
+      />
 
       {labels?.bottomText && (
         <label className="label text-gray-100">

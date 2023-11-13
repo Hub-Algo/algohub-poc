@@ -20,7 +20,7 @@ function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState 
 
   return (
     <form onSubmit={handleClickNextButton} id={CampaignApplicationFormView.ContactInfo} className={'flex flex-col gap-4 my-20'}>
-      <h2 className={'font-semibold text-xl mb-10 mx-auto text-gray-100'}>{'Contact Information'}</h2>
+      <h2 className={'font-semibold text-3xl mb-10 mx-auto text-gray-100'}>{'Contact Information'}</h2>
 
       <p className={'max-w-2xl text-center mb-10 mx-auto text-gray-100'}>
         {

@@ -37,9 +37,9 @@ function CampaignApplicationFormProductOverview({
       id={CampaignApplicationFormView.CompanyRegistrationInfo}
       className={'text-gray-900 flex flex-col gap-4 my-20 items-center'}
     >
-      <h2 className={'font-semibold text-xl mb-5'}>{'Product Overview'}</h2>
+      <h2 className={'font-semibold text-3xl mb-5 text-gray-100'}>{'Product Overview'}</h2>
 
-      <p className={'max-w-2xl text-center'}>
+      <p className={'max-w-2xl text-center text-gray-100'}>
         {
           'Please provide a brief introduction to the product you are seeking to fund, including URLs to all relevant social media channels.'
         }
@@ -54,7 +54,7 @@ function CampaignApplicationFormProductOverview({
           <ul>
             {CAMPAIGN_APPLICATION_MARKET_TYPES.map((market) => (
               <li>
-                <label className={'gap-2 flex'}>
+                <label className={'gap-2 flex text-gray-100'}>
                   <input
                     id={`radio-btn--${market}`}
                     type={'radio'}
@@ -89,11 +89,11 @@ function CampaignApplicationFormProductOverview({
       </div>
 
       <div className={'justify-between flex mt-10 w-full'}>
-        <Button type="button" onClick={handleClickPrevButton}>
+        <Button buttonColor="orange" type="button" onClick={handleClickPrevButton}>
           {'Prev'}
         </Button>
 
-        <Button type="submit" isDisabled={isDisabled}>
+        <Button buttonColor="orange" type="submit" isDisabled={isDisabled}>
           {'Next'}
         </Button>
       </div>

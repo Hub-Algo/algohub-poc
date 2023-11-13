@@ -21,8 +21,8 @@ function CampaignApplicatioFormTeamInfoView({ onClickNextButton, onClickPrevButt
       id={CampaignApplicationFormView.ContactInfo}
       className={'text-gray-900 flex flex-col gap-4 my-20'}
     >
-      <div className={'flex flex-col mx-auto max-w-md w-full'}>
-        <h2 className={'font-semibold text-xl mb-10 text-center'}>{'Team Information'}</h2>
+      <div className={'flex flex-col items-center mx-auto max-w-md w-full'}>
+        <h2 className={'font-semibold text-3xl mb-10 text-cente text-gray-100'}>{'Team Information'}</h2>
 
         <Input
           labels={{ inputTitle: 'Number of employees' }}
@@ -48,11 +48,11 @@ function CampaignApplicatioFormTeamInfoView({ onClickNextButton, onClickPrevButt
       </div>
 
       <div className={'justify-between flex mt-10'}>
-        <Button type="button" onClick={handleClickPrevButton}>
+        <Button buttonColor="orange" type="button" onClick={handleClickPrevButton}>
           {'Prev'}
         </Button>
 
-        <Button type="submit" isDisabled={isDisabled}>
+        <Button buttonColor="orange" type="submit" isDisabled={isDisabled}>
           {'Next'}
         </Button>
       </div>

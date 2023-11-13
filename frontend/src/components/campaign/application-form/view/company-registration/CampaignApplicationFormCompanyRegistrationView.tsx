@@ -30,9 +30,9 @@ function CampaignApplicationFormCompanyRegistrationView({
       id={CampaignApplicationFormView.CompanyRegistrationInfo}
       className={'text-gray-900 flex flex-col gap-4 my-20 items-center'}
     >
-      <h2 className={'font-semibold text-xl mb-10'}>{'Company Registration Information'}</h2>
+      <h2 className={'font-semibold text-3xl mb-10 text-gray-100'}>{'Company Registration Information'}</h2>
 
-      <p className={'max-w-2xl text-center mb-10'}>
+      <p className={'max-w-2xl text-center mb-10 text-gray-100'}>
         {
           'To be eligible for participation in the AlgoHub Token Sales program, you must provide evidence that the organization seeking funding is officially registered with a recognized national institution.'
         }
@@ -69,11 +69,11 @@ function CampaignApplicationFormCompanyRegistrationView({
         />
       </div>
       <div className={'justify-between flex mt-10 w-full'}>
-        <Button type="button" onClick={handleClickPrevButton}>
+        <Button buttonColor="orange" type="button" onClick={handleClickPrevButton}>
           {'Prev'}
         </Button>
 
-        <Button type="submit" isDisabled={isDisabled}>
+        <Button buttonColor="orange" type="submit" isDisabled={isDisabled}>
           {'Next'}
         </Button>
       </div>
