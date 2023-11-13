@@ -1,16 +1,17 @@
 import { useState } from 'react'
-import Input from '../../../../common/input/Input'
+
+import Input from '../../../../../../common/input/Input'
+import { INITIAL_CAMPAIGN_APPLICATION_CONTACT_INFO } from '../../CampaignApplicationForm.constants'
+import Button from '../../../../../../common/button/Button'
 import {
   CampaignApplicationContactInfo,
   CampaignApplicationFormData,
   CampaignApplicationFormView,
-} from '../../CampaignApplicationForm.types'
-import { INITIAL_CAMPAIGN_APPLICATION_CONTACT_INFO } from '../../CampaignApplicationForm.constants'
-import Button from '../../../../common/button/Button'
+} from '../../../../../../../pages/campaign-application/CampaignApplication.types'
 
 interface CampaignApplicationFormContactInfoViewProps {
   onClickNextButton: (data: CampaignApplicationFormData) => void
-  savedState?: CampaignApplicationContactInfo
+  savedState: CampaignApplicationContactInfo | null
 }
 
 function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState }: CampaignApplicationFormContactInfoViewProps) {
@@ -19,7 +20,7 @@ function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState 
   const isDisabled = !state?.email || !state.name || !state.surname || !state.role
 
   return (
-    <form onSubmit={handleClickNextButton} id={CampaignApplicationFormView.ContactInfo} className={'flex flex-col gap-4 my-20'}>
+    <form onSubmit={handleClickNextButton} id={CampaignApplicationFormView.ContactInfo} className={'flex flex-col gap-4 mb-20'}>
       <h2 className={'font-semibold text-3xl mb-10 mx-auto text-gray-100'}>{'Contact Information'}</h2>
 
       <p className={'max-w-2xl text-center mb-10 mx-auto text-gray-100'}>

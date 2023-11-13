@@ -1,18 +1,19 @@
 import { useState } from 'react'
 
-import Button from '../../../../common/button/Button'
+import Button from '../../../../../../common/button/Button'
+
+import Input from '../../../../../../common/input/Input'
+import { CAMPAIGN_APPLICATION_MARKET_TYPES, INITIAL_CAMPAIGN_APPLICATION_PRODUCT_OVERVIEW } from '../../CampaignApplicationForm.constants'
 import {
   CampaignApplicationFormData,
   CampaignApplicationFormView,
   CampaignApplicationProductOverview,
-} from '../../CampaignApplicationForm.types'
-import Input from '../../../../common/input/Input'
-import { CAMPAIGN_APPLICATION_MARKET_TYPES, INITIAL_CAMPAIGN_APPLICATION_PRODUCT_OVERVIEW } from '../../CampaignApplicationForm.constants'
+} from '../../../../../../../pages/campaign-application/CampaignApplication.types'
 
 interface CampaignApplicationFormProductOverviewProps {
   onClickNextButton: (data: CampaignApplicationFormData) => void
   onClickPrevButton: (view: CampaignApplicationFormView) => void
-  savedState?: CampaignApplicationProductOverview
+  savedState: CampaignApplicationProductOverview | null
 }
 
 function CampaignApplicationFormProductOverview({
@@ -35,7 +36,7 @@ function CampaignApplicationFormProductOverview({
     <form
       onSubmit={handleClickNextButton}
       id={CampaignApplicationFormView.CompanyRegistrationInfo}
-      className={'text-gray-900 flex flex-col gap-4 my-20 items-center'}
+      className={'text-gray-900 flex flex-col gap-4 mb-20 items-center'}
     >
       <h2 className={'font-semibold text-3xl mb-5 text-gray-100'}>{'Product Overview'}</h2>
 

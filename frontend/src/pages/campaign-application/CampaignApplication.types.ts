@@ -55,7 +55,7 @@ export type CampaignApplicationProductDocumentation = {
 
 export type CampaignApplicationFundRaisingGoal = {
   minAmount: number
-  intention: string
+  usdPricePerToken: string
   financialPlan: string
   hasConcentToApplicationFee: boolean
   hasConcentToFundraiseFee: boolean
@@ -77,3 +77,32 @@ export type CampaignApplicationFormData =
   | ({ type: CampaignApplicationFormView.ProductOverview } & CampaignApplicationProductOverview)
   | ({ type: CampaignApplicationFormView.ProductDocumentation } & CampaignApplicationProductDocumentation)
   | ({ type: CampaignApplicationFormView.FundraisingGoal } & CampaignApplicationFundRaisingGoal)
+
+export type CampaignApplicationData = {
+  [CampaignApplicationFormView.ContactInfo]: CampaignApplicationContactInfo | null
+  [CampaignApplicationFormView.TeamInfo]: CampaignApplicationTeamInfo | null
+  [CampaignApplicationFormView.CompanyRegistrationInfo]: CampaignApplicationCompanyRegistrationInfo | null
+  [CampaignApplicationFormView.ProductOverview]: CampaignApplicationProductOverview | null
+  [CampaignApplicationFormView.ProductDocumentation]: CampaignApplicationProductDocumentation | null
+  [CampaignApplicationFormView.FundraisingGoal]: CampaignApplicationFundRaisingGoal | null
+}
+
+export type CampaignApplicationReducerAction =
+  | {
+      type: 'SET_FORM_DATA'
+      formData: CampaignApplicationFormData
+    }
+  | {
+      type: 'SET_VIEW'
+      view: CampaignApplicationState['view']
+    }
+  | {
+      type: 'SET_CAMPAIGN_ID'
+      campaignId: bigint
+    }
+
+export type CampaignApplicationState = {
+  formData: CampaignApplicationData
+  view: 'form' | 'confirmation' | 'deposit-ido-asa'
+  campaignId: null | bigint
+}

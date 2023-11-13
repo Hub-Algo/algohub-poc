@@ -4,6 +4,7 @@ import { ReactNode, useState } from 'react'
 import { Algohub, AlgohubClient } from '../../contracts/AlgohubClient'
 import Button from '../common/button/Button'
 import { microAlgos } from '@algorandfoundation/algokit-utils'
+import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
 
 /* Example usage
 <AlgohubCreateCampaign
@@ -39,7 +40,7 @@ type Props = {
   hardCap: AlgohubCreateCampaignArgs['hardCap']
   duration: AlgohubCreateCampaignArgs['duration']
   metadataUrl: AlgohubCreateCampaignArgs['metadataUrl']
-  onSuccess?: VoidFunction
+  onSuccess?: (response: AppCallTransactionResultOfType<bigint>) => void
 }
 
 const AlgohubCreateCampaign = (props: Props) => {
@@ -76,11 +77,11 @@ const AlgohubCreateCampaign = (props: Props) => {
 
         return Promise.reject(e)
       })
-      .then(() => {
+      .then((res) => {
         setLoading(false)
 
         if (props.onSuccess) {
-          props.onSuccess()
+          props.onSuccess(res)
         }
       })
   }

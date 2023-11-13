@@ -18,13 +18,13 @@ import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
-import CampaignApplicationForm from './components/campaign/application-form/CampaignApplicationForm'
 import { userServices } from './services/userServices'
 import AllCampaigns from './pages/AllCampaigns'
 import algod from './core/algosdk/AlgodManager'
 import { AlgohubClient } from './contracts/AlgohubClient'
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
+import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 
 export interface AppState {
   activeAccount?: Account | null
@@ -134,7 +134,7 @@ export default function App() {
         },
         { path: ROUTES.PROJECT_DETAIL.FULL_PATH, element: <CampaignDetails /> },
         { path: ROUTES.ABOUT.FULL_PATH, element: <About /> },
-        { path: ROUTES.CAMPAIGN_APPLICATION_FORM.FULL_PATH, element: <CampaignApplicationForm /> },
+        { path: ROUTES.CAMPAIGN_APPLICATION_FORM.FULL_PATH, element: <CampaignApplicationContextProvider /> },
         { path: ROUTES.ALL_CAMPAIGNS.FULL_PATH, element: <AllCampaigns /> },
       ],
     },

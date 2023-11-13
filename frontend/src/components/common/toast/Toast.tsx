@@ -4,7 +4,7 @@ import { Fragment, useEffect, useLayoutEffect, useState } from 'react'
 import Button from '../button/Button'
 import classNames from 'classnames'
 
-interface ToastProps {
+export interface ToastProps {
   children: React.ReactNode
   id?: string
   type?: 'success' | 'warning' | 'error'
@@ -45,7 +45,7 @@ function Toast({ children, type, id }: ToastProps) {
       </Button>
 
       <div
-        className={classNames('alert', 'max-w-prose', 'flex', 'flex-wrap', 'border-1', 'border-black', {
+        className={classNames('alert', 'max-w-lg', 'flex', 'flex-wrap', 'border-1', 'border-black', 'whitespace-pre-wrap', {
           'border-green-500': type === 'success',
           'border-yellow-500': type === 'warning',
           'border-rose-500': type === 'error',

@@ -6,7 +6,7 @@ import {
   CampaignApplicationProductDocumentation,
   CampaignApplicationProductOverview,
   CampaignApplicationTeamInfo,
-} from './CampaignApplicationForm.types'
+} from '../../../../../pages/campaign-application/CampaignApplication.types'
 
 const CAMPAIGN_APPLICATION_FORM_STATES = Object.values(CampaignApplicationFormView)
 
@@ -77,7 +77,7 @@ const INITIAL_CAMPAIGN_APPLICATION_FUND_RAISING_GOAL: CampaignApplicationFundRai
   hasConcentToApplicationFee: false,
   hasConcentToFundraiseFee: false,
   hasConfirmedDataAccuracy: false,
-  intention: '',
+  usdPricePerToken: '',
   financialPlan: '',
 }
 

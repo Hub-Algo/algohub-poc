@@ -1,17 +1,18 @@
 import { useState } from 'react'
-import Input from '../../../../common/input/Input'
+import Input from '../../../../../../common/input/Input'
+
+import { INITIAL_CAMPAIGN_APPLICATION_FUND_RAISING_GOAL } from '../../CampaignApplicationForm.constants'
+import Button from '../../../../../../common/button/Button'
 import {
-  CampaignApplicationFundRaisingGoal,
   CampaignApplicationFormData,
   CampaignApplicationFormView,
-} from '../../CampaignApplicationForm.types'
-import { INITIAL_CAMPAIGN_APPLICATION_FUND_RAISING_GOAL } from '../../CampaignApplicationForm.constants'
-import Button from '../../../../common/button/Button'
+  CampaignApplicationFundRaisingGoal,
+} from '../../../../../../../pages/campaign-application/CampaignApplication.types'
 
 interface CampaignApplicationFormFundRaisingGoalProps {
   onSubmitForm: (data: CampaignApplicationFormData) => void
   onClickPrevButton: (view: CampaignApplicationFormView) => void
-  savedState?: CampaignApplicationFundRaisingGoal
+  savedState: CampaignApplicationFundRaisingGoal | null
 }
 
 function CampaignApplicationFormFundRaisingGoal({
@@ -27,14 +28,14 @@ function CampaignApplicationFormFundRaisingGoal({
     !state.hasConcentToApplicationFee ||
     !state.hasConcentToFundraiseFee ||
     !state.hasConfirmedDataAccuracy ||
-    !state.intention ||
+    !state.usdPricePerToken ||
     !state.minAmount
 
   return (
     <form
       onSubmit={handleSubmitForm}
       id={CampaignApplicationFormView.CompanyRegistrationInfo}
-      className={'text-gray-900 flex flex-col gap-4 my-20'}
+      className={'text-gray-900 flex flex-col gap-4 mb-20'}
     >
       <div className={'flex flex-col items-center gap-4'}>
         <h2 className={'font-semibold text-3xl mb-10 text-gray-100'}>{'Fund-Raising Goal'}</h2>
@@ -69,10 +70,10 @@ function CampaignApplicationFormFundRaisingGoal({
         </div>
 
         <Input
-          labels={{ inputTitle: 'Please describe how you intend to use the requested funds' }}
-          type={'text'}
-          value={state?.intention ?? ''}
-          onChange={handleSetIntention}
+          labels={{ inputTitle: 'Please enter the USD price of the token' }}
+          type={'string'}
+          value={state?.usdPricePerToken ?? ''}
+          onChange={handleSetUsdPricePerToken}
           customClassName={'max-w-md mx-auto'}
         />
 
@@ -172,11 +173,11 @@ function CampaignApplicationFormFundRaisingGoal({
     })
   }
 
-  function handleSetIntention(event: React.SyntheticEvent<HTMLInputElement, Event>) {
+  function handleSetUsdPricePerToken(event: React.SyntheticEvent<HTMLInputElement, Event>) {
     const { value } = event.currentTarget
 
     setState((prev) => {
-      return prev ? { ...prev, intention: value } : { ...INITIAL_CAMPAIGN_APPLICATION_FUND_RAISING_GOAL, intention: value }
+      return prev ? { ...prev, usdPricePerToken: value } : { ...INITIAL_CAMPAIGN_APPLICATION_FUND_RAISING_GOAL, usdPricePerToken: value }
     })
   }
 
