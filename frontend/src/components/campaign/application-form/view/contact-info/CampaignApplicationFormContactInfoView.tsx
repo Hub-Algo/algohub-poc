@@ -19,20 +19,16 @@ function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState 
   const isDisabled = !state?.email || !state.name || !state.surname || !state.role
 
   return (
-    <form
-      onSubmit={handleClickNextButton}
-      id={CampaignApplicationFormView.ContactInfo}
-      className={'text-gray-900 flex flex-col gap-4 my-20'}
-    >
-      <h2 className={'font-semibold text-xl mb-10 mx-auto'}>{'Contact Information'}</h2>
+    <form onSubmit={handleClickNextButton} id={CampaignApplicationFormView.ContactInfo} className={'flex flex-col gap-4 my-20'}>
+      <h2 className={'font-semibold text-xl mb-10 mx-auto text-gray-100'}>{'Contact Information'}</h2>
 
-      <p className={'max-w-2xl text-center mb-10 mx-auto'}>
+      <p className={'max-w-2xl text-center mb-10 mx-auto text-gray-100'}>
         {
           'The information provided here will be utilized solely for the purpose of contacting your organization, as necessary, to obtain additional information or to verify the details submitted by you. It is in the applicant best interest to provide frequently used channels of communication, to avoid possibly slowing down the application process. '
         }
       </p>
 
-      <div className={'flex flex-col mx-auto max-w-md w-full'}>
+      <div className={'flex flex-col mx-auto max-w-md w-full text-gray-900'}>
         <Input labels={{ inputTitle: 'First name' }} type={'text'} value={state?.name ?? ''} onChange={handleSetName} />
 
         <Input labels={{ inputTitle: 'Last name' }} type={'text'} value={state?.surname ?? ''} onChange={handleSetLastName} />
@@ -48,7 +44,7 @@ function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState 
         <Input labels={{ inputTitle: 'Telegram channel' }} type={'text'} value={state?.telegram ?? ''} onChange={handleSetTelegram} />
       </div>
 
-      <Button type="submit" isDisabled={isDisabled} customClassName={'ml-auto mt-10'}>
+      <Button type="submit" isDisabled={isDisabled} buttonColor="orange" customClassName={'ml-auto mt-10'}>
         {'Next'}
       </Button>
     </form>

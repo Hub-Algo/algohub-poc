@@ -17,9 +17,9 @@ function CampaignApplicationForm() {
   const [hasSubmitted, setHasSubmitted] = useState(false)
 
   return (
-    <PageContainer customClassName={'w-screen min-h-screen bg-green-300'}>
+    <PageContainer customClassName={'w-screen min-h-screen bg-gray-900'}>
       {hasSubmitted ? (
-        <div className={'flex flex-col items-center justify-center text-green-600 font-semibold mt-32 gap-8'}>
+        <div className={'flex flex-col items-center justify-center text-gray-100 font-semibold mt-32 gap-8'}>
           <p>{'Your campaign application has been submitted!'}</p>
 
           <Link className={'btn btn-success'} to={routes.BASE}>
