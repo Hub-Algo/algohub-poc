@@ -8,7 +8,8 @@ module.exports = {
         'onramp-green': '#a0dd1d',
         'card-bg': '#D9D9D9',
       },
-      height:{"120":"28rem"}
+      height:{"120":"28rem"},
+      scale:{"101":"1.01"}
     },
   },
   daisyui: {
