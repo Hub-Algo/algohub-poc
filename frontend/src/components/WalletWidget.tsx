@@ -20,7 +20,7 @@ type WalletWidgetType = Option & {
 }
 
 const WalletWidget = ({ username, walletAddress, resetUserData }: WalletWidgetPropsInterface) => {
-  const { providers } = useWallet()
+  const { providers, activeAccount } = useWallet()
   const state = useAppContext()
   const navigate = useNavigate()
 
@@ -75,7 +75,7 @@ const WalletWidget = ({ username, walletAddress, resetUserData }: WalletWidgetPr
   }
 
   function handleDisconnect() {
-    const provider = providers?.filter((provider) => provider.metadata.id === state.activeAccount?.providerId)
+    const provider = providers?.filter((provider) => provider.metadata.id === activeAccount?.providerId)
 
     if (!provider) {
       return
