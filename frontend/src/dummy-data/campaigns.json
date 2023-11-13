@@ -90,7 +90,7 @@
     "end_date": "31/12/2023",
     "campaign_category": "infrastructure",
     "hard_goal": 650.0,
-    "invested_amount":232,
+    "invested_amount":650.0,
     "soft_goal": null,
     "max_allocation": 500,
     "campaign_media": [""]
@@ -106,7 +106,7 @@
     "end_date": "31/12/2023",
     "campaign_category": "interoperability",
     "hard_goal": 650.0,
-    "invested_amount":500,
+    "invested_amount":650.0,
     "soft_goal": null,
     "max_allocation": 500,
     "campaign_media": [""]

@@ -67,7 +67,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
   })
 
   return (
-    <div className={'flex gap-4 md:gap-14 items-center w-full justify-between bg-gray-950 px-2 mt-5'}>
+    <div className={'flex gap-4 md:gap-14 items-center h-120 w-full justify-between bg-gray-950 px-2 mt-5 my-2'}>
       <Button
         aria-label={'previous-button'}
         onClick={handleDisplayPrevious}
