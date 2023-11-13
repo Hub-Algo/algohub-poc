@@ -4,19 +4,19 @@ import { PeraOnramp } from '@perawallet/onramp'
 import { useEffect, useRef } from 'react'
 
 import usePeraOnrampAssetOptin from '../hook/usePeraOnrampAssetOptIn'
-import { useWallet } from '@txnlab/use-wallet'
 import Button from '../../../components/common/button/Button'
 import Toast from '../../../components/common/toast/Toast'
+import useAppContext from '../../util/useAppContext'
 
 function PeraOnrampButton() {
-  const { activeAddress } = useWallet()
+  const state = useAppContext()
 
   const peraOnrampRef = useRef<null | PeraOnramp>(null)
   const { executeAssetOptin, toastMessage } = usePeraOnrampAssetOptin()
 
   function handleClick() {
     if (peraOnrampRef.current) {
-      peraOnrampRef.current.addFunds({ accountAddress: activeAddress ?? '' }).then(closeModal)
+      peraOnrampRef.current.addFunds({ accountAddress: state.userData?.wallet_address ?? '' }).then(closeModal)
     }
   }
 
@@ -28,7 +28,7 @@ function PeraOnrampButton() {
 
   useEffect(() => {
     const onramp = new PeraOnramp({
-      optInEnabled: Boolean(activeAddress),
+      optInEnabled: Boolean(state.userData?.wallet_address),
     })
 
     onramp.on({
@@ -36,7 +36,7 @@ function PeraOnrampButton() {
     })
 
     peraOnrampRef.current = onramp
-  }, [activeAddress, executeAssetOptin])
+  }, [state.userData?.wallet_address, executeAssetOptin])
 
   return (
     <>
