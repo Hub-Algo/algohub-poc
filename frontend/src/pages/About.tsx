@@ -14,7 +14,7 @@ export default function About() {
             collaboration services.
           </p>
           <ul className="flex flex-col gap-3 mt-3 py-3 border-t-2 border-b-2">
-            <li className="hover:scale-101 transition-all hover:bg-gray-950 p-6 rounded-md select-none">
+            <li className="hover:scale-101 transition-all hover:bg-gray-950 p-3 rounded-md select-none">
               <h3 className="text-2xl font-bold text-orange-500">Launchpad:</h3>
               <p className="text-gray-400 text-xl">
                 A fundraising platform for enterprise projects building on Algorand. Features a decentralized diligence process, post-raise

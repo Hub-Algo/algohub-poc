@@ -14,7 +14,9 @@ function CampaignApplicationSteps() {
   return (
     <ul className="steps">
       {CAMPAIGN_APPLICATION_STEPS.map((step, index) => (
-        <li className={classNames('step', 'mt-20', { 'step-primary': activeStepIndex >= index })}>{step.title}</li>
+        <li className={classNames('step text-gray-400', 'mt-20', { 'step-primary text-gray-100': activeStepIndex >= index })}>
+          {step.title}
+        </li>
       ))}
     </ul>
   )
