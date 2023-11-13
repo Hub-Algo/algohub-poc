@@ -11,6 +11,7 @@ import Toast, { ToastProps } from '../../../../common/toast/Toast'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import routes from '../../../../../core/routes'
+import { convertToBaseUnits } from '../../../../../core/util/transaction/transactionUtils'
 
 function CampaignApplicationDepositIdoAsa() {
   const { signer } = useWallet()
@@ -77,7 +78,7 @@ function CampaignApplicationDepositIdoAsa() {
           from: appState.activeAccount.address,
           to: appMetadata.appAddress,
           // Convert to base units
-          amount: idoAsaToTransfer * 1000000,
+          amount: convertToBaseUnits(6, idoAsaToTransfer),
           suggestedParams,
           assetIndex: idoAsaId,
         })

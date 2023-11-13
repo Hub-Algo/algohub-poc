@@ -9,6 +9,7 @@ import { filterTruthyObjectValues } from '../../../../../core/util/object/object
 import Button from '../../../../common/button/Button'
 import { CampaignApplicationFormView } from '../../../../../pages/campaign-application/CampaignApplication.types'
 import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
+import { convertToBaseUnits } from '../../../../../core/util/transaction/transactionUtils'
 
 function CampaignApplicationConfirmationPage() {
   const dispatch = useCampaignApplicationDispatchContext()
@@ -33,14 +34,14 @@ function CampaignApplicationConfirmationPage() {
         <AlgohubCreateCampaign
           typedClient={state?.algohubClient}
           votersAsa={478560182}
-          price={1000}
+          price={Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken) ?? 0}
           maxBuyCap={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
           softCap={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
-          hardCap={formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ?? 0}
+          hardCap={convertToBaseUnits(6, formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ?? 0)}
           duration={86400} // 1 day
           metadataUrl={''}
           idoAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId ?? 0}
-          buyAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId ?? 0}
+          buyAsa={113638050} // USDC
           onSuccess={handleSuccessfulApplication}
         >
           {'Submit application'}
