@@ -59,4 +59,8 @@ function convertToBaseUnits(assetDecimals: number, amount: number) {
   return Math.pow(10, assetDecimals) * amount
 }
 
-export { generateAlgoExplorerLink, generateOptIntoAssetTxns, convertToBaseUnits }
+function convertFromBaseUnits(assetDecimals: number, amount: number) {
+  return Math.pow(10, -assetDecimals) * amount
+}
+
+export { generateAlgoExplorerLink, generateOptIntoAssetTxns, convertToBaseUnits, convertFromBaseUnits }

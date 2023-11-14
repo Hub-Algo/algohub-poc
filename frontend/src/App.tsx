@@ -25,6 +25,8 @@ import { AlgohubClient } from './contracts/AlgohubClient'
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
+import { USDC_ASSET } from './core/util/asset/AssetConstants'
+import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 
 export interface AppState {
   activeAccount?: Account | null
@@ -69,16 +71,15 @@ export default function App() {
   }
 
   const fetchAndAppendUserData = async (walletAddress: string) => {
-    const userData = await userService.fetchUserAssets(walletAddress)
-
     const userAssets = (await userService.fetchUserAssets(walletAddress)).assets
 
     const userCreatedAssets = (await userService.fetchUserAssets(walletAddress)).created_assets
 
-    // const user = await userService.signupUser(walletAddress)
-    const usdcDecimals = 6
     //Asset needs type
-    const usdcBalance = userAssets?.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0]?.amount / 10 ** usdcDecimals
+    const usdcBalance = convertFromBaseUnits(
+      USDC_ASSET.decimals,
+      Number(userAssets.find((asset) => asset['asset-id'] === USDC_ASSET.id)?.amount ?? 0),
+    )
 
     const { data } = await axios.get(`https://mainnet-api.algonode.cloud/v2/accounts/${walletAddress}`)
 

@@ -40,9 +40,8 @@ function CampaignApplicationConfirmationPage() {
           softCap={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
           hardCap={convertToBaseUnits(6, formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ?? 0)}
           duration={86400} // 1 day
-          // metadataUrl={''}
           idoAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId ?? 0}
-          buyAsa={10458941} //TODO:Set USDC mainnet
+          buyAsa={USDC_ASSET.id} // TODO: Set USDC mainnet id
           onSuccess={handleSuccessfulApplication}
         >
           {'Submit application'}
