@@ -12,9 +12,11 @@ import AlgohubGetAllCampaignApps from '../components/algohub-pre-generated/Algoh
 import useAppContext from '../core/util/useAppContext'
 import WalletConnectModal from '../components/common/wallet-connect-modal/WalletConnectModal'
 import { useWallet } from '@txnlab/use-wallet'
+import { NewCampaignInterface } from '../interfaces/new-campaign-interface'
+import CampaignDetailsDashboard from '../components/campaign/campaign-details/CampaignDetailsDashboard'
 
 export interface CampaignOutletInterface {
-  campaignList: CampaignInterface[]
+  campaignList: NewCampaignInterface[]
 }
 
 const CampaignDetails = () => {
@@ -39,13 +41,11 @@ const CampaignDetails = () => {
     },
   ]
 
-  const campaign = campaignList.filter((campaign) => campaign.campaign_id === campaignId)[0]
+  const campaign = campaignList.filter((campaign) => campaign.metadata.id === campaignId)[0]
 
   return (
     <PageContainer>
-      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.campaign_title}`]} />
-      {state.algohubClient && <AlgohubGetAllCampaignApps typedClient={state.algohubClient}>{'get all'}</AlgohubGetAllCampaignApps>}
-
+      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.record.companyRegistrationInfo.registeredCompanyName}`]} />
       <section>
         <div className="flex gap-5">
           <div className="w-16 h-16 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">
@@ -56,37 +56,17 @@ const CampaignDetails = () => {
             />
           </div>
           <div>
-            <h2 className="font-bold text-4xl text-gray-100">{campaign?.campaign_title}</h2>
+            <h2 className="font-bold text-4xl text-gray-100 font-oswald">
+              {campaign?.record.companyRegistrationInfo.registeredCompanyName}
+            </h2>
             <h3 className="text-gray-100">Community for everyone</h3>
           </div>
         </div>
       </section>
       <section>
-        <div className="flex flex-col md:flex-row md:gap-10">
+        <div className="flex flex-col gap-6 md:grid md:grid-cols-9 md:gap-10">
           <Carousel />
-          <div className="w-full bg-gray-950 rounded-md p-6 gap-6 flex flex-col">
-            <div className="">
-              <p className="text-sm md:text-lg text-gray-400">Fundraise goal</p>
-              <h2 className="text-3xl md:text-5xl font-bold text-gray-100 ">${campaign?.hard_goal}</h2>
-            </div>
-            <div className="text-gray-300 flex w-full items-center justify-between">
-              <p className="w-3/6">Max allocation</p>
-              <div className="w-1/6 border h-px border-dashed border-gray-600"></div>
-              <p className="w-1/6">$500</p>
-            </div>
-
-            <div className="text-gray-300 flex w-full items-center justify-between">
-              <p className="w-3/6">Max allocation</p>
-              <div className="w-1/6 border h-px border-dashed border-gray-600"></div>
-              <p className="w-1/6">${campaign?.max_allocation}</p>
-            </div>
-
-            {getTxnModal()}
-
-            <a className="btn" href={'/'}>
-              {'Website'}
-            </a>
-          </div>
+          <CampaignDetailsDashboard campaign={campaign}>{getTxnModal()}</CampaignDetailsDashboard>
         </div>
       </section>
       <section className="mt-6">
@@ -107,20 +87,20 @@ const CampaignDetails = () => {
     if (!activeAccount) {
       return <WalletConnectModal buttonLabel="Connect to vote" />
     }
-    if ((campaign?.campaign_status === 'new' && hasVoted) || campaign?.campaign_status === 'pending') {
-      // TODO: Get campaign id dynamically
-      return <InvestModal campaignStatus={campaign.campaign_status} campaignId={479460351n} />
-    } else if (campaign?.campaign_status === 'new' && !hasVoted) {
-      return <VoteModal />
-    }
+    // if ((campaign?.campaign_status === 'new' && hasVoted) || campaign?.campaign_status === 'pending') {
+    //   // TODO: Get campaign id dynamically
+    return <InvestModal campaignStatus={'new'} campaignId={479460351n} />
+    // } else if (campaign?.campaign_status === 'new' && !hasVoted) {
+    //   return <VoteModal />
+    // }
 
-    return (
-      <Modal id={'CampaignDetails.TxnModal'} modalButtonName={'Whitelist'}>
-        <h2>{'Transaction details'}</h2>
+    // return (
+    //   <Modal id={'CampaignDetails.TxnModal'} modalButtonName={'Whitelist'}>
+    //     <h2>{'Transaction details'}</h2>
 
-        <p>{'Enter the amount you want to fund'}</p>
-      </Modal>
-    )
+    //     <p>{'Enter the amount you want to fund'}</p>
+    //   </Modal>
+    // )
   }
 }
 

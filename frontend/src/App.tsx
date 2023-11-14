@@ -17,7 +17,6 @@ import { USDC_ASSET } from './core/util/asset/AssetConstants'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
-import { CampaignInterface } from './interfaces/campaign-interface'
 import { UserInterface } from './interfaces/userInterface'
 import About from './pages/About'
 import AllCampaigns from './pages/AllCampaigns'
@@ -28,15 +27,25 @@ import { CampaignApplicationContextProvider } from './pages/campaign-application
 import { fetchAllCampaigns } from './services/campaignServices'
 import { userServices } from './services/userServices'
 
+import AllCampaigns from './pages/AllCampaigns'
+import algod from './core/algosdk/AlgodManager'
+import { AlgohubClient } from './contracts/AlgohubClient'
+import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
+import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
+import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
+import { USDC_ASSET } from './core/util/asset/AssetConstants'
+import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
+import { NewCampaignInterface } from './interfaces/new-campaign-interface'
+
 export interface AppState {
   activeAccount?: Account | null
-  campaignList: CampaignInterface[]
+  campaignList: NewCampaignInterface[]
   userData?: UserInterface
   algohubClient: AlgohubClient | null
 }
 
 export default function App() {
-  const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
+  const [campaignList, setCampaignList] = useState<NewCampaignInterface[]>([])
   const [userData, setUserData] = useState<UserInterface>()
   const { activeAccount, signer, activeAddress } = useWallet()
 
@@ -75,10 +84,9 @@ export default function App() {
 
     const userCreatedAssets = (await userService.fetchUserAssets(walletAddress)).created_assets
 
-    //Asset needs type
     const usdcBalance = convertFromBaseUnits(
       USDC_ASSET.decimals,
-      Number(userAssets.find((asset) => asset['asset-id'] === USDC_ASSET.id)?.amount ?? 0),
+      Number(userAssets?.find((asset) => asset['asset-id'] === USDC_ASSET.id)?.amount ?? 0),
     )
 
     const { data } = await axios.get(`https://mainnet-api.algonode.cloud/v2/accounts/${walletAddress}`)
