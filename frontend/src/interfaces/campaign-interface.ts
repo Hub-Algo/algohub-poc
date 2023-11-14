@@ -1,16 +1,71 @@
+export interface CompanyRegistrationInfo {
+  registeredCompanyName: string
+  dateOfRegistration: string
+  countryOfRegistration: string
+  chamberOfCommerceRegistrationNumber: number
+}
+
+export interface TeamInfo {
+  employeeNumber: number
+  founder: string
+}
+
+export interface ProductOverview {
+  productName: string
+  marketType: string
+  website: string
+  github: string
+  xAccount: string
+  discordServer: string
+  elevatorPitch: string
+  telegram: string
+}
+
+export interface ProductDocumentation {
+  raisedFundsRange: string
+  roadmap: string
+  whitepaper: string
+  tokenVestingSchedule: string
+  auditReport: string
+  assetId: number
+  pitchDeck: string
+  hasConsentToInDepthInterview: boolean
+}
+
+export interface FundraisingGoal {
+  minAmount: number
+  hasAgreedToAlgohubTermsOfService: boolean
+  hasConcentToApplicationFee: boolean
+  hasConcentToFundraiseFee: boolean
+  hasConfirmedDataAccuracy: boolean
+  usdPricePerToken: string
+  financialPlan: string
+  maxAmount: number
+}
+
+export interface ContactInfo {
+  name: string
+  surname: string
+  role: string
+  email: string
+}
+
+export interface Records {
+  companyRegistrationInfo: CompanyRegistrationInfo
+  teamInfo: TeamInfo
+  productOverview: ProductOverview
+  productDocumentation: ProductDocumentation
+  fundraisingGoal: FundraisingGoal
+  contactInfo: ContactInfo
+}
+
+export interface Metadata {
+  id: string
+  private: boolean
+  createdAt: string
+}
+
 export interface CampaignInterface {
-  campaign_id: string
-  campaign_title: string
-  campaign_subtitle: string
-  creator_address: string
-  campaign_status: 'new' | 'pending' | 'completed'
-  campaign_category: string
-  ido_token: number
-  start_date: string
-  end_date: string
-  hard_goal: number
-  invested_amount: number
-  soft_goal: null | number
-  max_allocation: number
-  campaign_media: string[]
+  record: Records
+  metadata: Metadata
 }

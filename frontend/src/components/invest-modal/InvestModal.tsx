@@ -13,7 +13,7 @@ import Toast from '../common/toast/Toast'
 import { USDC_ASSET } from '../../core/util/asset/AssetConstants'
 
 interface InvestModalProps {
-  campaignStatus: Exclude<CampaignInterface['campaign_status'], 'completed'>
+  campaignStatus: string
   campaignId: bigint | number
 }
 function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {

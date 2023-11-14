@@ -1,11 +1,8 @@
-const images = [
-  'https://pbs.twimg.com/profile_banners/973713781627830272/1683779199/600x200',
-  'https://pbs.twimg.com/profile_banners/1503154439909167115/1660838512/600x200',
-  'https://pbs.twimg.com/profile_banners/1414619378323267585/1699203622/1500x500',
-  'https://pbs.twimg.com/profile_banners/1441430126303055873/1680594213/1500x500',
-]
+interface CarouselPropsInterface {
+  images: string[]
+}
 
-const Carousel = () => {
+const Carousel = ({ images }: CarouselPropsInterface) => {
   const renderedImages = images.map((image, index) => {
     return (
       <div key={index} id={`item${index}`} className="carousel-item w-full">

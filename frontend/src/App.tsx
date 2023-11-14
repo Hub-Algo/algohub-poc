@@ -26,17 +26,17 @@ import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { userServices } from './services/userServices'
-import { NewCampaignInterface } from './interfaces/new-campaign-interface'
+import { CampaignInterface } from './interfaces/new-campaign-interface'
 
 export interface AppState {
   activeAccount?: Account | null
-  campaignList: NewCampaignInterface[]
+  campaignList: CampaignInterface[]
   userData?: UserInterface
   algohubClient: AlgohubClient | null
 }
 
 export default function App() {
-  const [campaignList, setCampaignList] = useState<NewCampaignInterface[]>([])
+  const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
   const [userData, setUserData] = useState<UserInterface>()
   const { activeAccount, signer, activeAddress } = useWallet()
 

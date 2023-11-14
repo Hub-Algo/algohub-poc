@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react'
 import { useWindowSizeContext } from '../../../core/window-size/WindowSizeContext'
 import Button from '../../common/button/Button'
 import CardWithImage from '../../common/card/with-image/CardWithImage'
-import { NewCampaignInterface } from '../../../interfaces/new-campaign-interface'
+import { CampaignInterface } from '../../../interfaces/new-campaign-interface'
 
 interface CampaignsListPropsInterface {
-  campaigns: NewCampaignInterface[]
+  campaigns: CampaignInterface[]
 }
 
 const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
@@ -76,7 +76,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
   }
 
   function getDisplayedCampaignsLimit(isSmallScreen: boolean, isXSmallScreen: boolean, isMidRangeScreen: boolean) {
-    if (isXSmallScreen) {
+    if (isXSmallScreen || isSmallScreen) {
       return 1
     }
 
