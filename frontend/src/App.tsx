@@ -69,12 +69,17 @@ export default function App() {
   }
 
   const fetchAndAppendUserData = async (walletAddress: string) => {
-    const userAssets = await userService.fetchUserAssets(walletAddress)
+    const userData = await userService.fetchUserAssets(walletAddress)
+    console.log('userData before sany', userData)
+
+    const userAssets = (await userService.fetchUserAssets(walletAddress)).assets
+
+    const userCreatedAssets = (await userService.fetchUserAssets(walletAddress)).created_assets
 
     // const user = await userService.signupUser(walletAddress)
     const usdcDecimals = 6
     //Asset needs type
-    const usdcBalance = userAssets.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0]?.amount / 10 ** usdcDecimals
+    const usdcBalance = userAssets?.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0]?.amount / 10 ** usdcDecimals
 
     const { data } = await axios.get(`https://mainnet-api.algonode.cloud/v2/accounts/${walletAddress}`)
 
@@ -90,6 +95,8 @@ export default function App() {
       username,
       usdc_balance: usdcBalance ? Number(usdcBalance.toFixed(2)) : 0,
       algo_balance: Number(algoBalance),
+      user_assets: userAssets,
+      user_created_assets: userCreatedAssets,
     })
   }
 
@@ -100,6 +107,7 @@ export default function App() {
   useEffect(() => {
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
+      console.log('userData', userData)
     }
   }, [activeAccount])
 

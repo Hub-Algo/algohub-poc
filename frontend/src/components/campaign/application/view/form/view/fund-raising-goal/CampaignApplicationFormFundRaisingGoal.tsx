@@ -8,6 +8,8 @@ import {
   CampaignApplicationFormView,
   CampaignApplicationFundRaisingGoal,
 } from '../../../../../../../pages/campaign-application/CampaignApplication.types'
+import LabelTooltip from '../../../../../../common/LabelTooltip'
+import { BiQuestionMark } from 'react-icons/bi'
 
 interface CampaignApplicationFormFundRaisingGoalProps {
   onSubmitForm: (data: CampaignApplicationFormData) => void
@@ -46,102 +48,96 @@ function CampaignApplicationFormFundRaisingGoal({
           }
         </p>
 
-        <div className="flex flex-col gap-4 max-w-md">
-          <p className={'font-medium text-gray-100'}>{'Minimum Funding Target'}</p>
-          <p className="text-gray-100">
-            {
-              'This will be the minimum amount of funds required for the campaign to be considered successful. In the event that this target is not met within the specified timeframe, it will trigger the automatic termination of the token sale, followed by the prompt refund of all collected capital to the respective investors.'
-            }
-          </p>
-
+        <div className="w-full">
+          <LabelTooltip
+            labelContent="Minimum funding target"
+            tooltipText="This will be the minimum amount of funds required for the campaign to be considered successful. In the event that this target is not met within the specified timeframe, it will trigger the automatic termination of the token sale, followed by the prompt refund of all collected capital to the respective investors."
+          />
           <Input type={'number'} value={state?.minAmount ?? ''} onChange={handleSetMinAmount} />
         </div>
 
-        <div className="flex flex-col gap-4 max-w-md">
-          <p className="font-medium text-gray-100">{'Maximum Funding Target (if applicable)'}</p>
-
-          <p className="text-gray-100">
-            {
-              'In the event that this target is met within the specified timeframe, the token sales will be considered completed, with no possibility to raise additional funds beyond the Maximum Funding Target. '
-            }
-          </p>
-
+        <div className="w-full">
+          <LabelTooltip
+            labelContent="Maximum Funding Target (if applicable)"
+            tooltipText="In the event that this target is met within the specified timeframe, the token sales will be considered completed, with no possibility to raise additional funds beyond the Maximum Funding Target."
+          />
           <Input type={'number'} value={state?.maxAmount ?? ''} onChange={handleSetMaxAmount} />
         </div>
 
-        <Input
-          labels={{ inputTitle: 'Please enter the USD price of the token' }}
-          type={'string'}
-          value={state?.usdPricePerToken ?? ''}
-          onChange={handleSetUsdPricePerToken}
-          customClassName={'max-w-md mx-auto'}
-        />
-
-        <Input
-          labels={{ inputTitle: 'Financial plan' }}
-          type={'url'}
-          value={state?.financialPlan ?? ''}
-          onChange={handleSetFinancialPlan}
-          customClassName={'max-w-md'}
-        />
-
-        <div className="max-w-md gap-4 flex flex-col">
-          <p className="text-gray-100">{'In other to prevent spam applications, AlgoHub applies an application fee of 100 USDC.'}</p>
-
-          <label className={'gap-2 flex text-gray-100'}>
-            <input type={'checkbox'} value={'yes'} onChange={handleSetApplicationFeeConsent} checked={state?.hasConcentToApplicationFee} />
-
-            {
-              'I understand that AlgoHub will apply an application fee of 100 USDC, and I consent to the collection of said fee at application submission time.'
-            }
-          </label>
+        <div className="w-full">
+          <LabelTooltip labelContent="USD price of the token" />
+          <Input type={'string'} value={state?.usdPricePerToken ?? ''} onChange={handleSetUsdPricePerToken} customClassName={'mx-auto'} />
         </div>
 
-        <div className="max-w-md gap-4 flex flex-col">
-          <p className="text-gray-100">{'AlgoHub applies a fundraise fee equal to 6% of the raised capital.'}</p>
-
-          <label className={'gap-2 flex text-gray-100'}>
-            <input type={'checkbox'} value={'yes'} onChange={handleSetFundraiseFeeConsent} checked={state?.hasConcentToFundraiseFee} />
-
-            {
-              'I understand that AlgoHub will apply a fundraise fee (6% of the raised capital), and I consent to the collection of said fee should the fundraising goal be met'
-            }
-          </label>
+        <div className="w-full">
+          <LabelTooltip labelContent="Financial plan" />
+          <Input type={'url'} value={state?.financialPlan ?? ''} onChange={handleSetFinancialPlan} customClassName={'mx-auto'} />
         </div>
 
-        <div className="max-w-md gap-4 flex flex-col">
-          <p className="text-gray-100">{`By submitting this application form, you agree to AlgoHub's terms of service`}</p>
+        <div className="flex flex-col gap-6 mt-6">
+          <div className="gap-1 flex flex-col">
+            <p className="text-gray-100 font-bold">
+              {'In order to prevent spam applications, AlgoHub applies an application fee of 100 USDC.'}
+            </p>
 
-          <label className={'gap-2 flex text-gray-100'}>
-            <input
-              type={'checkbox'}
-              value={'yes'}
-              onChange={handleSetAlgohubTermsOfServiceAgreement}
-              checked={state?.hasAgreedToAlgohubTermsOfService}
-            />
+            <label className={'gap-2 flex text-gray-300'}>
+              <input
+                type={'checkbox'}
+                value={'yes'}
+                onChange={handleSetApplicationFeeConsent}
+                checked={state?.hasConcentToApplicationFee}
+              />
 
-            {"I agree to AlgoHub's terms of service."}
-          </label>
+              {
+                'I understand that AlgoHub will apply an application fee of 100 USDC, and I consent to the collection of said fee at application submission time.'
+              }
+            </label>
+          </div>
+
+          <div className="gap-1 flex flex-col">
+            <p className="text-gray-100 font-bold">{'AlgoHub applies a fundraise fee equal to 6% of the raised capital.'}</p>
+
+            <label className={'gap-2 flex text-gray-300'}>
+              <input type={'checkbox'} value={'yes'} onChange={handleSetFundraiseFeeConsent} checked={state?.hasConcentToFundraiseFee} />
+
+              {
+                'I understand that AlgoHub will apply a fundraise fee (6% of the raised capital), and I consent to the collection of said fee should the fundraising goal be met'
+              }
+            </label>
+          </div>
+
+          <div className="gap-1 w-full flex flex-col">
+            <p className="text-gray-100 font-bold">{`By submitting this application form, you agree to AlgoHub's terms of service`}</p>
+
+            <label className={'gap-2 flex text-gray-300'}>
+              <input
+                type={'checkbox'}
+                value={'yes'}
+                onChange={handleSetAlgohubTermsOfServiceAgreement}
+                checked={state?.hasAgreedToAlgohubTermsOfService}
+              />
+
+              {"I agree to AlgoHub's terms of service."}
+            </label>
+          </div>
         </div>
 
-        <div className="max-w-md gap-4 flex flex-col mt-10">
-          <p className="text-gray-100">
-            {
-              'By submitting this form, you confirm that the information provided is accurate and complete to the best of your knowledge. You acknowledge that any deliberate misrepresentation may result in the rejection of the submitted application at any stage of the process, subject to the sole and absolute discretion of the AlgoHub team.'
-            }
-          </p>
+        <div className="gap-4 flex flex-col mt-10 w-full">
+          <div className="flex items-center gap-3">
+            <label className={'gap-2 flex text-gray-300'}>
+              <input type={'checkbox'} value={'yes'} onChange={handleSetHasConfirmed} checked={state?.hasConfirmedDataAccuracy} />
 
-          <p className="text-gray-100">
-            {
-              'You further understand and agree that the submission of this form does not guarantee acceptance, and that AlgoHub reserves the right to reject any application for any reason without explanation.'
-            }
-          </p>
-
-          <label className={'gap-2 flex text-gray-100'}>
-            <input type={'checkbox'} value={'yes'} onChange={handleSetHasConfirmed} checked={state?.hasConfirmedDataAccuracy} />
-
-            {'I confirm that the information I have provided is accurate and complete.'}
-          </label>
+              {'I confirm that the information I have provided is accurate and complete.'}
+            </label>
+            <div
+              className="tooltip tooltip-bottom text-sm"
+              data-tip="By submitting this form, you confirm that the information provided is accurate and complete to the best of your knowledge. You acknowledge that any deliberate misrepresentation may result in the rejection of the submitted application at any stage of the process, subject to the sole and absolute discretion of the AlgoHub team. You further understand and agree that the submission of this form does not guarantee acceptance, and that AlgoHub reserves the right to reject any application for any reason without explanation."
+            >
+              <button className="bg-gray-100 rounded-full">
+                <BiQuestionMark className="text-gray-950" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

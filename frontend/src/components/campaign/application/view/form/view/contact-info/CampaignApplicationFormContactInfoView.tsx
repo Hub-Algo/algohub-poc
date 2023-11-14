@@ -8,6 +8,7 @@ import {
   CampaignApplicationFormData,
   CampaignApplicationFormView,
 } from '../../../../../../../pages/campaign-application/CampaignApplication.types'
+import LabelTooltip from '../../../../../../common/LabelTooltip'
 
 interface CampaignApplicationFormContactInfoViewProps {
   onClickNextButton: (data: CampaignApplicationFormData) => void
@@ -30,19 +31,40 @@ function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState 
       </p>
 
       <div className={'flex flex-col mx-auto max-w-md w-full text-gray-900'}>
-        <Input labels={{ inputTitle: 'First name' }} type={'text'} value={state?.name ?? ''} onChange={handleSetName} />
+        <div className="w-full">
+          <LabelTooltip labelContent="First name" />
+          <Input type={'text'} value={state?.name ?? ''} onChange={handleSetName} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Last name' }} type={'text'} value={state?.surname ?? ''} onChange={handleSetLastName} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Last name" />
+          <Input type={'text'} value={state?.surname ?? ''} onChange={handleSetLastName} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Role within the organization' }} type={'text'} value={state?.role ?? ''} onChange={handleSetRole} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Role within the organization" />
+          <Input type={'text'} value={state?.role ?? ''} onChange={handleSetRole} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Email address' }} type={'email'} value={state?.email ?? ''} onChange={handleSetEmail} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Email address" />
+          <Input type={'email'} value={state?.email ?? ''} onChange={handleSetEmail} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Discord handle' }} type={'text'} value={state?.discord ?? ''} onChange={handleSetDiscord} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Discord handle" />
+          <Input type={'text'} value={state?.discord ?? ''} onChange={handleSetDiscord} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Twitter handle' }} type={'text'} value={state?.twitter ?? ''} onChange={handleSetTwitter} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Twitter handle" />
+          <Input type={'text'} value={state?.twitter ?? ''} onChange={handleSetTwitter} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Telegram channel' }} type={'text'} value={state?.telegram ?? ''} onChange={handleSetTelegram} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Telegram channel" />
+          <Input type={'text'} value={state?.telegram ?? ''} onChange={handleSetTelegram} />
+        </div>
       </div>
 
       <Button type={'submit'} isDisabled={isDisabled} buttonColor={'orange'} customClassName={'ml-auto mt-10'}>

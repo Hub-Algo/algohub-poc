@@ -7,6 +7,7 @@ import {
   CampaignApplicationFormView,
   CampaignApplicationTeamInfo,
 } from '../../../../../../../pages/campaign-application/CampaignApplication.types'
+import LabelTooltip from '../../../../../../common/LabelTooltip'
 
 interface CampaignApplicatioFormTeamInfoViewProps {
   onClickPrevButton: (view: CampaignApplicationFormView) => void
@@ -28,27 +29,20 @@ function CampaignApplicatioFormTeamInfoView({ onClickNextButton, onClickPrevButt
       <div className={'flex flex-col items-center mx-auto max-w-md w-full'}>
         <h2 className={'font-semibold text-3xl mb-10 text-cente text-gray-100'}>{'Team Information'}</h2>
 
-        <Input
-          labels={{ inputTitle: 'Number of employees' }}
-          type={'number'}
-          value={state?.employeeNumber ?? ''}
-          onChange={handleSetEmployeeNumber}
-          min={0}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Number of employees" />
+          <Input type={'number'} value={state?.employeeNumber ?? ''} onChange={handleSetEmployeeNumber} min={0} />
+        </div>
 
-        <Input
-          labels={{ inputTitle: 'Founder information' }}
-          type={'text'}
-          value={state?.founder ?? ''}
-          onChange={handleSetFounderInformation}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Founder information" />
+          <Input type={'text'} value={state?.founder ?? ''} onChange={handleSetFounderInformation} />
+        </div>
 
-        <Input
-          labels={{ inputTitle: 'Cofounder information' }}
-          type={'text'}
-          value={state?.cofounder ?? ''}
-          onChange={handleSetCofounderInformation}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Cofounder information" />
+          <Input type={'text'} value={state?.cofounder ?? ''} onChange={handleSetCofounderInformation} />
+        </div>
       </div>
 
       <div className={'justify-between flex mt-10'}>
