@@ -40,7 +40,7 @@ export class userServices {
 
   async fetchUserNfd(walletAddress: string) {
     try {
-      const { data } = await axios.get(`https://api.nf.domains/nfd/v2/address?address=${walletAddress}`)
+      const { data } = await axios.get(`https://api.testnet.nf.domains/nfd/v2/address?address=${walletAddress}`)
       return data[walletAddress][0].name
     } catch (error) {
       return ellipseAddress(walletAddress)

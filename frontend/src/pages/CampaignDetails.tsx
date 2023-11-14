@@ -9,6 +9,10 @@ import InvestModal from '../components/invest-modal/InvestModal'
 import WalletConnectModal from '../components/common/wallet-connect-modal/WalletConnectModal'
 import { useWallet } from '@txnlab/use-wallet'
 import CampaignDetailsDashboard from '../components/campaign/campaign-details/CampaignDetailsDashboard'
+import { AssetServices } from '../services/assetServices'
+import { useEffect, useState } from 'react'
+import { ellipseAddress } from '../core/util/wallet/ellipseAddress'
+import { AssetInfoInterface } from '../interfaces/AssetInfoInterface'
 
 const images = [
   'https://pbs.twimg.com/profile_banners/1429713964288471040/1661936165/1500x500',
@@ -28,8 +32,10 @@ const CampaignDetails = () => {
 
   const { campaignId } = useParams()
 
+  const [assetInfo, setAssetInfo] = useState<AssetInfoInterface>()
+
   const tabItems: TabItem[] = [
-    { id: 'become-vip', content: 'Become VIP' },
+    { id: 'project-info', content: 'Project information' },
     {
       id: 'voting-history',
       content: 'Voting History',
@@ -41,7 +47,18 @@ const CampaignDetails = () => {
     },
   ]
 
+  const assetServices = new AssetServices()
+
   const campaign = campaignList.filter((campaign) => campaign.metadata.id === campaignId)[0]
+
+  const fetchAssetInfo = async () => {
+    const { asset } = await assetServices.getAssetInformation(campaign.record.productDocumentation.assetId)
+    setAssetInfo(asset)
+  }
+
+  useEffect(() => {
+    fetchAssetInfo()
+  }, [])
 
   return (
     <PageContainer>
@@ -71,13 +88,57 @@ const CampaignDetails = () => {
       </section>
       <section className="mt-6">
         <Tab items={tabItems}>
-          <div>{'Campaign info'}</div>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-end gap-6">
+              <h4 className="text-2xl font-bold text-gray-100 font-oswald">Project name:</h4>
+              <h3 className="text-2xl font-oswald text-gray-100">{campaign.record.companyRegistrationInfo.registeredCompanyName}</h3>
+            </div>
+            <div className="flex items-end gap-6">
+              <h4 className="text-2xl font-bold text-gray-100 font-oswald">Asset id:</h4>
+              <a href={`https://testnet.algoexplorer.io/asset/${campaign.record.productDocumentation.assetId}`}>
+                <h3 className="text-2xl font-oswald text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600">
+                  {campaign.record.productDocumentation.assetId} - {assetInfo?.params.name}
+                </h3>
+              </a>
+            </div>
+            <div className="flex items-end gap-6">
+              <h4 className="text-2xl font-bold text-gray-100 font-oswald">Creator address:</h4>
+              <a href={`https://testnet.algoexplorer.io/address/${assetInfo?.params.creator}`}>
+                <h3 className="text-2xl font-oswald text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600">
+                  {ellipseAddress(assetInfo?.params.creator)}
+                </h3>
+              </a>
+            </div>
+            <div className="flex items-end gap-6">
+              <h4 className="text-2xl font-bold text-gray-100 font-oswald">Project communities:</h4>
+              <a href={`https://testnet.algoexplorer.io/address/${assetInfo?.params.creator}`}>
+                <h3 className="text-2xl font-oswald text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600">
+                  {ellipseAddress(assetInfo?.params.creator)}
+                </h3>
+              </a>
+            </div>
+          </div>
 
-          <div>{'Tokenomics'}</div>
+          <div>
+            {' '}
+            <div className="h-96 flex items-center justify-center">
+              <p className="text-3xl text-gray-300">Comming soon</p>
+            </div>
+          </div>
 
-          <div>{'Details'}</div>
+          <div>
+            {' '}
+            <div className="h-96 flex items-center justify-center">
+              <p className="text-3xl text-gray-300">Comming soon</p>
+            </div>
+          </div>
 
-          <div>{'Settings'}</div>
+          <div>
+            {' '}
+            <div className="h-96 flex items-center justify-center">
+              <p className="text-3xl text-gray-300">Comming soon</p>
+            </div>
+          </div>
         </Tab>
       </section>
     </PageContainer>
