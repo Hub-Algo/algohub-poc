@@ -9,7 +9,7 @@ import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call withdrawSales"
   typedClient={typedClient}
-  buyAsa={buyAsa}
+  investmentAsa={investmentAsa}
 />
 */
 type CampaignWithdrawSalesArgs = Campaign['methods']['withdrawSales(asset)void']['argsObj']
@@ -19,7 +19,7 @@ type Props = {
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  buyAsa: CampaignWithdrawSalesArgs['buyAsa']
+  investmentAsa: CampaignWithdrawSalesArgs['investmentAsa']
 }
 
 const CampaignWithdrawSales = (props: Props) => {
@@ -32,7 +32,7 @@ const CampaignWithdrawSales = (props: Props) => {
     console.log(`Calling withdrawSales`)
     await props.typedClient.withdrawSales(
       {
-        buyAsa: props.buyAsa,
+        investmentAsa: props.investmentAsa,
       },
       { sender },
     )

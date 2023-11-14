@@ -11,9 +11,9 @@ const SECODNDS_IN_DAY = 60 * 60 * 24;
 
 const campaign = {
   price: 2,
-  maxBuyCap: 100,
-  softCap: 100,
-  hardCap: 150,
+  maxInvestmentPerAccount: 100,
+  minTotalInvestment: 100,
+  maxTotalInvestment: 150,
   duration: SECODNDS_IN_DAY * 7, // 1 week in seconds
   metadataUrl: 'https://google.com',
 };
@@ -75,11 +75,11 @@ describe('Algohub App', () => {
         {
           votersAsa: voteAsa,
           idoAsa,
-          buyAsa: usdcAsa,
+          investmentAsa: usdcAsa,
           price: campaign.price,
-          maxBuyCap: campaign.maxBuyCap,
-          softCap: campaign.softCap,
-          hardCap: campaign.hardCap,
+          maxInvestmentPerAccount: campaign.maxInvestmentPerAccount,
+          minTotalInvestment: campaign.minTotalInvestment,
+          maxTotalInvestment: campaign.maxTotalInvestment,
           duration: campaign.duration,
           metadataUrl: campaign.metadataUrl,
           vestingPercentages,
@@ -369,9 +369,9 @@ describe('Algohub App', () => {
     await campaignContract.appClient.fundAppAccount(algokit.microAlgos(1_000_000));
     campaignDetailsOnChain = await campaignContract.getCampaign({});
     expect(campaignDetailsOnChain.return?.at(0)).toBe(BigInt(campaign.price));
-    expect(campaignDetailsOnChain.return?.at(1)).toBe(BigInt(campaign.maxBuyCap));
-    expect(campaignDetailsOnChain.return?.at(2)).toBe(BigInt(campaign.softCap));
-    expect(campaignDetailsOnChain.return?.at(3)).toBe(BigInt(campaign.hardCap));
+    expect(campaignDetailsOnChain.return?.at(1)).toBe(BigInt(campaign.maxInvestmentPerAccount));
+    expect(campaignDetailsOnChain.return?.at(2)).toBe(BigInt(campaign.minTotalInvestment));
+    expect(campaignDetailsOnChain.return?.at(3)).toBe(BigInt(campaign.maxTotalInvestment));
     expect(campaignDetailsOnChain.return?.at(4)).toBe(BigInt(0)); // investment amount
     expect(campaignDetailsOnChain.return?.at(5)).toBe(BigInt(0)); // withdrawnAmount
     // TODO: Assert the below - must be now + voting period
@@ -382,8 +382,8 @@ describe('Algohub App', () => {
 
     const voterAsa = await campaignContract.getVotersAsa({});
     expect(voterAsa.return).toBe(BigInt(voteAsa));
-    const buyAsaOnChain = await campaignContract.getBuyAsa({});
-    expect(buyAsaOnChain.return).toBe(BigInt(usdcAsa));
+    const investmentAsaOnChain = await campaignContract.getBuyAsa({});
+    expect(investmentAsaOnChain.return).toBe(BigInt(usdcAsa));
     const idoAsaOnChain = await campaignContract.getIdoAsa({});
     expect(idoAsaOnChain.return).toBe(BigInt(idoAsa));
 
@@ -394,7 +394,7 @@ describe('Algohub App', () => {
     // TODO: Ideally check the actual values as well - vestingDurations needs casting to big ints
   });
   test('Campaign Contract - deposit IDO asset', async () => {
-    const idoAsaToTransfer = campaign.hardCap / campaign.price;
+    const idoAsaToTransfer = campaign.maxTotalInvestment / campaign.price;
     const idoXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender1.addr,
       to: campaignContractAddr,
@@ -413,7 +413,7 @@ describe('Algohub App', () => {
     expect(BigInt(idoBalance['asset-holding'].amount)).toBe(BigInt(idoAsaToTransfer));
   });
   test('Campaign Contract - deposit IDO asset (negative - invalid amount)', async () => {
-    const idoAsaToTransfer = campaign.hardCap / campaign.price - 1;
+    const idoAsaToTransfer = campaign.maxTotalInvestment / campaign.price - 1;
     const idoXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender1.addr,
       to: campaignContractAddr,
@@ -432,7 +432,7 @@ describe('Algohub App', () => {
     ).rejects.toThrow();
   });
   test('Campaign Contract - deposit IDO asset (negative - access control)', async () => {
-    const idoAsaToTransfer = campaign.hardCap / campaign.price;
+    const idoAsaToTransfer = campaign.maxTotalInvestment / campaign.price;
     const idoXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender2.addr,
       to: campaignContractAddr,
@@ -453,12 +453,12 @@ describe('Algohub App', () => {
   // TODO: Do the voing tests here
   // TODO: Hypelisting tests ...
 
-  test('Campaign Contract - buy()', async () => {
-    const buyCost = campaign.maxBuyCap * campaign.price;
-    const buyXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
+  test('Campaign Contract - invest()', async () => {
+    const investCost = campaign.maxInvestmentPerAccount * campaign.price;
+    const investXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender1.addr,
       to: campaignContractAddr,
-      amount: buyCost,
+      amount: investCost,
       suggestedParams: await algokit.getTransactionParams(undefined, algod),
       assetIndex: Number(usdcAsa),
     });
@@ -467,8 +467,8 @@ describe('Algohub App', () => {
     const usdcBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa)).do();
     expect(BigInt(usdcBalanceBefore['asset-holding'].amount)).toBe(BigInt(totalIdoTokens));
 
-    await campaignContract.buy(
-      { buyAsaXfer: buyXferTxn, buyAsa: usdcAsa, buyAmount: campaign.maxBuyCap },
+    await campaignContract.invest(
+      { investmentAsaXfer: investXferTxn, investmentAsa: usdcAsa, investmentAmount: campaign.maxInvestmentPerAccount },
       {
         sender: sender1,
         boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey]))],
@@ -476,24 +476,28 @@ describe('Algohub App', () => {
     );
     const usdcBalanceAfter = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa)).do();
     expect(BigInt(usdcBalanceAfter['asset-holding'].amount)).toBe(
-      BigInt(usdcBalanceBefore['asset-holding'].amount) - BigInt(buyCost)
+      BigInt(usdcBalanceBefore['asset-holding'].amount) - BigInt(investCost)
     );
     campaignDetailsOnChain = await campaignContract.getCampaign({});
-    expect(campaignDetailsOnChain.return?.at(4)).toBe(BigInt(campaign.maxBuyCap)); // investment amount
+    expect(campaignDetailsOnChain.return?.at(4)).toBe(BigInt(campaign.maxInvestmentPerAccount)); // investment amount
   });
-  test('Campaign Contract - buy() - negative (hardcap reached)', async () => {
-    const buyCost = campaign.price * campaign.maxBuyCap;
-    const buyXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
+  test('Campaign Contract - invest() - negative (hardcap reached)', async () => {
+    const investCost = campaign.price * campaign.maxInvestmentPerAccount;
+    const investXferTxn = await makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender1.addr,
       to: campaignContractAddr,
-      amount: buyCost,
+      amount: investCost,
       suggestedParams: await algokit.getTransactionParams(undefined, algod),
       assetIndex: Number(usdcAsa),
     });
 
     await expect(
-      campaignContract.buy(
-        { buyAsaXfer: buyXferTxn, buyAsa: usdcAsa, buyAmount: campaign.maxBuyCap },
+      campaignContract.invest(
+        {
+          investmentAsaXfer: investXferTxn,
+          investmentAsa: usdcAsa,
+          investmentAmount: campaign.maxInvestmentPerAccount,
+        },
         {
           sender: sender1,
           boxes: [
@@ -541,7 +545,8 @@ describe('Algohub App', () => {
 
   test('Campaign Contract - withdrawIdoAsa()', async () => {
     const campaingDetails = await campaignContract.getCampaign({});
-    const idoTokensTobeClaimed = (Number(campaign.hardCap) - Number(campaingDetails.return![4])) / campaign.price; // (hardcap - investment) / price
+    const idoTokensTobeClaimed =
+      (Number(campaign.maxTotalInvestment) - Number(campaingDetails.return![4])) / campaign.price; // (hardcap - investment) / price
     const idoBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(idoAsa)).do();
     await campaignContract.withdrawIdoAsa(
       { idoAsa },
@@ -563,9 +568,9 @@ describe('Algohub App', () => {
 
   test('Campaign Contract - withdrawSales()', async () => {
     const usdcBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa)).do();
-    const usdcTokensToWithdraw = campaign.maxBuyCap * campaign.price;
+    const usdcTokensToWithdraw = campaign.maxInvestmentPerAccount * campaign.price;
     await campaignContract.withdrawSales(
-      { buyAsa: usdcAsa },
+      { investmentAsa: usdcAsa },
       {
         sendParams: {
           fee: microAlgos(2_000),
@@ -585,7 +590,7 @@ describe('Algohub App', () => {
   test('Campaign Contract - withdrawInvestment() - negative (campaign is approved)', async () => {
     await expect(
       campaignContract.withdrawInvestment(
-        { buyAsa: usdcAsa },
+        { investmentAsa: usdcAsa },
         {
           boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey]))],
         }

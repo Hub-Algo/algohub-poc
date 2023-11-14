@@ -36,7 +36,7 @@
           "desc": ""
         },
         {
-          "name": "buyAsa",
+          "name": "investmentAsa",
           "type": "asset",
           "desc": ""
         },
@@ -46,17 +46,17 @@
           "desc": ""
         },
         {
-          "name": "maxBuyCap",
+          "name": "maxInvestmentPerAccount",
           "type": "uint64",
           "desc": ""
         },
         {
-          "name": "softCap",
+          "name": "minTotalInvestment",
           "type": "uint64",
           "desc": ""
         },
         {
-          "name": "hardCap",
+          "name": "maxTotalInvestment",
           "type": "uint64",
           "desc": ""
         },
@@ -132,20 +132,20 @@
       }
     },
     {
-      "name": "buy",
+      "name": "invest",
       "args": [
         {
-          "name": "buyAsaXfer",
+          "name": "investmentAsaXfer",
           "type": "axfer",
           "desc": ""
         },
         {
-          "name": "buyAsa",
+          "name": "investmentAsa",
           "type": "asset",
           "desc": ""
         },
         {
-          "name": "buyAmount",
+          "name": "investmentAmount",
           "type": "uint64",
           "desc": ""
         }
@@ -175,7 +175,7 @@
       "name": "withdrawInvestment",
       "args": [
         {
-          "name": "buyAsa",
+          "name": "investmentAsa",
           "type": "asset",
           "desc": ""
         }
@@ -205,7 +205,7 @@
       "name": "withdrawSales",
       "args": [
         {
-          "name": "buyAsa",
+          "name": "investmentAsa",
           "type": "asset",
           "desc": ""
         }

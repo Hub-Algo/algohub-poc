@@ -52,7 +52,7 @@ export const APP_SPEC: AppSpec = {
         no_op: 'CALL',
       },
     },
-    'buy(axfer,asset,uint64)void': {
+    'invest(axfer,asset,uint64)void': {
       call_config: {
         no_op: 'CALL',
       },
@@ -144,9 +144,9 @@ export const APP_SPEC: AppSpec = {
           type: 'uint64',
           key: 'idoAsaId',
         },
-        buyAsaId: {
+        investmentAsaId: {
           type: 'uint64',
-          key: 'buyAsaId',
+          key: 'investmentAsaId',
         },
         votersAsaId: {
           type: 'uint64',
@@ -229,7 +229,7 @@ export const APP_SPEC: AppSpec = {
             desc: '',
           },
           {
-            name: 'buyAsa',
+            name: 'investmentAsa',
             type: 'asset',
             desc: '',
           },
@@ -239,17 +239,17 @@ export const APP_SPEC: AppSpec = {
             desc: '',
           },
           {
-            name: 'maxBuyCap',
+            name: 'maxInvestmentPerAccount',
             type: 'uint64',
             desc: '',
           },
           {
-            name: 'softCap',
+            name: 'minTotalInvestment',
             type: 'uint64',
             desc: '',
           },
           {
-            name: 'hardCap',
+            name: 'maxTotalInvestment',
             type: 'uint64',
             desc: '',
           },
@@ -325,20 +325,20 @@ export const APP_SPEC: AppSpec = {
         },
       },
       {
-        name: 'buy',
+        name: 'invest',
         args: [
           {
-            name: 'buyAsaXfer',
+            name: 'investmentAsaXfer',
             type: 'axfer',
             desc: '',
           },
           {
-            name: 'buyAsa',
+            name: 'investmentAsa',
             type: 'asset',
             desc: '',
           },
           {
-            name: 'buyAmount',
+            name: 'investmentAmount',
             type: 'uint64',
             desc: '',
           },
@@ -368,7 +368,7 @@ export const APP_SPEC: AppSpec = {
         name: 'withdrawInvestment',
         args: [
           {
-            name: 'buyAsa',
+            name: 'investmentAsa',
             type: 'asset',
             desc: '',
           },
@@ -398,7 +398,7 @@ export const APP_SPEC: AppSpec = {
         name: 'withdrawSales',
         args: [
           {
-            name: 'buyAsa',
+            name: 'investmentAsa',
             type: 'asset',
             desc: '',
           },
@@ -573,11 +573,11 @@ export type Campaign = {
           adminAccount: string | Uint8Array
           votersAsa: number | bigint
           idoAsa: number | bigint
-          buyAsa: number | bigint
+          investmentAsa: number | bigint
           price: bigint | number
-          maxBuyCap: bigint | number
-          softCap: bigint | number
-          hardCap: bigint | number
+          maxInvestmentPerAccount: bigint | number
+          minTotalInvestment: bigint | number
+          maxTotalInvestment: bigint | number
           votingPeriod: bigint | number
           duration: bigint | number
           metadataUrl: string
@@ -586,11 +586,11 @@ export type Campaign = {
           adminAccount: string | Uint8Array,
           votersAsa: number | bigint,
           idoAsa: number | bigint,
-          buyAsa: number | bigint,
+          investmentAsa: number | bigint,
           price: bigint | number,
-          maxBuyCap: bigint | number,
-          softCap: bigint | number,
-          hardCap: bigint | number,
+          maxInvestmentPerAccount: bigint | number,
+          minTotalInvestment: bigint | number,
+          maxTotalInvestment: bigint | number,
           votingPeriod: bigint | number,
           duration: bigint | number,
           metadataUrl: string,
@@ -629,17 +629,17 @@ export type Campaign = {
       }
     > &
     Record<
-      'buy(axfer,asset,uint64)void' | 'buy',
+      'invest(axfer,asset,uint64)void' | 'invest',
       {
         argsObj: {
-          buyAsaXfer: TransactionToSign | Transaction | Promise<SendTransactionResult>
-          buyAsa: number | bigint
-          buyAmount: bigint | number
+          investmentAsaXfer: TransactionToSign | Transaction | Promise<SendTransactionResult>
+          investmentAsa: number | bigint
+          investmentAmount: bigint | number
         }
         argsTuple: [
-          buyAsaXfer: TransactionToSign | Transaction | Promise<SendTransactionResult>,
-          buyAsa: number | bigint,
-          buyAmount: bigint | number,
+          investmentAsaXfer: TransactionToSign | Transaction | Promise<SendTransactionResult>,
+          investmentAsa: number | bigint,
+          investmentAmount: bigint | number,
         ]
         returns: void
       }
@@ -658,9 +658,9 @@ export type Campaign = {
       'withdrawInvestment(asset)void' | 'withdrawInvestment',
       {
         argsObj: {
-          buyAsa: number | bigint
+          investmentAsa: number | bigint
         }
-        argsTuple: [buyAsa: number | bigint]
+        argsTuple: [investmentAsa: number | bigint]
         returns: void
       }
     > &
@@ -678,9 +678,9 @@ export type Campaign = {
       'withdrawSales(asset)void' | 'withdrawSales',
       {
         argsObj: {
-          buyAsa: number | bigint
+          investmentAsa: number | bigint
         }
-        argsTuple: [buyAsa: number | bigint]
+        argsTuple: [investmentAsa: number | bigint]
         returns: void
       }
     > &
@@ -761,7 +761,7 @@ export type Campaign = {
       algohub?: IntegerState
       admin?: BinaryState
       idoAsaId?: IntegerState
-      buyAsaId?: IntegerState
+      investmentAsaId?: IntegerState
       votersAsaId?: IntegerState
       campaign?: BinaryState
       vestingSchedule?: BinaryState
@@ -863,11 +863,11 @@ export abstract class CampaignCallFactory {
             args.adminAccount,
             args.votersAsa,
             args.idoAsa,
-            args.buyAsa,
+            args.investmentAsa,
             args.price,
-            args.maxBuyCap,
-            args.softCap,
-            args.hardCap,
+            args.maxInvestmentPerAccount,
+            args.minTotalInvestment,
+            args.maxTotalInvestment,
             args.votingPeriod,
             args.duration,
             args.metadataUrl,
@@ -921,16 +921,16 @@ export abstract class CampaignCallFactory {
     }
   }
   /**
-   * Constructs a no op call for the buy(axfer,asset,uint64)void ABI method
+   * Constructs a no op call for the invest(axfer,asset,uint64)void ABI method
    *
    * @param args Any args for the contract call
    * @param params Any additional parameters for the call
    * @returns A TypedCallParams object for the call
    */
-  static buy(args: MethodArgs<'buy(axfer,asset,uint64)void'>, params: AppClientCallCoreParams & CoreAppCallArgs) {
+  static invest(args: MethodArgs<'invest(axfer,asset,uint64)void'>, params: AppClientCallCoreParams & CoreAppCallArgs) {
     return {
-      method: 'buy(axfer,asset,uint64)void' as const,
-      methodArgs: Array.isArray(args) ? args : [args.buyAsaXfer, args.buyAsa, args.buyAmount],
+      method: 'invest(axfer,asset,uint64)void' as const,
+      methodArgs: Array.isArray(args) ? args : [args.investmentAsaXfer, args.investmentAsa, args.investmentAmount],
       ...params,
     }
   }
@@ -958,7 +958,7 @@ export abstract class CampaignCallFactory {
   static withdrawInvestment(args: MethodArgs<'withdrawInvestment(asset)void'>, params: AppClientCallCoreParams & CoreAppCallArgs) {
     return {
       method: 'withdrawInvestment(asset)void' as const,
-      methodArgs: Array.isArray(args) ? args : [args.buyAsa],
+      methodArgs: Array.isArray(args) ? args : [args.investmentAsa],
       ...params,
     }
   }
@@ -986,7 +986,7 @@ export abstract class CampaignCallFactory {
   static withdrawSales(args: MethodArgs<'withdrawSales(asset)void'>, params: AppClientCallCoreParams & CoreAppCallArgs) {
     return {
       method: 'withdrawSales(asset)void' as const,
-      methodArgs: Array.isArray(args) ? args : [args.buyAsa],
+      methodArgs: Array.isArray(args) ? args : [args.investmentAsa],
       ...params,
     }
   }
@@ -1277,14 +1277,14 @@ export class CampaignClient {
   }
 
   /**
-   * Calls the buy(axfer,asset,uint64)void ABI method.
+   * Calls the invest(axfer,asset,uint64)void ABI method.
    *
    * @param args The arguments for the contract call
    * @param params Any additional parameters for the call
    * @returns The result of the call
    */
-  public buy(args: MethodArgs<'buy(axfer,asset,uint64)void'>, params: AppClientCallCoreParams & CoreAppCallArgs = {}) {
-    return this.call(CampaignCallFactory.buy(args, params))
+  public invest(args: MethodArgs<'invest(axfer,asset,uint64)void'>, params: AppClientCallCoreParams & CoreAppCallArgs = {}) {
+    return this.call(CampaignCallFactory.invest(args, params))
   }
 
   /**
@@ -1485,8 +1485,8 @@ export class CampaignClient {
       get idoAsaId() {
         return CampaignClient.getIntegerState(state, 'idoAsaId')
       },
-      get buyAsaId() {
-        return CampaignClient.getIntegerState(state, 'buyAsaId')
+      get investmentAsaId() {
+        return CampaignClient.getIntegerState(state, 'investmentAsaId')
       },
       get votersAsaId() {
         return CampaignClient.getIntegerState(state, 'votersAsaId')
@@ -1549,9 +1549,9 @@ export class CampaignClient {
         resultMappers.push(undefined)
         return this
       },
-      buy(args: MethodArgs<'buy(axfer,asset,uint64)void'>, params?: AppClientCallCoreParams & CoreAppCallArgs) {
+      invest(args: MethodArgs<'invest(axfer,asset,uint64)void'>, params?: AppClientCallCoreParams & CoreAppCallArgs) {
         promiseChain = promiseChain.then(() =>
-          client.buy(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+          client.invest(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
         )
         resultMappers.push(undefined)
         return this
@@ -1730,16 +1730,16 @@ export type CampaignComposer<TReturns extends [...any[]] = []> = {
   ): CampaignComposer<[...TReturns, MethodReturn<'lockApprovedStatus()void'>]>
 
   /**
-   * Calls the buy(axfer,asset,uint64)void ABI method.
+   * Calls the invest(axfer,asset,uint64)void ABI method.
    *
    * @param args The arguments for the contract call
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  buy(
-    args: MethodArgs<'buy(axfer,asset,uint64)void'>,
+  invest(
+    args: MethodArgs<'invest(axfer,asset,uint64)void'>,
     params?: AppClientCallCoreParams & CoreAppCallArgs,
-  ): CampaignComposer<[...TReturns, MethodReturn<'buy(axfer,asset,uint64)void'>]>
+  ): CampaignComposer<[...TReturns, MethodReturn<'invest(axfer,asset,uint64)void'>]>
 
   /**
    * Calls the claim(asset)void ABI method.

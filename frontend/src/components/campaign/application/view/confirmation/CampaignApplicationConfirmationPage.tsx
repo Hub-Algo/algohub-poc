@@ -37,12 +37,12 @@ function CampaignApplicationConfirmationPage() {
           votersAsa={478560182}
           metadata={formData as CampaignApplicationData}
           price={Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken) ?? 0}
-          maxBuyCap={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
-          softCap={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
-          hardCap={convertToBaseUnits(6, formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ?? 0)}
+          maxInvestmentPerAccount={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
+          minTotalInvestment={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
+          maxTotalInvestment={convertToBaseUnits(6, formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ?? 0)}
           duration={86400} // 1 day
           idoAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId ?? 0}
-          buyAsa={USDC_ASSET.id} // TODO: Set USDC mainnet id
+          investmentAsa={USDC_ASSET.id} // TODO: Set USDC mainnet id
           onSuccess={handleSuccessfulApplication}
         >
           {'Submit application'}

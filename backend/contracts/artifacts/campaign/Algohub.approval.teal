@@ -333,15 +333,15 @@ abi_route_createCampaign:
 	txna ApplicationArgs 8
 	btoi
 
-	// hardCap: uint64
+	// maxTotalInvestment: uint64
 	txna ApplicationArgs 7
 	btoi
 
-	// softCap: uint64
+	// minTotalInvestment: uint64
 	txna ApplicationArgs 6
 	btoi
 
-	// maxBuyCap: uint64
+	// maxInvestmentPerAccount: uint64
 	txna ApplicationArgs 5
 	btoi
 
@@ -349,7 +349,7 @@ abi_route_createCampaign:
 	txna ApplicationArgs 4
 	btoi
 
-	// buyAsa: asset
+	// investmentAsa: asset
 	txna ApplicationArgs 3
 	btoi
 	txnas Assets
@@ -410,7 +410,7 @@ createCampaign:
 
 	// contracts/campaign/campaign.algo.ts:444
 	// approvalProgram: Campaign.approvalProgram()
-	byte b64 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
+	byte b64 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
 	itxn_field ApprovalProgram
 
 	// contracts/campaign/campaign.algo.ts:445
@@ -572,11 +572,11 @@ if0_end:
 	//         this.txn.sender,
 	//         this.votersAsaId.value,
 	//         idoAsa,
-	//         buyAsa,
+	//         investmentAsa,
 	//         price,
-	//         maxBuyCap,
-	//         softCap,
-	//         hardCap,
+	//         maxInvestmentPerAccount,
+	//         minTotalInvestment,
+	//         maxTotalInvestment,
 	//         this.votingPeriod.value,
 	//         duration,
 	//         metadataUrl,
@@ -598,11 +598,11 @@ if0_end:
 	//         this.txn.sender,
 	//         this.votersAsaId.value,
 	//         idoAsa,
-	//         buyAsa,
+	//         investmentAsa,
 	//         price,
-	//         maxBuyCap,
-	//         softCap,
-	//         hardCap,
+	//         maxInvestmentPerAccount,
+	//         minTotalInvestment,
+	//         maxTotalInvestment,
 	//         this.votingPeriod.value,
 	//         duration,
 	//         metadataUrl,
@@ -620,20 +620,20 @@ if0_end:
 	itxn_field Assets
 	byte 0x0000000000000001
 	itxn_field ApplicationArgs
-	frame_dig -3 // buyAsa: asset
+	frame_dig -3 // investmentAsa: asset
 	itxn_field Assets
 	byte 0x0000000000000002
 	itxn_field ApplicationArgs
 	frame_dig -4 // price: uint64
 	itob
 	itxn_field ApplicationArgs
-	frame_dig -5 // maxBuyCap: uint64
+	frame_dig -5 // maxInvestmentPerAccount: uint64
 	itob
 	itxn_field ApplicationArgs
-	frame_dig -6 // softCap: uint64
+	frame_dig -6 // minTotalInvestment: uint64
 	itob
 	itxn_field ApplicationArgs
-	frame_dig -7 // hardCap: uint64
+	frame_dig -7 // maxTotalInvestment: uint64
 	itob
 	itxn_field ApplicationArgs
 	byte 0x766f74696e67506572696f64 // "votingPeriod"

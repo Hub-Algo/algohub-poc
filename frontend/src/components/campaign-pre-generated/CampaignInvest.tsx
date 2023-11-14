@@ -4,35 +4,41 @@ import { ReactNode, useState } from 'react'
 import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
-<CampaignWithdrawInvestment
+<CampaignInvest
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call withdrawInvestment"
+  buttonNode="Call invest"
   typedClient={typedClient}
+  investmentAsaXfer={investmentAsaXfer}
   investmentAsa={investmentAsa}
+  investmentAmount={investmentAmount}
 />
 */
-type CampaignWithdrawInvestmentArgs = Campaign['methods']['withdrawInvestment(asset)void']['argsObj']
+type CampaignInvestArgs = Campaign['methods']['invest(axfer,asset,uint64)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  investmentAsa: CampaignWithdrawInvestmentArgs['investmentAsa']
+  investmentAsaXfer: CampaignInvestArgs['investmentAsaXfer']
+  investmentAsa: CampaignInvestArgs['investmentAsa']
+  investmentAmount: CampaignInvestArgs['investmentAmount']
 }
 
-const CampaignWithdrawInvestment = (props: Props) => {
+const CampaignInvest = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling withdrawInvestment`)
-    await props.typedClient.withdrawInvestment(
+    console.log(`Calling invest`)
+    await props.typedClient.invest(
       {
+        investmentAsaXfer: props.investmentAsaXfer,
         investmentAsa: props.investmentAsa,
+        investmentAmount: props.investmentAmount,
       },
       { sender },
     )
@@ -46,4 +52,4 @@ const CampaignWithdrawInvestment = (props: Props) => {
   )
 }
 
-export default CampaignWithdrawInvestment
+export default CampaignInvest

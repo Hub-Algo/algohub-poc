@@ -14,11 +14,11 @@ import Button from '../common/button/Button'
   adminAccount={adminAccount}
   votersAsa={votersAsa}
   idoAsa={idoAsa}
-  buyAsa={buyAsa}
+  investmentAsa={investmentAsa}
   price={price}
-  maxBuyCap={maxBuyCap}
-  softCap={softCap}
-  hardCap={hardCap}
+  maxInvestmentPerAccount={maxInvestmentPerAccount}
+  minTotalInvestment={minTotalInvestment}
+  maxTotalInvestment={maxTotalInvestment}
   votingPeriod={votingPeriod}
   duration={duration}
   metadataUrl={metadataUrl}
@@ -33,11 +33,11 @@ type Props = {
   adminAccount: CampaignCreateCampaignArgs['adminAccount']
   votersAsa: CampaignCreateCampaignArgs['votersAsa']
   idoAsa: CampaignCreateCampaignArgs['idoAsa']
-  buyAsa: CampaignCreateCampaignArgs['buyAsa']
+  investmentAsa: CampaignCreateCampaignArgs['investmentAsa']
   price: CampaignCreateCampaignArgs['price']
-  maxBuyCap: CampaignCreateCampaignArgs['maxBuyCap']
-  softCap: CampaignCreateCampaignArgs['softCap']
-  hardCap: CampaignCreateCampaignArgs['hardCap']
+  maxInvestmentPerAccount: CampaignCreateCampaignArgs['maxInvestmentPerAccount']
+  minTotalInvestment: CampaignCreateCampaignArgs['minTotalInvestment']
+  maxTotalInvestment: CampaignCreateCampaignArgs['maxTotalInvestment']
   votingPeriod: CampaignCreateCampaignArgs['votingPeriod']
   duration: CampaignCreateCampaignArgs['duration']
   metadataUrl: CampaignCreateCampaignArgs['metadataUrl']
@@ -58,11 +58,11 @@ const CampaignCreateCampaign = (props: Props) => {
         adminAccount: props.adminAccount,
         votersAsa: props.votersAsa,
         idoAsa: props.idoAsa,
-        buyAsa: props.buyAsa,
+        investmentAsa: props.investmentAsa,
         price: props.price,
-        maxBuyCap: props.maxBuyCap,
-        softCap: props.softCap,
-        hardCap: props.hardCap,
+        maxInvestmentPerAccount: props.maxInvestmentPerAccount,
+        minTotalInvestment: props.minTotalInvestment,
+        maxTotalInvestment: props.maxTotalInvestment,
         votingPeriod: props.votingPeriod,
         duration: props.duration,
         metadataUrl: props.metadataUrl,

@@ -7,23 +7,23 @@ import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 <CampaignBuy
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call buy"
+  buttonNode="Call invest"
   typedClient={typedClient}
-  buyAsaXfer={buyAsaXfer}
-  buyAsa={buyAsa}
-  buyAmount={buyAmount}
+  investmentAsaXfer={investmentAsaXfer}
+  investmentAsa={investmentAsa}
+  investmentAmount={investmentAmount}
 />
 */
-type CampaignBuyArgs = Campaign['methods']['buy(axfer,asset,uint64)void']['argsObj']
+type CampaignBuyArgs = Campaign['methods']['invest(axfer,asset,uint64)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  buyAsaXfer: CampaignBuyArgs['buyAsaXfer']
-  buyAsa: CampaignBuyArgs['buyAsa']
-  buyAmount: CampaignBuyArgs['buyAmount']
+  investmentAsaXfer: CampaignBuyArgs['investmentAsaXfer']
+  investmentAsa: CampaignBuyArgs['investmentAsa']
+  investmentAmount: CampaignBuyArgs['investmentAmount']
 }
 
 const CampaignBuy = (props: Props) => {
@@ -33,12 +33,12 @@ const CampaignBuy = (props: Props) => {
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling buy`)
-    await props.typedClient.buy(
+    console.log(`Calling invest`)
+    await props.typedClient.invest(
       {
-        buyAsaXfer: props.buyAsaXfer,
-        buyAsa: props.buyAsa,
-        buyAmount: props.buyAmount,
+        investmentAsaXfer: props.investmentAsaXfer,
+        investmentAsa: props.investmentAsa,
+        investmentAmount: props.investmentAmount,
       },
       { sender },
     )

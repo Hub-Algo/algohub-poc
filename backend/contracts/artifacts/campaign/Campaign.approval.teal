@@ -58,8 +58,8 @@ createApplication:
 	app_global_put
 
 	// contracts/campaign/campaign.algo.ts:60
-	// this.buyAsaId.value = Asset.zeroIndex
-	byte 0x6275794173614964 // "buyAsaId"
+	// this.investmentAsaId.value = Asset.zeroIndex
+	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
 	int 0
 	app_global_put
 
@@ -182,9 +182,9 @@ convertToAsaAmount:
 
 	// if1_condition
 	// contracts/campaign/campaign.algo.ts:97
-	// asaToCovertTo === this.buyAsaId.value
+	// asaToCovertTo === this.investmentAsaId.value
 	frame_dig -2 // asaToCovertTo: asset
-	byte 0x6275794173614964 // "buyAsaId"
+	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
 	app_global_get
 	==
 	bz if1_end
@@ -245,15 +245,15 @@ abi_route_createCampaign:
 	txna ApplicationArgs 9
 	btoi
 
-	// hardCap: uint64
+	// maxTotalInvestment: uint64
 	txna ApplicationArgs 8
 	btoi
 
-	// softCap: uint64
+	// minTotalInvestment: uint64
 	txna ApplicationArgs 7
 	btoi
 
-	// maxBuyCap: uint64
+	// maxInvestmentPerAccount: uint64
 	txna ApplicationArgs 6
 	btoi
 
@@ -261,7 +261,7 @@ abi_route_createCampaign:
 	txna ApplicationArgs 5
 	btoi
 
-	// buyAsa: asset
+	// investmentAsa: asset
 	txna ApplicationArgs 4
 	btoi
 	txnas Assets
@@ -318,9 +318,9 @@ createCampaign:
 	app_global_put
 
 	// contracts/campaign/campaign.algo.ts:120
-	// this.buyAsaId.value = buyAsa
-	byte 0x6275794173614964 // "buyAsaId"
-	frame_dig -4 // buyAsa: asset
+	// this.investmentAsaId.value = investmentAsa
+	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
+	frame_dig -4 // investmentAsa: asset
 	app_global_put
 
 	// contracts/campaign/campaign.algo.ts:121
@@ -329,17 +329,17 @@ createCampaign:
 	callsub optInToAsa
 
 	// contracts/campaign/campaign.algo.ts:122
-	// this.optInToAsa(buyAsa)
-	frame_dig -4 // buyAsa: asset
+	// this.optInToAsa(investmentAsa)
+	frame_dig -4 // investmentAsa: asset
 	callsub optInToAsa
 
 	// contracts/campaign/campaign.algo.ts:124
 	// this.campaign.value = {
 	//       price: price,
-	//       maxBuyCap: maxBuyCap,
-	//       softCap: softCap,
-	//       hardCap: hardCap,
-	//       purchasedAmount: 0,
+	//       maxInvestmentPerAccount: maxInvestmentPerAccount,
+	//       minTotalInvestment: minTotalInvestment,
+	//       maxTotalInvestment: maxTotalInvestment,
+	//       investedAmount: 0,
 	//       withdrawnAmount: 0,
 	//       startTime: globals.latestTimestamp + votingPeriod,
 	//       endTime: globals.latestTimestamp + votingPeriod + duration,
@@ -352,13 +352,13 @@ createCampaign:
 	frame_dig -5 // price: uint64
 	itob
 	callsub process_static_tuple_element
-	frame_dig -6 // maxBuyCap: uint64
+	frame_dig -6 // maxInvestmentPerAccount: uint64
 	itob
 	callsub process_static_tuple_element
-	frame_dig -7 // softCap: uint64
+	frame_dig -7 // minTotalInvestment: uint64
 	itob
 	callsub process_static_tuple_element
-	frame_dig -8 // hardCap: uint64
+	frame_dig -8 // maxTotalInvestment: uint64
 	itob
 	callsub process_static_tuple_element
 	byte 0x0000000000000000
@@ -520,7 +520,7 @@ depositIdoAsa:
 	assert
 
 	// contracts/campaign/campaign.algo.ts:152
-	// idoAsaToTransfer = this.campaign.value.hardCap / this.campaign.value.price
+	// idoAsaToTransfer = this.campaign.value.maxTotalInvestment / this.campaign.value.price
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
 	store 0 // full array
@@ -617,22 +617,22 @@ lockApprovedStatus:
 	app_global_put
 	retsub
 
-// buy(uint64,asset,axfer)void
+// invest(uint64,asset,axfer)void
 //
 // // eslint-disable-next-line no-unused-vars
-abi_route_buy:
+abi_route_invest:
 	byte 0x // push empty bytes to fill the stack frame for this subroutine's local variables
 
-	// buyAmount: uint64
+	// investmentAmount: uint64
 	txna ApplicationArgs 2
 	btoi
 
-	// buyAsa: asset
+	// investmentAsa: asset
 	txna ApplicationArgs 1
 	btoi
 	txnas Assets
 
-	// buyAsaXfer: axfer
+	// investmentAsaXfer: axfer
 	txn GroupIndex
 	int 1
 	-
@@ -642,12 +642,12 @@ abi_route_buy:
 	==
 	assert
 
-	// execute buy(uint64,asset,axfer)void
-	callsub buy
+	// execute invest(uint64,asset,axfer)void
+	callsub invest
 	int 1
 	return
 
-buy:
+invest:
 	proto 4 0
 
 	// contracts/campaign/campaign.algo.ts:170
@@ -677,14 +677,14 @@ buy:
 	assert
 
 	// contracts/campaign/campaign.algo.ts:175
-	// assert(this.campaign.value.maxBuyCap >= buyAmount)
+	// assert(this.campaign.value.maxInvestmentPerAccount >= investmentAmount)
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
 	store 0 // full array
 	load 0 // full array
 	extract 8 8
 	btoi
-	frame_dig -3 // buyAmount: uint64
+	frame_dig -3 // investmentAmount: uint64
 	>=
 	assert
 
@@ -711,7 +711,7 @@ buy:
 
 if3_end:
 	// contracts/campaign/campaign.algo.ts:181
-	// assert(this.campaign.value.hardCap >= this.campaign.value.purchasedAmount + buyAmount)
+	// assert(this.campaign.value.maxTotalInvestment >= this.campaign.value.investedAmount + investmentAmount)
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
 	store 0 // full array
@@ -724,7 +724,7 @@ if3_end:
 	load 0 // full array
 	extract 32 8
 	btoi
-	frame_dig -3 // buyAmount: uint64
+	frame_dig -3 // investmentAmount: uint64
 	+
 	>=
 	assert
@@ -752,8 +752,8 @@ if3_end:
 
 if4_end:
 	// contracts/campaign/campaign.algo.ts:187
-	// buyAsaToTransfer = buyAmount * this.campaign.value.price
-	frame_dig -3 // buyAmount: uint64
+	// investmentAsaToTransfer = investmentAmount * this.campaign.value.price
+	frame_dig -3 // investmentAmount: uint64
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
 	store 0 // full array
@@ -761,46 +761,46 @@ if4_end:
 	extract 0 8
 	btoi
 	*
-	frame_bury -4 // buyAsaToTransfer: uint64
+	frame_bury -4 // investmentAsaToTransfer: uint64
 
 	// contracts/campaign/campaign.algo.ts:188
-	// verifyTxn(buyAsaXfer, {
-	//       assetAmount: buyAsaToTransfer,
+	// verifyTxn(investmentAsaXfer, {
+	//       assetAmount: investmentAsaToTransfer,
 	//       assetReceiver: this.app.address,
 	//       sender: this.txn.sender,
-	//       xferAsset: this.buyAsaId.value,
+	//       xferAsset: this.investmentAsaId.value,
 	//     })
 	// verify assetAmount
-	frame_dig -1 // buyAsaXfer: axfer
+	frame_dig -1 // investmentAsaXfer: axfer
 	gtxns AssetAmount
-	frame_dig -4 // buyAsaToTransfer: uint64
+	frame_dig -4 // investmentAsaToTransfer: uint64
 	==
 	assert
 
 	// verify assetReceiver
-	frame_dig -1 // buyAsaXfer: axfer
+	frame_dig -1 // investmentAsaXfer: axfer
 	gtxns AssetReceiver
 	global CurrentApplicationAddress
 	==
 	assert
 
 	// verify sender
-	frame_dig -1 // buyAsaXfer: axfer
+	frame_dig -1 // investmentAsaXfer: axfer
 	gtxns Sender
 	txn Sender
 	==
 	assert
 
 	// verify xferAsset
-	frame_dig -1 // buyAsaXfer: axfer
+	frame_dig -1 // investmentAsaXfer: axfer
 	gtxns XferAsset
-	byte 0x6275794173614964 // "buyAsaId"
+	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
 	app_global_get
 	==
 	assert
 
 	// contracts/campaign/campaign.algo.ts:194
-	// this.campaign.value.purchasedAmount = this.campaign.value.purchasedAmount + buyAmount
+	// this.campaign.value.investedAmount = this.campaign.value.investedAmount + investmentAmount
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
 	store 0 // full array
@@ -812,7 +812,7 @@ if4_end:
 	load 0 // full array
 	extract 32 8
 	btoi
-	frame_dig -3 // buyAmount: uint64
+	frame_dig -3 // investmentAmount: uint64
 	+
 	itob
 	replace3
@@ -833,7 +833,7 @@ if4_end:
 
 	// if5_consequent
 	// contracts/campaign/campaign.algo.ts:197
-	// this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + buyAmount
+	// this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + investmentAmount
 	byte 0x70 // "p"
 	txn Sender
 	concat
@@ -843,7 +843,7 @@ if4_end:
 	box_get
 	assert
 	btoi
-	frame_dig -3 // buyAmount: uint64
+	frame_dig -3 // investmentAmount: uint64
 	+
 	itob
 	box_put
@@ -851,11 +851,11 @@ if4_end:
 
 if5_else:
 	// contracts/campaign/campaign.algo.ts:199
-	// this.purchases(this.txn.sender).value = buyAmount
+	// this.purchases(this.txn.sender).value = investmentAmount
 	byte 0x70 // "p"
 	txn Sender
 	concat
-	frame_dig -3 // buyAmount: uint64
+	frame_dig -3 // investmentAmount: uint64
 	itob
 	box_put
 
@@ -981,15 +981,6 @@ claim:
 	// assert(this.campaign.exists)
 	txna Applications 0
 	byte 0x63616d706169676e // "campaign"
-	app_global_get_ex
-	swap
-	pop
-	assert
-
-	// contracts/campaign/campaign.algo.ts:223
-	// assert(this.vestingSchedule.exists)
-	txna Applications 0
-	byte 0x76657374696e675363686564756c65 // "vestingSchedule"
 	app_global_get_ex
 	swap
 	pop
@@ -1156,7 +1147,7 @@ if7_end:
 //
 // // eslint-disable-next-line no-unused-vars
 abi_route_withdrawInvestment:
-	// buyAsa: asset
+	// investmentAsa: asset
 	txna ApplicationArgs 1
 	btoi
 	txnas Assets
@@ -1192,8 +1183,8 @@ withdrawInvestment:
 	// sendAssetTransfer({
 	//       sender: this.app.address,
 	//       assetReceiver: this.txn.sender,
-	//       xferAsset: this.buyAsaId.value,
-	//       assetAmount: this.convertToAsaAmount(this.purchases(this.txn.sender).value, this.buyAsaId.value),
+	//       xferAsset: this.investmentAsaId.value,
+	//       assetAmount: this.convertToAsaAmount(this.purchases(this.txn.sender).value, this.investmentAsaId.value),
 	//     })
 	itxn_begin
 	int axfer
@@ -1210,14 +1201,14 @@ withdrawInvestment:
 	itxn_field AssetReceiver
 
 	// contracts/campaign/campaign.algo.ts:262
-	// xferAsset: this.buyAsaId.value
-	byte 0x6275794173614964 // "buyAsaId"
+	// xferAsset: this.investmentAsaId.value
+	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
 	app_global_get
 	itxn_field XferAsset
 
 	// contracts/campaign/campaign.algo.ts:263
-	// assetAmount: this.convertToAsaAmount(this.purchases(this.txn.sender).value, this.buyAsaId.value)
-	byte 0x6275794173614964 // "buyAsaId"
+	// assetAmount: this.convertToAsaAmount(this.purchases(this.txn.sender).value, this.investmentAsaId.value)
+	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
 	app_global_get
 	byte 0x70 // "p"
 	txn Sender
@@ -1279,7 +1270,7 @@ withdrawIdoAsa:
 
 	// if8_consequent
 	// contracts/campaign/campaign.algo.ts:280
-	// totalUnsoldAmount = this.campaign.value.hardCap - this.campaign.value.purchasedAmount
+	// totalUnsoldAmount = this.campaign.value.maxTotalInvestment - this.campaign.value.investedAmount
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
 	store 0 // full array
@@ -1395,7 +1386,7 @@ if8_end:
 
 // withdrawSales(asset)void
 abi_route_withdrawSales:
-	// buyAsa: asset
+	// investmentAsa: asset
 	txna ApplicationArgs 1
 	btoi
 	txnas Assets
@@ -1430,8 +1421,8 @@ withdrawSales:
 	// sendAssetTransfer({
 	//       sender: this.app.address,
 	//       assetReceiver: this.txn.sender,
-	//       xferAsset: buyAsa,
-	//       assetAmount: this.app.address.assetBalance(buyAsa),
+	//       xferAsset: investmentAsa,
+	//       assetAmount: this.app.address.assetBalance(investmentAsa),
 	//     })
 	itxn_begin
 	int axfer
@@ -1448,14 +1439,14 @@ withdrawSales:
 	itxn_field AssetReceiver
 
 	// contracts/campaign/campaign.algo.ts:309
-	// xferAsset: buyAsa
-	frame_dig -1 // buyAsa: asset
+	// xferAsset: investmentAsa
+	frame_dig -1 // investmentAsa: asset
 	itxn_field XferAsset
 
 	// contracts/campaign/campaign.algo.ts:310
-	// assetAmount: this.app.address.assetBalance(buyAsa)
+	// assetAmount: this.app.address.assetBalance(investmentAsa)
 	global CurrentApplicationAddress
-	frame_dig -1 // buyAsa: asset
+	frame_dig -1 // investmentAsa: asset
 	asset_holding_get AssetBalance
 	assert
 	itxn_field AssetAmount
@@ -1663,8 +1654,8 @@ getBuyAsa:
 	proto 0 0
 
 	// contracts/campaign/campaign.algo.ts:343
-	// return this.buyAsaId.value;
-	byte 0x6275794173614964 // "buyAsaId"
+	// return this.investmentAsaId.value;
+	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
 	app_global_get
 	itob
 	byte 0x151f7c75
@@ -1724,7 +1715,7 @@ call_NoOp:
 	method "setVestingSchedule(uint64[],uint64[])void"
 	method "depositIdoAsa(axfer,asset)void"
 	method "lockApprovedStatus()void"
-	method "buy(axfer,asset,uint64)void"
+	method "invest(axfer,asset,uint64)void"
 	method "claim(asset)void"
 	method "withdrawInvestment(asset)void"
 	method "withdrawIdoAsa(asset)void"
@@ -1738,7 +1729,7 @@ call_NoOp:
 	method "getCampaign()(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)"
 	method "getVestingSchedule()(uint64,uint64[],uint64[])"
 	txna ApplicationArgs 0
-	match abi_route_createCampaign abi_route_setVestingSchedule abi_route_depositIdoAsa abi_route_lockApprovedStatus abi_route_buy abi_route_claim abi_route_withdrawInvestment abi_route_withdrawIdoAsa abi_route_withdrawSales abi_route_vote abi_route_getAccountTotalPurchases abi_route_getVotes abi_route_getVotersAsa abi_route_getIdoAsa abi_route_getBuyAsa abi_route_getCampaign abi_route_getVestingSchedule
+	match abi_route_createCampaign abi_route_setVestingSchedule abi_route_depositIdoAsa abi_route_lockApprovedStatus abi_route_invest abi_route_claim abi_route_withdrawInvestment abi_route_withdrawIdoAsa abi_route_withdrawSales abi_route_vote abi_route_getAccountTotalPurchases abi_route_getVotes abi_route_getVotersAsa abi_route_getIdoAsa abi_route_getBuyAsa abi_route_getCampaign abi_route_getVestingSchedule
 	err
 
 process_static_tuple_element:

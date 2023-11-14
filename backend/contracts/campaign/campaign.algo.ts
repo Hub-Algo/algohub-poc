@@ -8,10 +8,10 @@ type VestingDetails = {
 
 type CampaignObj = {
   price: number;
-  maxBuyCap: number;
-  softCap: number;
-  hardCap: number;
-  purchasedAmount: number;
+  maxInvestmentPerAccount: number;
+  minTotalInvestment: number;
+  maxTotalInvestment: number;
+  investedAmount: number;
   withdrawnAmount: number;
   startTime: number;
   endTime: number;
@@ -32,7 +32,7 @@ export default class Campaign extends Contract {
 
   idoAsaId = GlobalStateKey<Asset>();
 
-  buyAsaId = GlobalStateKey<Asset>();
+  investmentAsaId = GlobalStateKey<Asset>();
 
   votersAsaId = GlobalStateKey<Asset>();
 
@@ -57,7 +57,7 @@ export default class Campaign extends Contract {
     this.algohub.value = algohubApp;
     this.votersAsaId.value = Asset.zeroIndex;
     this.idoAsaId.value = Asset.zeroIndex;
-    this.buyAsaId.value = Asset.zeroIndex;
+    this.investmentAsaId.value = Asset.zeroIndex;
     this.isApprovedCampaign.value = false;
   }
 
@@ -94,7 +94,7 @@ export default class Campaign extends Contract {
   }
 
   private convertToAsaAmount(purchaseAmount: number, asaToCovertTo: Asset): number {
-    if (asaToCovertTo === this.buyAsaId.value) return purchaseAmount / this.campaign.value.price;
+    if (asaToCovertTo === this.investmentAsaId.value) return purchaseAmount / this.campaign.value.price;
     if (asaToCovertTo === this.idoAsaId.value) return purchaseAmount * this.campaign.value.price;
     return 0;
   }
@@ -103,11 +103,11 @@ export default class Campaign extends Contract {
     adminAccount: Account,
     votersAsa: Asset,
     idoAsa: Asset,
-    buyAsa: Asset,
+    investmentAsa: Asset,
     price: number,
-    maxBuyCap: number,
-    softCap: number,
-    hardCap: number,
+    maxInvestmentPerAccount: number,
+    minTotalInvestment: number,
+    maxTotalInvestment: number,
     votingPeriod: number,
     duration: number,
     metadataUrl: string
@@ -117,16 +117,16 @@ export default class Campaign extends Contract {
 
     this.votersAsaId.value = votersAsa;
     this.idoAsaId.value = idoAsa;
-    this.buyAsaId.value = buyAsa;
+    this.investmentAsaId.value = investmentAsa;
     this.optInToAsa(idoAsa);
-    this.optInToAsa(buyAsa);
+    this.optInToAsa(investmentAsa);
 
     this.campaign.value = {
       price: price,
-      maxBuyCap: maxBuyCap,
-      softCap: softCap,
-      hardCap: hardCap,
-      purchasedAmount: 0,
+      maxInvestmentPerAccount: maxInvestmentPerAccount,
+      minTotalInvestment: minTotalInvestment,
+      maxTotalInvestment: maxTotalInvestment,
+      investedAmount: 0,
       withdrawnAmount: 0,
       startTime: globals.latestTimestamp + votingPeriod,
       endTime: globals.latestTimestamp + votingPeriod + duration,
@@ -149,7 +149,7 @@ export default class Campaign extends Contract {
     // TODO: Allow deposit only once
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
-    const idoAsaToTransfer = this.campaign.value.hardCap / this.campaign.value.price;
+    const idoAsaToTransfer = this.campaign.value.maxTotalInvestment / this.campaign.value.price;
     verifyTxn(idoXfer, {
       assetAmount: idoAsaToTransfer,
       assetReceiver: this.app.address,
@@ -166,37 +166,37 @@ export default class Campaign extends Contract {
   }
 
   // eslint-disable-next-line no-unused-vars
-  buy(buyAsaXfer: AssetTransferTxn, buyAsa: Asset, buyAmount: number): void {
+  invest(investmentAsaXfer: AssetTransferTxn, investmentAsa: Asset, investmentAmount: number): void {
     assert(this.campaign.exists);
     assert(this.isApproved());
     // check campaing is not finished
-    assert(this.campaign.value.endTime > globals.latestTimestamp);
-    // Check amount to buy is not more than max buy cap
-    assert(this.campaign.value.maxBuyCap >= buyAmount);
-    // Allow hypelisted addresses to buy before start time
+    // assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // Check amount to invest is not more than max invest cap
+    assert(this.campaign.value.maxInvestmentPerAccount >= investmentAmount);
+    // Allow hypelisted addresses to invest before start time
     if (!this.isHypelisted(this.txn.sender)) {
       assert(this.campaign.value.startTime < globals.latestTimestamp);
     }
     // check that hardcap is not reached
-    assert(this.campaign.value.hardCap >= this.campaign.value.purchasedAmount + buyAmount);
-    // TODO: allow set approve campaign in case buy cannot be called due to hardcap reached
+    assert(this.campaign.value.maxTotalInvestment >= this.campaign.value.investedAmount + investmentAmount);
+    // TODO: allow set approve campaign in case invest cannot be called due to hardcap reached
     if (!this.isApprovedCampaign.value) {
       this.isApprovedCampaign.value = true;
     }
 
-    const buyAsaToTransfer = buyAmount * this.campaign.value.price;
-    verifyTxn(buyAsaXfer, {
-      assetAmount: buyAsaToTransfer,
+    const investmentAsaToTransfer = investmentAmount * this.campaign.value.price;
+    verifyTxn(investmentAsaXfer, {
+      assetAmount: investmentAsaToTransfer,
       assetReceiver: this.app.address,
       sender: this.txn.sender,
-      xferAsset: this.buyAsaId.value,
+      xferAsset: this.investmentAsaId.value,
     });
-    this.campaign.value.purchasedAmount = this.campaign.value.purchasedAmount + buyAmount;
+    this.campaign.value.investedAmount = this.campaign.value.investedAmount + investmentAmount;
 
     if (this.purchases(this.txn.sender).exists) {
-      this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + buyAmount;
+      this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + investmentAmount;
     } else {
-      this.purchases(this.txn.sender).value = buyAmount;
+      this.purchases(this.txn.sender).value = investmentAmount;
     }
   }
 
@@ -220,7 +220,7 @@ export default class Campaign extends Contract {
     // this.expandOpcodeBugdet();
     // can claim after the campaign is over and according to the vesting schedule
     assert(this.campaign.exists);
-    assert(this.vestingSchedule.exists);
+    // assert(this.vestingSchedule.exists);
     assert(this.isApproved());
     // assert(this.campaign.value.endTime < globals.latestTimestamp);
     assert(this.purchases(this.txn.sender).exists);
@@ -247,7 +247,7 @@ export default class Campaign extends Contract {
   }
 
   // eslint-disable-next-line no-unused-vars
-  withdrawInvestment(buyAsa: Asset): void {
+  withdrawInvestment(investmentAsa: Asset): void {
     // if a wallet bought tokens during the voting period due to hypelisting
     // they can withdraw their tokens if the campaign did not collected required votes
     assert(this.campaign.exists);
@@ -259,8 +259,8 @@ export default class Campaign extends Contract {
     sendAssetTransfer({
       sender: this.app.address,
       assetReceiver: this.txn.sender,
-      xferAsset: this.buyAsaId.value,
-      assetAmount: this.convertToAsaAmount(this.purchases(this.txn.sender).value, this.buyAsaId.value),
+      xferAsset: this.investmentAsaId.value,
+      assetAmount: this.convertToAsaAmount(this.purchases(this.txn.sender).value, this.investmentAsaId.value),
     });
   }
 
@@ -277,7 +277,7 @@ export default class Campaign extends Contract {
     // TODO: Add check for end time
     // assert(this.campaign.value.endTime > globals.latestTimestamp);
     if (this.isApproved()) {
-      const totalUnsoldAmount = this.campaign.value.hardCap - this.campaign.value.purchasedAmount;
+      const totalUnsoldAmount = this.campaign.value.maxTotalInvestment - this.campaign.value.investedAmount;
       assert(totalUnsoldAmount > 0);
       sendAssetTransfer({
         sender: this.app.address,
@@ -295,9 +295,9 @@ export default class Campaign extends Contract {
     }
   }
 
-  withdrawSales(buyAsa: Asset): void {
+  withdrawSales(investmentAsa: Asset): void {
     // to be called only by the contract creator after the campaign is over
-    // to allow them to withdaw all or part of the sale/buy tokens.
+    // to allow them to withdaw all or part of the sale/invest tokens.
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
     // TODO: Add check for end time
@@ -306,8 +306,8 @@ export default class Campaign extends Contract {
     sendAssetTransfer({
       sender: this.app.address,
       assetReceiver: this.txn.sender,
-      xferAsset: buyAsa,
-      assetAmount: this.app.address.assetBalance(buyAsa),
+      xferAsset: investmentAsa,
+      assetAmount: this.app.address.assetBalance(investmentAsa),
     });
   }
 
@@ -340,7 +340,7 @@ export default class Campaign extends Contract {
   }
 
   getBuyAsa(): Asset {
-    return this.buyAsaId.value;
+    return this.investmentAsaId.value;
   }
 
   getCampaign(): CampaignObj {
@@ -426,11 +426,11 @@ export class Algohub extends Contract {
   createCampaign(
     votersAsa: Asset,
     idoAsa: Asset,
-    buyAsa: Asset,
+    investmentAsa: Asset,
     price: number,
-    maxBuyCap: number,
-    softCap: number,
-    hardCap: number,
+    maxInvestmentPerAccount: number,
+    minTotalInvestment: number,
+    maxTotalInvestment: number,
     duration: number,
     metadataUrl: string,
     vestingPercentages: number[],
@@ -472,11 +472,11 @@ export class Algohub extends Contract {
         this.txn.sender,
         this.votersAsaId.value,
         idoAsa,
-        buyAsa,
+        investmentAsa,
         price,
-        maxBuyCap,
-        softCap,
-        hardCap,
+        maxInvestmentPerAccount,
+        minTotalInvestment,
+        maxTotalInvestment,
         this.votingPeriod.value,
         duration,
         metadataUrl,

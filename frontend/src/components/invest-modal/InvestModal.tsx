@@ -1,16 +1,16 @@
-import { FormEvent, Fragment, useState } from 'react'
-import { CampaignInterface } from '../../interfaces/campaign-interface'
-import Modal from '../common/modal/Modal'
-import InvestModalInitialView from './view/initial/InvestModalInitialView'
-import InvestModalConfirmView from './view/confirm/InvestModalConfirmModal'
-import algosdk, { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk'
-import useAppContext from '../../core/util/useAppContext'
-import algod from '../../core/algosdk/AlgodManager'
-import { CampaignClient } from '../../contracts/CampaignClient'
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { useWallet } from '@txnlab/use-wallet'
-import Toast from '../common/toast/Toast'
+import algosdk, { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk'
+import { FormEvent, Fragment, useState } from 'react'
+import { CampaignClient } from '../../contracts/CampaignClient'
+import algod from '../../core/algosdk/AlgodManager'
 import { USDC_ASSET } from '../../core/util/asset/AssetConstants'
+import useAppContext from '../../core/util/useAppContext'
+import { CampaignInterface } from '../../interfaces/campaign-interface'
+import Modal from '../common/modal/Modal'
+import Toast from '../common/toast/Toast'
+import InvestModalConfirmView from './view/confirm/InvestModalConfirmModal'
+import InvestModalInitialView from './view/initial/InvestModalInitialView'
 
 interface InvestModalProps {
   campaignStatus: string
@@ -96,11 +96,11 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
 
         const suggestedParams = await algod.client.getTransactionParams().do()
         const appClient = await campaignContract.appClient.getAppReference()
-        const buyAmount = value * Math.pow(10, 6)
-        const buyXferTxn = makeAssetTransferTxnWithSuggestedParamsFromObject({
+        const investmentAmount = value * Math.pow(10, 6)
+        const investXferTxn = makeAssetTransferTxnWithSuggestedParamsFromObject({
           from: state.activeAccount.address,
           to: appClient.appAddress,
-          amount: buyAmount,
+          amount: investmentAmount,
           suggestedParams: suggestedParams,
           assetIndex: USDC_ASSET.id, // TODO: Use mainnet usdc asset
         })
@@ -109,8 +109,8 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
           throw new Error(`You don't have enough balance to invest ${value} USDC`)
         }
 
-        await campaignContract.buy(
-          { buyAsaXfer: buyXferTxn, buyAsa: USDC_ASSET.id, buyAmount: buyAmount },
+        await campaignContract.invest(
+          { investmentAsaXfer: investXferTxn, investmentAsa: USDC_ASSET.id, investmentAmount: investmentAmount },
           {
             sender: { signer, addr: state.activeAccount?.address } as TransactionSignerAccount,
             boxes: [

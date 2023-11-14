@@ -238,7 +238,7 @@ export const APP_SPEC: AppSpec = {
             desc: '',
           },
           {
-            name: 'buyAsa',
+            name: 'investmentAsa',
             type: 'asset',
             desc: '',
           },
@@ -248,17 +248,17 @@ export const APP_SPEC: AppSpec = {
             desc: '',
           },
           {
-            name: 'maxBuyCap',
+            name: 'maxInvestmentPerAccount',
             type: 'uint64',
             desc: '',
           },
           {
-            name: 'softCap',
+            name: 'minTotalInvestment',
             type: 'uint64',
             desc: '',
           },
           {
-            name: 'hardCap',
+            name: 'maxTotalInvestment',
             type: 'uint64',
             desc: '',
           },
@@ -512,11 +512,11 @@ export type Algohub = {
         argsObj: {
           votersAsa: number | bigint
           idoAsa: number | bigint
-          buyAsa: number | bigint
+          investmentAsa: number | bigint
           price: bigint | number
-          maxBuyCap: bigint | number
-          softCap: bigint | number
-          hardCap: bigint | number
+          maxInvestmentPerAccount: bigint | number
+          minTotalInvestment: bigint | number
+          maxTotalInvestment: bigint | number
           duration: bigint | number
           metadataUrl: string
           vestingPercentages: bigint | number[]
@@ -525,11 +525,11 @@ export type Algohub = {
         argsTuple: [
           votersAsa: number | bigint,
           idoAsa: number | bigint,
-          buyAsa: number | bigint,
+          investmentAsa: number | bigint,
           price: bigint | number,
-          maxBuyCap: bigint | number,
-          softCap: bigint | number,
-          hardCap: bigint | number,
+          maxInvestmentPerAccount: bigint | number,
+          minTotalInvestment: bigint | number,
+          maxTotalInvestment: bigint | number,
           duration: bigint | number,
           metadataUrl: string,
           vestingPercentages: bigint | number[],
@@ -762,11 +762,11 @@ export abstract class AlgohubCallFactory {
         : [
             args.votersAsa,
             args.idoAsa,
-            args.buyAsa,
+            args.investmentAsa,
             args.price,
-            args.maxBuyCap,
-            args.softCap,
-            args.hardCap,
+            args.maxInvestmentPerAccount,
+            args.minTotalInvestment,
+            args.maxTotalInvestment,
             args.duration,
             args.metadataUrl,
             args.vestingPercentages,

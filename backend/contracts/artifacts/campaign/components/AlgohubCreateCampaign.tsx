@@ -11,11 +11,11 @@ import { useWallet } from '@txnlab/use-wallet'
   typedClient={typedClient}
   votersAsa={votersAsa}
   idoAsa={idoAsa}
-  buyAsa={buyAsa}
+  investmentAsa={investmentAsa}
   price={price}
-  maxBuyCap={maxBuyCap}
-  softCap={softCap}
-  hardCap={hardCap}
+  maxInvestmentPerAccount={maxInvestmentPerAccount}
+  minTotalInvestment={minTotalInvestment}
+  maxTotalInvestment={maxTotalInvestment}
   duration={duration}
   metadataUrl={metadataUrl}
   vestingPercentages={vestingPercentages}
@@ -31,11 +31,11 @@ type Props = {
   typedClient: AlgohubClient
   votersAsa: AlgohubCreateCampaignArgs['votersAsa']
   idoAsa: AlgohubCreateCampaignArgs['idoAsa']
-  buyAsa: AlgohubCreateCampaignArgs['buyAsa']
+  investmentAsa: AlgohubCreateCampaignArgs['investmentAsa']
   price: AlgohubCreateCampaignArgs['price']
-  maxBuyCap: AlgohubCreateCampaignArgs['maxBuyCap']
-  softCap: AlgohubCreateCampaignArgs['softCap']
-  hardCap: AlgohubCreateCampaignArgs['hardCap']
+  maxInvestmentPerAccount: AlgohubCreateCampaignArgs['maxInvestmentPerAccount']
+  minTotalInvestment: AlgohubCreateCampaignArgs['minTotalInvestment']
+  maxTotalInvestment: AlgohubCreateCampaignArgs['maxTotalInvestment']
   duration: AlgohubCreateCampaignArgs['duration']
   metadataUrl: AlgohubCreateCampaignArgs['metadataUrl']
   vestingPercentages: AlgohubCreateCampaignArgs['vestingPercentages']
@@ -54,11 +54,11 @@ const AlgohubCreateCampaign = (props: Props) => {
       {
         votersAsa: props.votersAsa,
         idoAsa: props.idoAsa,
-        buyAsa: props.buyAsa,
+        investmentAsa: props.investmentAsa,
         price: props.price,
-        maxBuyCap: props.maxBuyCap,
-        softCap: props.softCap,
-        hardCap: props.hardCap,
+        maxInvestmentPerAccount: props.maxInvestmentPerAccount,
+        minTotalInvestment: props.minTotalInvestment,
+        maxTotalInvestment: props.maxTotalInvestment,
         duration: props.duration,
         metadataUrl: props.metadataUrl,
         vestingPercentages: props.vestingPercentages,

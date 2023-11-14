@@ -81,7 +81,7 @@
           "desc": ""
         },
         {
-          "name": "buyAsa",
+          "name": "investmentAsa",
           "type": "asset",
           "desc": ""
         },
@@ -91,17 +91,17 @@
           "desc": ""
         },
         {
-          "name": "maxBuyCap",
+          "name": "maxInvestmentPerAccount",
           "type": "uint64",
           "desc": ""
         },
         {
-          "name": "softCap",
+          "name": "minTotalInvestment",
           "type": "uint64",
           "desc": ""
         },
         {
-          "name": "hardCap",
+          "name": "maxTotalInvestment",
           "type": "uint64",
           "desc": ""
         },
