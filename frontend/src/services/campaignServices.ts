@@ -1,12 +1,11 @@
 import campaigns from '../dummy-data/new_campaigns.json'
-import { CampaignInterface } from '../interfaces/campaign-interface'
-import { NewCampaignInterface, Records, Metadata } from '../interfaces/new-campaign-interface'
+import { CampaignInterface, Metadata, Records } from '../interfaces/campaign-interface'
 
 const fetchAllCampaigns = async () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const allCampaigns: { record: any; metadata: Metadata }[] = campaigns
 
-  const mappedCampaigns: NewCampaignInterface[] = allCampaigns.map((campaign) => {
+  const mappedCampaigns: CampaignInterface[] = allCampaigns.map((campaign) => {
     const { record, metadata } = campaign
 
     const mappedRecord: Records = {
@@ -26,16 +25,16 @@ const fetchAllCampaigns = async () => {
 
 const filterCampaignByCategory = (campaigns: CampaignInterface[], category: string) => {
   if (category) {
-    const filteredCampaigns = campaigns.filter((campaign) => campaign.campaign_category === category)
+    const filteredCampaigns = campaigns.filter((campaign) => campaign.record.productOverview.marketType === category)
     return filteredCampaigns
   }
 
   return campaigns
 }
 
-const filterCampaignsByStatus = (campaigns: NewCampaignInterface[], status: CampaignInterface['campaign_status']) => {
-  // const filteredCampaigns = campaigns.filter((campaign) => campaign.campaign_status === status)
-  // return filteredCampaigns
-}
+// const filterCampaignsByStatus = (campaigns: CampaignInterface[], status: CampaignInterface['campaign_status']) => {
+//   // const filteredCampaigns = campaigns.filter((campaign) => campaign.campaign_status === status)
+//   // return filteredCampaigns
+// }
 
-export { fetchAllCampaigns, filterCampaignByCategory, filterCampaignsByStatus }
+export { fetchAllCampaigns, filterCampaignByCategory }

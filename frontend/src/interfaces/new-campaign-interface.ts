@@ -65,7 +65,7 @@ export interface Metadata {
   createdAt: string
 }
 
-export interface NewCampaignInterface {
+export interface CampaignInterface {
   record: Records
   metadata: Metadata
 }

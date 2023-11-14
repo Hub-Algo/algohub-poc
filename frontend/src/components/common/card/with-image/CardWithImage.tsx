@@ -1,6 +1,6 @@
 import { generatePath, useNavigate } from 'react-router-dom'
 import routes from '../../../../core/routes'
-import { NewCampaignInterface } from '../../../../interfaces/new-campaign-interface'
+import { CampaignInterface } from '../../../../interfaces/new-campaign-interface'
 import ProgressBar from '../../ProgressBar'
 import Button from '../../button/Button'
 import { formatCreationDate } from '../../../../core/util/campaign/campaignUtils'
@@ -11,7 +11,7 @@ interface CardWithImageProps {
     alt: string
     src: string
   }
-  campaign: NewCampaignInterface
+  campaign: CampaignInterface
 }
 
 function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
