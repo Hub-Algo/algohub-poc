@@ -1,32 +1,41 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { CampaignClient } from '../../contracts/CampaignClient'
+import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
-<CampaignWithdrawPurchase
+<CampaignWithdrawInvestment
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call withdrawPurchase"
+  buttonNode="Call withdrawInvestment"
   typedClient={typedClient}
+  buyAsa={buyAsa}
 />
 */
+type CampaignWithdrawInvestmentArgs = Campaign['methods']['withdrawInvestment(asset)void']['argsObj']
+
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
+  buyAsa: CampaignWithdrawInvestmentArgs['buyAsa']
 }
 
-const CampaignWithdrawPurchase = (props: Props) => {
+const CampaignWithdrawInvestment = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling withdrawPurchase`)
-    await props.typedClient.withdrawPurchase({}, { sender })
+    console.log(`Calling withdrawInvestment`)
+    await props.typedClient.withdrawInvestment(
+      {
+        buyAsa: props.buyAsa,
+      },
+      { sender },
+    )
     setLoading(false)
   }
 
@@ -37,4 +46,4 @@ const CampaignWithdrawPurchase = (props: Props) => {
   )
 }
 
-export default CampaignWithdrawPurchase
+export default CampaignWithdrawInvestment

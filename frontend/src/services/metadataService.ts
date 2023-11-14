@@ -1,9 +1,9 @@
 //Use axios to fetch data?
 import axios from 'axios'
-import { CampaignApplicationFormData } from '../components/campaign/application-form/CampaignApplicationForm.types'
+import { CampaignApplicationData } from '../pages/campaign-application/CampaignApplication.types'
 
 export class metadataService {
-  async uploadMetadata(campaignMetadata: CampaignApplicationFormData) {
+  async uploadMetadata(campaignMetadata: CampaignApplicationData) {
     try {
       const requestData = campaignMetadata
 

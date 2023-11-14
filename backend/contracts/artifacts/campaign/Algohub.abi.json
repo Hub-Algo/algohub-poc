@@ -114,6 +114,16 @@
           "name": "metadataUrl",
           "type": "string",
           "desc": ""
+        },
+        {
+          "name": "vestingPercentages",
+          "type": "uint64[]",
+          "desc": ""
+        },
+        {
+          "name": "vestingDurations",
+          "type": "uint64[]",
+          "desc": ""
         }
       ],
       "desc": "",
@@ -146,6 +156,15 @@
           "desc": ""
         }
       ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "expandOpcodeBudget",
+      "args": [],
       "desc": "",
       "returns": {
         "type": "void",

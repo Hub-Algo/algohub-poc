@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { CampaignClient } from '../../contracts/CampaignClient'
+import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 import Button from '../common/button/Button'
 
 /* Example usage
@@ -12,11 +12,14 @@ import Button from '../common/button/Button'
   typedClient={typedClient}
 />
 */
+type CampaignCreateApplicationArgs = Campaign['methods']['createApplication(application)void']['argsObj']
+
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
+  algohubApp: CampaignCreateApplicationArgs['algohubApp']
 }
 
 const CampaignCreateApplication = (props: Props) => {
@@ -27,7 +30,12 @@ const CampaignCreateApplication = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling createApplication`)
-    await props.typedClient.create.createApplication({}, { sender })
+    await props.typedClient.create.createApplication(
+      {
+        algohubApp: props.algohubApp,
+      },
+      { sender },
+    )
     setLoading(false)
   }
 

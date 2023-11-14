@@ -4,36 +4,30 @@ import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignWithdrawIdoAsa
+<CampaignLockApprovedStatus
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call withdrawIdoAsa"
+  buttonNode="Call lockApprovedStatus"
   typedClient={typedClient}
-  idoAsa={idoAsa}
 />
 */
-type CampaignWithdrawIdoAsaArgs = Dao['methods']['withdrawIdoAsa(asset)void']['argsObj']
-
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  idoAsa: CampaignWithdrawIdoAsaArgs['idoAsa']
 }
 
-const CampaignWithdrawIdoAsa = (props: Props) => {
+const CampaignLockApprovedStatus = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling withdrawIdoAsa`)
-    await props.typedClient.withdrawIdoAsa(
-      {
-        idoAsa: props.idoAsa,
-      },
+    console.log(`Calling lockApprovedStatus`)
+    await props.typedClient.lockApprovedStatus(
+      {},
       { sender },
     )
     setLoading(false)
@@ -46,4 +40,4 @@ const CampaignWithdrawIdoAsa = (props: Props) => {
   )
 }
 
-export default CampaignWithdrawIdoAsa
+export default CampaignLockApprovedStatus

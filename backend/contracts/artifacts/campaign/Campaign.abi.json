@@ -4,7 +4,13 @@
   "methods": [
     {
       "name": "createApplication",
-      "args": [],
+      "args": [
+        {
+          "name": "algohubApp",
+          "type": "application",
+          "desc": ""
+        }
+      ],
       "desc": "",
       "returns": {
         "type": "void",
@@ -77,6 +83,26 @@
       }
     },
     {
+      "name": "setVestingSchedule",
+      "args": [
+        {
+          "name": "vestingPercentages",
+          "type": "uint64[]",
+          "desc": ""
+        },
+        {
+          "name": "vestingDurations",
+          "type": "uint64[]",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
       "name": "depositIdoAsa",
       "args": [
         {
@@ -90,6 +116,15 @@
           "desc": ""
         }
       ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "lockApprovedStatus",
+      "args": [],
       "desc": "",
       "returns": {
         "type": "void",
@@ -137,8 +172,14 @@
       }
     },
     {
-      "name": "withdrawPurchase",
-      "args": [],
+      "name": "withdrawInvestment",
+      "args": [
+        {
+          "name": "buyAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
       "desc": "",
       "returns": {
         "type": "void",
@@ -147,7 +188,13 @@
     },
     {
       "name": "withdrawIdoAsa",
-      "args": [],
+      "args": [
+        {
+          "name": "idoAsa",
+          "type": "asset",
+          "desc": ""
+        }
+      ],
       "desc": "",
       "returns": {
         "type": "void",
@@ -186,6 +233,21 @@
       "desc": "",
       "returns": {
         "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getAccountTotalPurchases",
+      "args": [
+        {
+          "name": "account",
+          "type": "account",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
         "desc": ""
       }
     },
@@ -230,7 +292,16 @@
       "args": [],
       "desc": "",
       "returns": {
-        "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)",
+        "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)",
+        "desc": ""
+      }
+    },
+    {
+      "name": "getVestingSchedule",
+      "args": [],
+      "desc": "",
+      "returns": {
+        "type": "(uint64,uint64[],uint64[])",
         "desc": ""
       }
     }
