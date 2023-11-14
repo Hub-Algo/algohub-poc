@@ -20,7 +20,7 @@ function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
   return (
     <div
       onClick={() => navigate(generatePath(routes.PROJECT_DETAIL.FULL_PATH, { campaignId: campaign.metadata.id }))}
-      className="shadow-xl bg-transparent border-2 border-transparent rounded-md hover:border-orange-500 transition-all hover:scale-105 cursor-pointer"
+      className="shadow-xl bg-transparent border-2 border-transparent rounded-md hover:border-orange-500 transition-all max-w-xs hover:scale-105 cursor-pointer"
     >
       <div className="rounded-b-none h-32 rounded-md bg-orange-500 p-1">
         <img src={imageProps.src} alt={imageProps.alt} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
@@ -47,7 +47,7 @@ function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
         </div>
         <Button
           buttonColor={'orange'}
-          size={'lg'}
+          size={'md'}
           customClassName={'rounded-2xl'}
           onClick={() => navigate(generatePath(routes.PROJECT_DETAIL.FULL_PATH, { campaignId: campaign.metadata.id }))}
         >
