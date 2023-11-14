@@ -1,10 +1,12 @@
 /* eslint-disable no-console */
+import { microAlgos } from '@algorandfoundation/algokit-utils'
+import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { Algohub, AlgohubClient } from '../../contracts/AlgohubClient'
+import { CampaignApplicationData } from '../../pages/campaign-application/CampaignApplication.types'
+import { metadataService } from '../../services/metadataService'
 import Button from '../common/button/Button'
-import { microAlgos } from '@algorandfoundation/algokit-utils'
-import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
 
 /* Example usage
 <AlgohubCreateCampaign
@@ -31,6 +33,7 @@ type Props = {
   buttonLoadingNode?: ReactNode
   children: ReactNode
   typedClient: AlgohubClient
+  metadata: CampaignApplicationData
   votersAsa: AlgohubCreateCampaignArgs['votersAsa']
   idoAsa: AlgohubCreateCampaignArgs['idoAsa']
   buyAsa: AlgohubCreateCampaignArgs['buyAsa']
@@ -39,7 +42,7 @@ type Props = {
   softCap: AlgohubCreateCampaignArgs['softCap']
   hardCap: AlgohubCreateCampaignArgs['hardCap']
   duration: AlgohubCreateCampaignArgs['duration']
-  metadataUrl: AlgohubCreateCampaignArgs['metadataUrl']
+  // metadataUrl: AlgohubCreateCampaignArgs['metadataUrl']
   onSuccess?: (response: AppCallTransactionResultOfType<bigint>) => void
 }
 
@@ -47,10 +50,12 @@ const AlgohubCreateCampaign = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
+  const metadataSrvc = new metadataService()
 
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling createCampaign`)
+    const metadataResp = await metadataSrvc.uploadMetadata(props.metadata)
     await props.typedClient
       .createCampaign(
         {
@@ -62,7 +67,7 @@ const AlgohubCreateCampaign = (props: Props) => {
           softCap: props.softCap,
           hardCap: props.hardCap,
           duration: props.duration,
-          metadataUrl: props.metadataUrl,
+          metadataUrl: metadataResp.url,
         },
         {
           sender,
