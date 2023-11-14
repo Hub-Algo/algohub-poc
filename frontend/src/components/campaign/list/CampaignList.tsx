@@ -1,15 +1,10 @@
 import './_campaign-list.scss'
 
 import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti'
-import { generatePath, useNavigate } from 'react-router-dom'
-
 import { useEffect, useState } from 'react'
-import routes from '../../../core/routes'
 import { useWindowSizeContext } from '../../../core/window-size/WindowSizeContext'
-import { CampaignInterface } from '../../../interfaces/campaign-interface'
 import Button from '../../common/button/Button'
 import CardWithImage from '../../common/card/with-image/CardWithImage'
-import ProgressBar from '../../common/ProgressBar'
 import { NewCampaignInterface } from '../../../interfaces/new-campaign-interface'
 
 interface CampaignsListPropsInterface {
@@ -23,8 +18,6 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
   const [displayedCampaignsOffset, setDisplayedCampaignsOffset] = useState(0)
   const [limit, setLimit] = useState(getDisplayedCampaignsLimit(isSmallScreen, isXSmallScreen, isMidRangeScreen))
   const displayedCampaigns = campaigns.length ? campaigns.slice(displayedCampaignsOffset, displayedCampaignsOffset + limit) : []
-
-  const navigate = useNavigate()
 
   useEffect(() => {
     const currentLimit = getDisplayedCampaignsLimit(isSmallScreen, isXSmallScreen, isMidRangeScreen)

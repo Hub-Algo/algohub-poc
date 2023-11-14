@@ -1,5 +1,5 @@
 import { NewCampaignInterface } from '../../../interfaces/new-campaign-interface'
-import CategoryBadge, { CategoryBadgePropsInterface } from '../../CategoryBadge'
+import CategoryBadge from '../../CategoryBadge'
 
 interface CampaignDetailsDashboardPropsInterface {
   children: React.ReactNode

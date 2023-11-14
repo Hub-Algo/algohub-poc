@@ -129,8 +129,6 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      console.log(e)
-
       setLoading(false)
       setInvestState('failed')
       setToaastMessage(e.message ?? 'Something went wrong while sending the transaction.')

@@ -5,7 +5,6 @@ import { UserInterface } from '../interfaces/userInterface'
 import ConnectDropdown from './ConnectDropdown'
 import Sidebar from './Sidebar'
 import WalletWidget from './WalletWidget'
-import useAppContext from '../core/util/useAppContext'
 
 export interface UserDataOutletInterface {
   userData: UserInterface

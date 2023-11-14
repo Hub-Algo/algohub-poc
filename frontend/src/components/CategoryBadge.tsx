@@ -29,7 +29,6 @@ const CategoryBadge = ({ marketCategory, size }: CategoryBadgePropsInterface) =>
   }
 
   const getBadgeSize = () => {
-    console.log(size)
     switch (size) {
       case 'sm':
         return 'text-sm'

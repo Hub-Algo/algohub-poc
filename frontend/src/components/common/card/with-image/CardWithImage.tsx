@@ -15,8 +15,6 @@ interface CardWithImageProps {
 }
 
 function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
-  console.log('card campaign', campaign)
-
   const navigate = useNavigate()
 
   return (

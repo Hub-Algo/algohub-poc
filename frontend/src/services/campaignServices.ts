@@ -33,8 +33,8 @@ const filterCampaignByCategory = (campaigns: CampaignInterface[], category: stri
 }
 
 const filterCampaignsByStatus = (campaigns: NewCampaignInterface[], status: CampaignInterface['campaign_status']) => {
-  const filteredCampaigns = campaigns.filter((campaign) => campaign.campaign_status === status)
-  return filteredCampaigns
+  // const filteredCampaigns = campaigns.filter((campaign) => campaign.campaign_status === status)
+  // return filteredCampaigns
 }
 
 export { fetchAllCampaigns, filterCampaignByCategory, filterCampaignsByStatus }
