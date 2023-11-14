@@ -10,9 +10,10 @@ import { CampaignInterface } from '../../../interfaces/campaign-interface'
 import Button from '../../common/button/Button'
 import CardWithImage from '../../common/card/with-image/CardWithImage'
 import ProgressBar from '../../common/ProgressBar'
+import { NewCampaignInterface } from '../../../interfaces/new-campaign-interface'
 
 interface CampaignsListPropsInterface {
-  campaigns: CampaignInterface[]
+  campaigns: NewCampaignInterface[]
 }
 
 const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
@@ -36,33 +37,8 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
       <CardWithImage
         key={index}
         imageProps={{ src: 'https://pbs.twimg.com/profile_banners/1502651569053044737/1658777150/1500x500', alt: 'gunny-tps' }}
-        campaign_id={campaign.campaign_id}
-      >
-        <h2 className={'card-title font-oswald'}>{campaign.campaign_title}</h2>
-        <div className="flex items-center">
-          <p className="text-lg font-bold">Goal:</p>
-          <h3>${campaign.hard_goal}</h3>
-        </div>
-        <ProgressBar hard_goal={campaign.hard_goal} invested_amount={campaign.invested_amount} />
-        <div className={'bg-gray-950 p-2 rounded-md'}>
-          <div className={'flex gap-4 w-max'}>
-            <p>{'Start date'}</p> <p>{campaign.start_date}</p>
-          </div>
-
-          <div className={'flex gap-4 w-max'}>
-            <p>{'End date'}</p> <p>{campaign.end_date}</p>
-          </div>
-        </div>
-
-        <Button
-          buttonColor={'orange'}
-          size={'lg'}
-          customClassName={'rounded-2xl'}
-          onClick={() => navigate(generatePath(routes.PROJECT_DETAIL.FULL_PATH, { campaignId: campaign.campaign_id }))}
-        >
-          {'view campaign'}
-        </Button>
-      </CardWithImage>
+        campaign={campaign}
+      ></CardWithImage>
     )
   })
 
@@ -112,10 +88,10 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
     }
 
     if (isMidRangeScreen) {
-      return 3
+      return 2
     }
 
-    return isSmallScreen ? 2 : 4
+    return 5
   }
 }
 
