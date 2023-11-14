@@ -4,35 +4,38 @@ import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignWithdrawIdoAsa
+<CampaignSetVestingSchedule
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call withdrawIdoAsa"
+  buttonNode="Call setVestingSchedule"
   typedClient={typedClient}
-  idoAsa={idoAsa}
+  vestingPercentages={vestingPercentages}
+  vestingDurations={vestingDurations}
 />
 */
-type CampaignWithdrawIdoAsaArgs = Dao['methods']['withdrawIdoAsa(asset)void']['argsObj']
+type CampaignSetVestingScheduleArgs = Dao['methods']['setVestingSchedule(uint64[],uint64[])void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  idoAsa: CampaignWithdrawIdoAsaArgs['idoAsa']
+  vestingPercentages: CampaignSetVestingScheduleArgs['vestingPercentages']
+  vestingDurations: CampaignSetVestingScheduleArgs['vestingDurations']
 }
 
-const CampaignWithdrawIdoAsa = (props: Props) => {
+const CampaignSetVestingSchedule = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling withdrawIdoAsa`)
-    await props.typedClient.withdrawIdoAsa(
+    console.log(`Calling setVestingSchedule`)
+    await props.typedClient.setVestingSchedule(
       {
-        idoAsa: props.idoAsa,
+        vestingPercentages: props.vestingPercentages,
+        vestingDurations: props.vestingDurations,
       },
       { sender },
     )
@@ -46,4 +49,4 @@ const CampaignWithdrawIdoAsa = (props: Props) => {
   )
 }
 
-export default CampaignWithdrawIdoAsa
+export default CampaignSetVestingSchedule
