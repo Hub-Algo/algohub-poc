@@ -57,7 +57,6 @@ export interface Records {
   productDocumentation: ProductDocumentation
   fundraisingGoal: FundraisingGoal
   contactInfo: ContactInfo
-  [key: string]: any // Index signature for additional properties
 }
 
 export interface Metadata {
