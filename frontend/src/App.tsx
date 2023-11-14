@@ -130,7 +130,7 @@ export default function App() {
     {
       element: (
         <>
-          <NavBar userData={userData} resetUserData={resetUserData} />
+          <NavBar userData={userData} resetUserData={resetUserData} providerId={activeAccount?.providerId}/>
           <Outlet context={{ activeAccount, campaignList, userData, algohubClient } satisfies AppState} />
           <Footer />
         </>
