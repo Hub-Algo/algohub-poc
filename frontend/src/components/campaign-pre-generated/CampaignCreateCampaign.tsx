@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
-import { microAlgos } from '@algorandfoundation/algokit-utils'
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
-import Button from '../common/button/Button'
 
 /* Example usage
 <CampaignCreateCampaign
@@ -14,11 +12,11 @@ import Button from '../common/button/Button'
   adminAccount={adminAccount}
   votersAsa={votersAsa}
   idoAsa={idoAsa}
-  buyAsa={buyAsa}
-  price={price}
-  maxBuyCap={maxBuyCap}
-  softCap={softCap}
-  hardCap={hardCap}
+  investmentAsa={investmentAsa}
+  conversionRate={conversionRate}
+  maxInvestmentPerAccount={maxInvestmentPerAccount}
+  minTotalInvestment={minTotalInvestment}
+  maxTotalInvestment={maxTotalInvestment}
   votingPeriod={votingPeriod}
   duration={duration}
   metadataUrl={metadataUrl}
@@ -28,21 +26,21 @@ type CampaignCreateCampaignArgs =
   Campaign['methods']['createCampaign(account,asset,asset,asset,uint64,uint64,uint64,uint64,uint64,uint64,string)void']['argsObj']
 
 type Props = {
-  children: ReactNode
+  buttonClass: string
+  buttonLoadingNode?: ReactNode
+  buttonNode: ReactNode
   typedClient: CampaignClient
   adminAccount: CampaignCreateCampaignArgs['adminAccount']
   votersAsa: CampaignCreateCampaignArgs['votersAsa']
   idoAsa: CampaignCreateCampaignArgs['idoAsa']
-  buyAsa: CampaignCreateCampaignArgs['buyAsa']
-  price: CampaignCreateCampaignArgs['price']
-  maxBuyCap: CampaignCreateCampaignArgs['maxBuyCap']
-  softCap: CampaignCreateCampaignArgs['softCap']
-  hardCap: CampaignCreateCampaignArgs['hardCap']
+  investmentAsa: CampaignCreateCampaignArgs['investmentAsa']
+  conversionRate: CampaignCreateCampaignArgs['conversionRate']
+  maxInvestmentPerAccount: CampaignCreateCampaignArgs['maxInvestmentPerAccount']
+  minTotalInvestment: CampaignCreateCampaignArgs['minTotalInvestment']
+  maxTotalInvestment: CampaignCreateCampaignArgs['maxTotalInvestment']
   votingPeriod: CampaignCreateCampaignArgs['votingPeriod']
   duration: CampaignCreateCampaignArgs['duration']
   metadataUrl: CampaignCreateCampaignArgs['metadataUrl']
-  customClassName?: string
-  onSuccess?: VoidFunction
 }
 
 const CampaignCreateCampaign = (props: Props) => {
@@ -58,33 +56,24 @@ const CampaignCreateCampaign = (props: Props) => {
         adminAccount: props.adminAccount,
         votersAsa: props.votersAsa,
         idoAsa: props.idoAsa,
-        buyAsa: props.buyAsa,
-        price: props.price,
-        maxBuyCap: props.maxBuyCap,
-        softCap: props.softCap,
-        hardCap: props.hardCap,
+        investmentAsa: props.investmentAsa,
+        conversionRate: props.conversionRate,
+        maxInvestmentPerAccount: props.maxInvestmentPerAccount,
+        minTotalInvestment: props.minTotalInvestment,
+        maxTotalInvestment: props.maxTotalInvestment,
         votingPeriod: props.votingPeriod,
         duration: props.duration,
         metadataUrl: props.metadataUrl,
       },
-      {
-        sender,
-        sendParams: {
-          fee: microAlgos(8_000),
-        },
-      },
+      { sender },
     )
     setLoading(false)
-
-    if (props.onSuccess) {
-      props.onSuccess()
-    }
   }
 
   return (
-    <Button customClassName={props.customClassName} onClick={callMethod} shouldDisplaySpinner={loading}>
-      {props.children}
-    </Button>
+    <button className={props.buttonClass} onClick={callMethod}>
+      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
+    </button>
   )
 }
 

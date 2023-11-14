@@ -26,7 +26,8 @@ export const createAsa = async (
   name: string,
   unit: string,
   total: number,
-  algod: algosdk.Algodv2
+  algod: algosdk.Algodv2,
+  decimals: number = 6
 ) => {
   try {
     const suggestedParams = await algod.getTransactionParams().do();
@@ -41,8 +42,8 @@ export const createAsa = async (
       freeze: creator.addr,
       clawback: creator.addr,
       assetURL: 'http://path/to/my/asset/details',
-      total,
-      decimals: 0,
+      total: total * 10 ** decimals,
+      decimals,
     });
 
     const result = await algokit.sendTransaction({ transaction: txn, from: creator }, algod);

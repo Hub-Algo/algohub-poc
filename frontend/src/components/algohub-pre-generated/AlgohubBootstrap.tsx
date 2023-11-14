@@ -25,7 +25,6 @@ type Props = {
 const AlgohubBootstrap = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
-
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
