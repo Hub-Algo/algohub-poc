@@ -6,7 +6,7 @@ import { PeraWalletConnect } from '@perawallet/connect'
 import { Account, PROVIDER_ID, ProvidersArray, WalletProvider, useInitializeProviders, useWallet } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
@@ -25,8 +25,7 @@ import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
-import { fetchAllCampaigns } from './services/campaignServices'
-import { userServices } from './services/userServices'
+import { userService } from './services/userServices'
 
 export interface AppState {
   activeAccount?: Account | null
@@ -36,18 +35,9 @@ export interface AppState {
 }
 
 export default function App() {
-  const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
+  const [campaignList, _setCampaignList] = useState<CampaignInterface[]>([])
   const [userData, setUserData] = useState<UserInterface>()
   const { activeAccount, signer, activeAddress } = useWallet()
-
-  const algohubClientAppDetails: AppDetails = {
-    resolveBy: 'id',
-    id: 479564984,
-    sender: { signer, addr: activeAddress } as TransactionSignerAccount,
-  }
-
-  const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : null
-  const userService = new userServices()
 
   let providersArray: ProvidersArray
 
@@ -61,16 +51,41 @@ export default function App() {
     ]
   }
 
-  const resetUserData = () => {
+  const algohubClient = useMemo(() => {
+    const algohubClientAppDetails: AppDetails = {
+      resolveBy: 'id',
+      id: 478556883,
+      sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+    }
+
+    return activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : null
+  }, [activeAddress, signer])
+
+  const algodConfig = getAlgodConfigFromViteEnvironment()
+
+  const walletProviders = useInitializeProviders({
+    providers: providersArray,
+    nodeConfig: {
+      network: algodConfig.network,
+      nodeServer: algodConfig.server,
+      nodePort: String(algodConfig.port),
+      nodeToken: String(algodConfig.token),
+    },
+    algosdkStatic: algosdk,
+  })
+
+  const resetUserData = useCallback(() => {
     setUserData(undefined)
-  }
+  }, [])
 
-  const fetchCampaigns = async () => {
-    const allCampaigns = await fetchAllCampaigns()
-    setCampaignList(allCampaigns)
-  }
+  const fetchCampaigns = useCallback(async () => {
+    if (algohubClient) {
+      const response = await algohubClient.getAllCampaignApps({})
+      console.log(response)
+    }
+  }, [algohubClient])
 
-  const fetchAndAppendUserData = async (walletAddress: string) => {
+  const fetchAndAppendUserData = useCallback(async (walletAddress: string) => {
     const userAssets = (await userService.fetchUserAssets(walletAddress)).assets
 
     const userCreatedAssets = (await userService.fetchUserAssets(walletAddress)).created_assets
@@ -97,30 +112,19 @@ export default function App() {
       user_assets: userAssets,
       user_created_assets: userCreatedAssets,
     })
-  }
-
-  useEffect(() => {
-    fetchCampaigns()
   }, [])
 
   useEffect(() => {
-    if (activeAccount) {
-      fetchAndAppendUserData(activeAccount?.address)
+    if (activeAddress) {
+      fetchAndAppendUserData(activeAddress)
+    } else {
+      resetUserData()
     }
-  }, [activeAccount])
+  }, [activeAddress, fetchAndAppendUserData, resetUserData])
 
-  const algodConfig = getAlgodConfigFromViteEnvironment()
-
-  const walletProviders = useInitializeProviders({
-    providers: providersArray,
-    nodeConfig: {
-      network: algodConfig.network,
-      nodeServer: algodConfig.server,
-      nodePort: String(algodConfig.port),
-      nodeToken: String(algodConfig.token),
-    },
-    algosdkStatic: algosdk,
-  })
+  useEffect(() => {
+    fetchCampaigns()
+  }, [fetchCampaigns])
 
   const router = createBrowserRouter([
     {
