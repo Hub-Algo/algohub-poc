@@ -10,6 +10,8 @@ import Modal from '../components/common/modal/Modal'
 import InvestModal from '../components/invest-modal/InvestModal'
 import AlgohubGetAllCampaignApps from '../components/algohub-pre-generated/AlgohubGetAllCampaignApps'
 import useAppContext from '../core/util/useAppContext'
+import WalletConnectModal from '../components/common/wallet-connect-modal/WalletConnectModal'
+import { useWallet } from '@txnlab/use-wallet'
 
 export interface CampaignOutletInterface {
   campaignList: CampaignInterface[]
@@ -19,6 +21,8 @@ const CampaignDetails = () => {
   const state = useAppContext()
   const hasVoted = false
   const { campaignList } = useOutletContext() as CampaignOutletInterface
+
+  const { activeAccount } = useWallet()
 
   const { campaignId } = useParams()
 
@@ -100,6 +104,9 @@ const CampaignDetails = () => {
   )
 
   function getTxnModal() {
+    if (!activeAccount) {
+      return <WalletConnectModal buttonLabel="Connect to vote" />
+    }
     if ((campaign?.campaign_status === 'new' && hasVoted) || campaign?.campaign_status === 'pending') {
       // TODO: Get campaign id dynamically
       return <InvestModal campaignStatus={campaign.campaign_status} campaignId={479460351n} />
