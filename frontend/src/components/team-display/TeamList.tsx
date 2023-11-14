@@ -1,7 +1,9 @@
 const teamInfo = [{ name: 'Arthur Rabelo' }]
 
 const TeamList = () => {
-  return <div className="bg-gray-950">TeamList</div>
+  const teamListRenderer = teamInfo.map((teamMember) => <div>{teamMember.name}</div>)
+
+  return <div className="bg-gray-950">{teamListRenderer}</div>
 }
 
 export default TeamList
