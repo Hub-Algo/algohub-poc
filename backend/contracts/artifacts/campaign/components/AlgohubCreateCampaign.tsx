@@ -18,9 +18,11 @@ import { useWallet } from '@txnlab/use-wallet'
   hardCap={hardCap}
   duration={duration}
   metadataUrl={metadataUrl}
+  vestingPercentages={vestingPercentages}
+  vestingDurations={vestingDurations}
 />
 */
-type AlgohubCreateCampaignArgs = Dao['methods']['createCampaign(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,string)uint64']['argsObj']
+type AlgohubCreateCampaignArgs = Dao['methods']['createCampaign(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,string,uint64[],uint64[])uint64']['argsObj']
 
 type Props = {
   buttonClass: string
@@ -36,6 +38,8 @@ type Props = {
   hardCap: AlgohubCreateCampaignArgs['hardCap']
   duration: AlgohubCreateCampaignArgs['duration']
   metadataUrl: AlgohubCreateCampaignArgs['metadataUrl']
+  vestingPercentages: AlgohubCreateCampaignArgs['vestingPercentages']
+  vestingDurations: AlgohubCreateCampaignArgs['vestingDurations']
 }
 
 const AlgohubCreateCampaign = (props: Props) => {
@@ -57,6 +61,8 @@ const AlgohubCreateCampaign = (props: Props) => {
         hardCap: props.hardCap,
         duration: props.duration,
         metadataUrl: props.metadataUrl,
+        vestingPercentages: props.vestingPercentages,
+        vestingDurations: props.vestingDurations,
       },
       { sender },
     )

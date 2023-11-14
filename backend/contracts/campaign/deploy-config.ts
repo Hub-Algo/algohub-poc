@@ -41,7 +41,7 @@ export async function deploy() {
     // allowDelete: true,
     onUpdate: 'append',
     onSchemaBreak: 'replace',
-    version: '0.0.1',
+    version: '0.0.2',
     createCall: (calls) =>
       calls.createApplication({
         algoToVoteRatio: ALGO_TO_VOTE_RATIO,
@@ -60,15 +60,17 @@ export async function deploy() {
       algod
     );
   }
-  const bootsrapResult = await campaignFactory.bootstrap(
-    { voteAsaTotal: TOTAL_VOTERS },
-    {
-      sendParams: {
-        fee: microAlgos(3_000),
-      },
-    }
-  );
-  console.log('VoteASA -->', bootsrapResult.return);
+  if (['create'].includes(factory.operationPerformed)) {
+    const bootsrapResult = await campaignFactory.bootstrap(
+      { voteAsaTotal: TOTAL_VOTERS },
+      {
+        sendParams: {
+          fee: microAlgos(3_000),
+        },
+      }
+    );
+    console.log('VoteASA -->', bootsrapResult.return);
+  }
 
   const method = 'getAllCampaignApps';
   const response = await campaignFactory.getAllCampaignApps({});

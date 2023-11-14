@@ -9,13 +9,17 @@ import { useWallet } from '@txnlab/use-wallet'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call createApplication"
   typedClient={typedClient}
+  algohubApp={algohubApp}
 />
 */
+type CampaignCreateApplicationArgs = Dao['methods']['createApplication(application)void']['argsObj']
+
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
+  algohubApp: CampaignCreateApplicationArgs['algohubApp']
 }
 
 const CampaignCreateApplication = (props: Props) => {
@@ -27,7 +31,9 @@ const CampaignCreateApplication = (props: Props) => {
     setLoading(true)
     console.log(`Calling createApplication`)
     await props.typedClient.create.createApplication(
-      {},
+      {
+        algohubApp: props.algohubApp,
+      },
       { sender },
     )
     setLoading(false)

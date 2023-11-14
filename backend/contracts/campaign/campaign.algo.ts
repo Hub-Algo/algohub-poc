@@ -1,8 +1,9 @@
 import { Contract } from '@algorandfoundation/tealscript';
 
 type VestingDetails = {
-  percentage: number; // percentage of tokens to be available
-  time: number; // seconds after end timestamp
+  vestingPeriods: number;
+  percentages: number[]; // percentage of tokens to be available
+  durations: number[]; // seconds after end timestamp
 };
 
 type CampaignObj = {
@@ -11,6 +12,7 @@ type CampaignObj = {
   softCap: number;
   hardCap: number;
   purchasedAmount: number;
+  withdrawnAmount: number;
   startTime: number;
   endTime: number;
   metadataUrl: string;
@@ -24,6 +26,8 @@ type AlgohubVotes = {
 
 // eslint-disable-next-line no-unused-vars
 export default class Campaign extends Contract {
+  algohub = GlobalStateKey<Application>();
+
   admin = GlobalStateKey<Account>();
 
   idoAsaId = GlobalStateKey<Asset>();
@@ -34,7 +38,7 @@ export default class Campaign extends Contract {
 
   campaign = GlobalStateKey<CampaignObj>();
 
-  vestingSchedule = GlobalStateKey<VestingDetails[]>();
+  vestingSchedule = GlobalStateKey<VestingDetails>();
 
   isApprovedCampaign = GlobalStateKey<boolean>();
 
@@ -43,16 +47,14 @@ export default class Campaign extends Contract {
   votesInFavor = GlobalStateKey<number>();
 
   inFavor = BoxMap<Address, boolean>({ prefix: 'v' });
-  // inFavor = GlobalStateMap<Address, boolean>({ maxKeys: 50, prefix: 'v' });
 
   purchases = BoxMap<Address, number>({ prefix: 'p' });
-  // purchases = GlobalStateMap<Address, number>({ maxKeys: 50, prefix: 'p' });
 
   claimedAmount = BoxMap<Address, number>({ prefix: 'c' });
-  // claimedAmount = GlobalStateMap<Address, number>({ maxKeys: 50, prefix: 'c' });
 
   // eslint-disable-next-line no-unused-vars
-  createApplication(): void {
+  createApplication(algohubApp: Application): void {
+    this.algohub.value = algohubApp;
     this.votersAsaId.value = Asset.zeroIndex;
     this.idoAsaId.value = Asset.zeroIndex;
     this.buyAsaId.value = Asset.zeroIndex;
@@ -62,6 +64,13 @@ export default class Campaign extends Contract {
   /// ========================
   /// ==== Private Methods ===
   /// ========================
+  private expandOpcodeBugdet(): void {
+    sendMethodCall<[], void>({
+      applicationID: this.algohub.value,
+      name: 'expandOpcodeBudget',
+    });
+  }
+
   private isApproved(): boolean {
     if (!this.isApprovedCampaign.value) {
       // TODO: Check quorum + voting logic
@@ -70,7 +79,8 @@ export default class Campaign extends Contract {
     return this.isApprovedCampaign.value;
   }
 
-  private isHypelisted(): boolean {
+  // eslint-disable-next-line no-unused-vars
+  private isHypelisted(account: Account): boolean {
     // Check if caller is hypelisted
     return true;
   }
@@ -81,6 +91,12 @@ export default class Campaign extends Contract {
       xferAsset: asaToOptIn,
       assetAmount: 0,
     });
+  }
+
+  private convertToAsaAmount(purchaseAmount: number, asaToCovertTo: Asset): number {
+    if (asaToCovertTo === this.buyAsaId.value) return purchaseAmount / this.campaign.value.price;
+    if (asaToCovertTo === this.idoAsaId.value) return purchaseAmount * this.campaign.value.price;
+    return 0;
   }
 
   createCampaign(
@@ -94,33 +110,41 @@ export default class Campaign extends Contract {
     hardCap: number,
     votingPeriod: number,
     duration: number,
-    // vestingSchedule: number,
     metadataUrl: string
   ): void {
     assert(!this.campaign.exists);
     this.admin.value = adminAccount;
+
     this.votersAsaId.value = votersAsa;
     this.idoAsaId.value = idoAsa;
     this.buyAsaId.value = buyAsa;
+    this.optInToAsa(idoAsa);
+    this.optInToAsa(buyAsa);
+
     this.campaign.value = {
       price: price,
       maxBuyCap: maxBuyCap,
       softCap: softCap,
       hardCap: hardCap,
       purchasedAmount: 0,
+      withdrawnAmount: 0,
       startTime: globals.latestTimestamp + votingPeriod,
       endTime: globals.latestTimestamp + votingPeriod + duration,
       metadataUrl: metadataUrl,
     };
-
-    this.optInToAsa(idoAsa);
-    this.optInToAsa(buyAsa);
-    // TODO: Set the vesting schedule logic
-    // this.vestingSchedule.value = {
-    //   x: vestingSchedule,
-    // };
   }
 
+  setVestingSchedule(vestingPercentages: number[], vestingDurations: number[]): void {
+    assert(!this.campaign.exists);
+    assert(vestingDurations.length === vestingPercentages.length);
+    this.vestingSchedule.value = {
+      vestingPeriods: vestingDurations.length,
+      percentages: vestingPercentages,
+      durations: vestingDurations,
+    };
+  }
+
+  // eslint-disable-next-line no-unused-vars
   depositIdoAsa(idoXfer: AssetTransferTxn, idoAsa: Asset): void {
     // TODO: Allow deposit only once
     assert(this.campaign.exists);
@@ -130,82 +154,161 @@ export default class Campaign extends Contract {
       assetAmount: idoAsaToTransfer,
       assetReceiver: this.app.address,
       sender: this.txn.sender,
-      xferAsset: idoAsa,
+      xferAsset: this.idoAsaId.value,
     });
   }
 
-  // purchaseBoxPayment: PayTxn,
+  lockApprovedStatus(): void {
+    assert(this.campaign.exists);
+    assert(this.isApproved());
+    assert(!this.isApprovedCampaign.value);
+    this.isApprovedCampaign.value = true;
+  }
+
   // eslint-disable-next-line no-unused-vars
   buy(buyAsaXfer: AssetTransferTxn, buyAsa: Asset, buyAmount: number): void {
     assert(this.campaign.exists);
     assert(this.isApproved());
-    // TODO: Allow hypelisted addresses to buy before start time
-    // assert(this.campaign.value.startTime < globals.latestTimestamp);
-    // assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // check campaing is not finished
+    assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // Check amount to buy is not more than max buy cap
+    assert(this.campaign.value.maxBuyCap >= buyAmount);
+    // Allow hypelisted addresses to buy before start time
+    if (!this.isHypelisted(this.txn.sender)) {
+      assert(this.campaign.value.startTime < globals.latestTimestamp);
+    }
+    // check that hardcap is not reached
+    assert(this.campaign.value.hardCap >= this.campaign.value.purchasedAmount + buyAmount);
+    // TODO: allow set approve campaign in case buy cannot be called due to hardcap reached
     if (!this.isApprovedCampaign.value) {
       this.isApprovedCampaign.value = true;
     }
-    // TODO: Check if there are tokens to be bought, i.e. hardcap is not reached
+
     const buyAsaToTransfer = buyAmount * this.campaign.value.price;
-    // assert(this.campaign.value.maxBuyCap >= buyAsaToTransfer);
     verifyTxn(buyAsaXfer, {
       assetAmount: buyAsaToTransfer,
       assetReceiver: this.app.address,
       sender: this.txn.sender,
-      xferAsset: buyAsa,
+      xferAsset: this.buyAsaId.value,
     });
+    this.campaign.value.purchasedAmount = this.campaign.value.purchasedAmount + buyAmount;
 
-    // if (this.purchases(this.txn.sender).exists) {
-    //   this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + buyAmount;
-    // } else {
-    //   this.purchases(this.txn.sender).value = buyAmount;
-    // }
+    if (this.purchases(this.txn.sender).exists) {
+      this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + buyAmount;
+    } else {
+      this.purchases(this.txn.sender).value = buyAmount;
+    }
   }
 
-  claim(idoAsa: Asset): void {
-    // can claim after the campaign is over and according to the vesting schedule
-    assert(this.campaign.exists);
-    assert(this.isApproved());
-    assert(this.campaign.value.endTime < globals.latestTimestamp);
-    assert(this.purchases(this.txn.sender).exists);
-    // assert(this.claimedAmount(this.txn.sender).value === 0);
-    const amountForClaim = this.purchases(this.txn.sender).value * this.campaign.value.price;
+  private calculateAllowedClaimAmountBasedOnVestingSchedule(totalAmount: number): number {
+    const durationAfterEndTime = globals.latestTimestamp - this.campaign.value.endTime;
+    let durationInVestingPeriod = 0;
+    let totalPercentageEligibleForClaim = 0;
+    for (let i = 0; i < this.vestingSchedule.value.vestingPeriods; i + 1) {
+      if (durationAfterEndTime > durationInVestingPeriod) {
+        durationInVestingPeriod = durationInVestingPeriod + this.vestingSchedule.value.durations[i];
+        totalPercentageEligibleForClaim = totalPercentageEligibleForClaim + this.vestingSchedule.value.percentages[i];
+      }
+    }
+    const eligibleAmountToClaim = (totalAmount * totalPercentageEligibleForClaim) / 100;
 
-    // TODO: Send whatever they are eligible to based on vesting schedule
-    sendAssetTransfer({
-      sender: this.app.address,
-      assetReceiver: this.txn.sender,
-      xferAsset: idoAsa,
-      assetAmount: amountForClaim,
-    });
-    // this.claimedAmount(this.txn.sender).value = amountForClaim;
-  }
-
-  withdrawPurchase(): void {
-    assert(this.campaign.exists);
-    assert(!this.isApproved());
-    assert(this.campaign.value.startTime > globals.latestTimestamp);
-    // if a wallet bought tokens during the voting period due to hypelisting
-    // they can withdraw their tokens if the campaign did not collected required votes
-  }
-
-  withdrawIdoAsa(): void {
-    assert(this.campaign.exists);
-    verifyTxn(this.txn, { sender: this.admin.value });
-    assert(this.campaign.value.endTime > globals.latestTimestamp);
-    // to be called only by contract cretator
-    // when the campaign reached their softcap but not the hardcap
-    // in this case, the contract holds IDO tokens which the creator
-    // should be able to withdraw from the contract as they were not sold
+    return eligibleAmountToClaim;
   }
 
   // eslint-disable-next-line no-unused-vars
-  withdrawSales(buyAsa: Asset): void {
+  claim(idoAsa: Asset): void {
+    // this.expandOpcodeBugdet();
+    // can claim after the campaign is over and according to the vesting schedule
+    assert(this.campaign.exists);
+    assert(this.vestingSchedule.exists);
+    assert(this.isApproved());
+    // assert(this.campaign.value.endTime < globals.latestTimestamp);
+    assert(this.purchases(this.txn.sender).exists);
+    const totalClaimableAmount = this.purchases(this.txn.sender).value / this.campaign.value.price;
+    const alreadyClaimedAmount = this.claimedAmount(this.txn.sender).exists
+      ? this.claimedAmount(this.txn.sender).value
+      : 0;
+    assert(totalClaimableAmount > alreadyClaimedAmount);
+    const totalAmountToClaim = totalClaimableAmount - alreadyClaimedAmount;
+    // const eligibleAmountToClaim = this.calculateAllowedClaimAmountBasedOnVestingSchedule(totalAmountToClaim);
+    const eligibleAmountToClaim = totalAmountToClaim;
+    sendAssetTransfer({
+      sender: this.app.address,
+      assetReceiver: this.txn.sender,
+      xferAsset: this.idoAsaId.value,
+      assetAmount: eligibleAmountToClaim,
+    });
+
+    if (this.claimedAmount(this.txn.sender).exists) {
+      this.claimedAmount(this.txn.sender).value = this.claimedAmount(this.txn.sender).value + eligibleAmountToClaim;
+    } else {
+      this.claimedAmount(this.txn.sender).value = eligibleAmountToClaim;
+    }
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  withdrawInvestment(buyAsa: Asset): void {
+    // if a wallet bought tokens during the voting period due to hypelisting
+    // they can withdraw their tokens if the campaign did not collected required votes
+    assert(this.campaign.exists);
+    // TODO: Add the checks below
+    // assert(!this.isApproved());
+    // assert(this.campaign.value.startTime > globals.latestTimestamp);
+    assert(this.purchases(this.txn.sender).exists);
+
+    sendAssetTransfer({
+      sender: this.app.address,
+      assetReceiver: this.txn.sender,
+      xferAsset: this.buyAsaId.value,
+      assetAmount: this.convertToAsaAmount(this.purchases(this.txn.sender).value, this.buyAsaId.value),
+    });
+  }
+
+  withdrawIdoAsa(idoAsa: Asset): void {
+    // to be called only by contract cretator
+    // when the campaign reached their softcap but not the hardcap
+    // OR in case the campaign was not approved
+    // in both cases the contract holds IDO tokens which the creator
+    // should be able to withdraw
+    // in former case, can withdraw whatever Ido tokens were not sold
+    // in latter case, can withdraw all the Ido tokens
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
-    assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // TODO: Add check for end time
+    // assert(this.campaign.value.endTime > globals.latestTimestamp);
+    if (this.isApproved()) {
+      const totalUnsoldAmount = this.campaign.value.hardCap - this.campaign.value.purchasedAmount;
+      assert(totalUnsoldAmount > 0);
+      sendAssetTransfer({
+        sender: this.app.address,
+        assetReceiver: this.txn.sender,
+        xferAsset: idoAsa,
+        assetAmount: totalUnsoldAmount / this.campaign.value.price, // this.convertToAsaAmount(totalUnsoldAmount, this.idoAsaId.value),
+      });
+    } else {
+      sendAssetTransfer({
+        sender: this.app.address,
+        assetReceiver: this.txn.sender,
+        xferAsset: idoAsa,
+        assetAmount: this.app.address.assetBalance(idoAsa),
+      });
+    }
+  }
+
+  withdrawSales(buyAsa: Asset): void {
     // to be called only by the contract creator after the campaign is over
     // to allow them to withdaw all or part of the sale/buy tokens.
+    assert(this.campaign.exists);
+    verifyTxn(this.txn, { sender: this.admin.value });
+    // TODO: Add check for end time
+    // assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // TODO: We might want to add vesting period here as well
+    sendAssetTransfer({
+      sender: this.app.address,
+      assetReceiver: this.txn.sender,
+      xferAsset: buyAsa,
+      assetAmount: this.app.address.assetBalance(buyAsa),
+    });
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -213,20 +316,15 @@ export default class Campaign extends Contract {
     assert(this.campaign.exists);
     assert(this.campaign.value.startTime > globals.latestTimestamp);
     assert(this.txn.sender.assetBalance(this.votersAsaId.value) === 1);
-    // assert(!this.inFavor(this.txn.sender).exists);
-
-    // const preBoxMBR = this.app.address.minBalance;
-    // this.inFavor(this.txn.sender).value = inFavor;
-
-    // verifyTxn(boxMBRPayment, {
-    //   receiver: this.app.address,
-    //   amount: this.app.address.minBalance - preBoxMBR,
-    // });
 
     this.votesTotal.value = this.votesTotal.value + 1;
     if (inFavor) {
       this.votesInFavor.value = this.votesInFavor.value + 1;
     }
+  }
+
+  getAccountTotalPurchases(account: Account): number {
+    return this.purchases(account).value;
   }
 
   getVotes(): [number, number] {
@@ -249,9 +347,9 @@ export default class Campaign extends Contract {
     return this.campaign.value;
   }
 
-  // getVestingSchedule(): VestingDetails[] {
-  //   return this.vestingSchedule.value;
-  // }
+  getVestingSchedule(): VestingDetails {
+    return this.vestingSchedule.value;
+  }
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -299,8 +397,8 @@ export class Algohub extends Contract {
     verifyTxn(this.txn, { sender: this.app.creator });
     assert(!this.votersAsaId.exists);
     const votersAsa = sendAssetCreation({
-      configAssetName: 'AlgoHubVote',
-      configAssetUnitName: 'AHV1',
+      configAssetName: 'AlgoHubVote2',
+      configAssetUnitName: 'AHV2',
       configAssetDecimals: 18,
       configAssetTotal: voteAsaTotal,
       configAssetFreeze: this.app.address,
@@ -334,14 +432,17 @@ export class Algohub extends Contract {
     softCap: number,
     hardCap: number,
     duration: number,
-    metadataUrl: string
+    metadataUrl: string,
+    vestingPercentages: number[],
+    vestingDurations: number[]
   ): Application {
     assert(this.votersAsaId.exists);
-    sendMethodCall<[], void>({
+    sendMethodCall<[Application], void>({
       name: 'createApplication',
+      methodArgs: [this.app],
       clearStateProgram: Campaign.clearProgram(),
       approvalProgram: Campaign.approvalProgram(),
-      globalNumByteSlice: 6,
+      globalNumByteSlice: 8,
       globalNumUint: 4,
     });
 
@@ -357,6 +458,12 @@ export class Algohub extends Contract {
       const newApp: Application[] = [campaignApp];
       this.algohubCampaigns.value = newApp;
     }
+
+    sendMethodCall<[number[], number[]], void>({
+      applicationID: campaignApp,
+      name: 'setVestingSchedule',
+      methodArgs: [vestingPercentages, vestingDurations],
+    });
 
     sendMethodCall<[Account, Asset, Asset, Asset, number, number, number, number, number, number, string], void>({
       applicationID: campaignApp,
@@ -421,6 +528,8 @@ export class Algohub extends Contract {
     this.totalVotes.value = this.totalVotes.value - 1;
     this.vipVoters(this.txn.sender).value = false;
   }
+
+  expandOpcodeBudget(): void {}
 
   /// ========================
   /// ==== Getter Methods ====

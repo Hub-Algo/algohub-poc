@@ -4,35 +4,35 @@ import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignWithdrawIdoAsa
+<CampaignWithdrawInvestment
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call withdrawIdoAsa"
+  buttonNode="Call withdrawInvestment"
   typedClient={typedClient}
-  idoAsa={idoAsa}
+  buyAsa={buyAsa}
 />
 */
-type CampaignWithdrawIdoAsaArgs = Dao['methods']['withdrawIdoAsa(asset)void']['argsObj']
+type CampaignWithdrawInvestmentArgs = Dao['methods']['withdrawInvestment(asset)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  idoAsa: CampaignWithdrawIdoAsaArgs['idoAsa']
+  buyAsa: CampaignWithdrawInvestmentArgs['buyAsa']
 }
 
-const CampaignWithdrawIdoAsa = (props: Props) => {
+const CampaignWithdrawInvestment = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling withdrawIdoAsa`)
-    await props.typedClient.withdrawIdoAsa(
+    console.log(`Calling withdrawInvestment`)
+    await props.typedClient.withdrawInvestment(
       {
-        idoAsa: props.idoAsa,
+        buyAsa: props.buyAsa,
       },
       { sender },
     )
@@ -46,4 +46,4 @@ const CampaignWithdrawIdoAsa = (props: Props) => {
   )
 }
 
-export default CampaignWithdrawIdoAsa
+export default CampaignWithdrawInvestment
