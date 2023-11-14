@@ -16,7 +16,9 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
               <span>{'Investment, beyond funds'}</span>
             </p>
             <div className="flex w-full gap-6 md:hidden mt-6">
-              <Button buttonColor="orange">CREATE CAMPAIGN</Button>
+              <Button buttonColor="orange">
+                <a href={routes.CAMPAIGN_APPLICATION_FORM.ROUTE}>CREATE CAMPAIGN</a>
+              </Button>
               <Button buttonColor="orange">
                 <a href={routes.ALL_CAMPAIGNS.ROUTE}>VIEW ALL CAMPAIGNS</a>
               </Button>
