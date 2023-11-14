@@ -3,6 +3,7 @@ import { CampaignInterface } from '../interfaces/campaign-interface'
 import { NewCampaignInterface, Records, Metadata } from '../interfaces/new-campaign-interface'
 
 const fetchAllCampaigns = async () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const allCampaigns: { record: any; metadata: Metadata }[] = campaigns
 
   const mappedCampaigns: NewCampaignInterface[] = allCampaigns.map((campaign) => {

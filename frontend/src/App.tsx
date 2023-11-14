@@ -26,15 +26,6 @@ import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { userServices } from './services/userServices'
-
-import AllCampaigns from './pages/AllCampaigns'
-import algod from './core/algosdk/AlgodManager'
-import { AlgohubClient } from './contracts/AlgohubClient'
-import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
-import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
-import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
-import { USDC_ASSET } from './core/util/asset/AssetConstants'
-import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { NewCampaignInterface } from './interfaces/new-campaign-interface'
 
 export interface AppState {
