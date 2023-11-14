@@ -47,7 +47,7 @@ const WalletConnectModal = ({ buttonLabel }: WalletConnectModalPropsInterface) =
       </Button>
       <dialog id={id} className="modal">
         <div className="modal-box flex flex-col gap-6 bg-gray-800">
-          <button onClick={handleCloseModal} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+          <button onClick={handleCloseModal} className="btn btn-sm btn-circle btn-ghost text-gray-100 absolute right-2 top-2">
             x
           </button>
           <h1 className="text-gray-100">Select a wallet to use</h1>

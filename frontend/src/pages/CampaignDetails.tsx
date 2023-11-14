@@ -8,6 +8,8 @@ import { TabItem } from '../components/common/tab/Tab.types'
 import { CampaignInterface } from '../interfaces/campaign-interface'
 import Modal from '../components/common/modal/Modal'
 import InvestModal from '../components/invest-modal/InvestModal'
+import { useWallet } from '@txnlab/use-wallet'
+import WalletConnectModal from '../components/common/wallet-connect-modal/WalletConnectModal'
 
 export interface CampaignOutletInterface {
   campaignList: CampaignInterface[]
@@ -16,6 +18,8 @@ export interface CampaignOutletInterface {
 const CampaignDetails = () => {
   const hasVoted = false
   const { campaignList } = useOutletContext() as CampaignOutletInterface
+
+  const { activeAccount } = useWallet()
 
   const { campaignId } = useParams()
 
@@ -95,6 +99,9 @@ const CampaignDetails = () => {
   )
 
   function getTxnModal() {
+    if (!activeAccount) {
+      return <WalletConnectModal buttonLabel="Connect to vote" />
+    }
     if ((campaign?.campaign_status === 'new' && hasVoted) || campaign?.campaign_status === 'pending') {
       return <InvestModal campaignStatus={campaign.campaign_status} />
     } else if (campaign?.campaign_status === 'new' && !hasVoted) {
