@@ -26,7 +26,7 @@ import Button from '../common/button/Button'
 />
 */
 type AlgohubCreateCampaignArgs =
-  Algohub['methods']['createCampaign(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,string, uint64[],uint64[])uint64']['argsObj']
+  Algohub['methods']['createCampaign(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,string,uint64[],uint64[])uint64']['argsObj']
 
 type Props = {
   buttonClass?: string

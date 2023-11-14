@@ -1,3 +1,5 @@
+import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
+import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
 import { DeflyWalletConnect } from '@blockshake/defly-connect'
 import { DaffiWalletConnect } from '@daffiwallet/connect'
 import { PeraWalletConnect } from '@perawallet/connect'
@@ -8,25 +10,23 @@ import { useEffect, useState } from 'react'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
+import { AlgohubClient } from './contracts/AlgohubClient'
+import algod from './core/algosdk/AlgodManager'
 import ROUTES from './core/routes'
+import { USDC_ASSET } from './core/util/asset/AssetConstants'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
+import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
 import { CampaignInterface } from './interfaces/campaign-interface'
 import { UserInterface } from './interfaces/userInterface'
 import About from './pages/About'
+import AllCampaigns from './pages/AllCampaigns'
 import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
+import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { userServices } from './services/userServices'
-import AllCampaigns from './pages/AllCampaigns'
-import algod from './core/algosdk/AlgodManager'
-import { AlgohubClient } from './contracts/AlgohubClient'
-import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
-import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
-import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
-import { USDC_ASSET } from './core/util/asset/AssetConstants'
-import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 
 export interface AppState {
   activeAccount?: Account | null
@@ -42,7 +42,7 @@ export default function App() {
 
   const algohubClientAppDetails: AppDetails = {
     resolveBy: 'id',
-    id: 478556883,
+    id: 479483526,
     sender: { signer, addr: activeAddress } as TransactionSignerAccount,
   }
 
