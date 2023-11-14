@@ -222,7 +222,7 @@ export default class Campaign extends Contract {
     assert(this.campaign.exists);
     assert(this.vestingSchedule.exists);
     assert(this.isApproved());
-    assert(this.campaign.value.endTime < globals.latestTimestamp);
+    // assert(this.campaign.value.endTime < globals.latestTimestamp);
     assert(this.purchases(this.txn.sender).exists);
     const totalClaimableAmount = this.purchases(this.txn.sender).value / this.campaign.value.price;
     const alreadyClaimedAmount = this.claimedAmount(this.txn.sender).exists
@@ -251,8 +251,9 @@ export default class Campaign extends Contract {
     // if a wallet bought tokens during the voting period due to hypelisting
     // they can withdraw their tokens if the campaign did not collected required votes
     assert(this.campaign.exists);
-    assert(!this.isApproved());
-    assert(this.campaign.value.startTime > globals.latestTimestamp);
+    // TODO: Add the checks below
+    // assert(!this.isApproved());
+    // assert(this.campaign.value.startTime > globals.latestTimestamp);
     assert(this.purchases(this.txn.sender).exists);
 
     sendAssetTransfer({
@@ -315,15 +316,6 @@ export default class Campaign extends Contract {
     assert(this.campaign.exists);
     assert(this.campaign.value.startTime > globals.latestTimestamp);
     assert(this.txn.sender.assetBalance(this.votersAsaId.value) === 1);
-    // assert(!this.inFavor(this.txn.sender).exists);
-
-    // const preBoxMBR = this.app.address.minBalance;
-    // this.inFavor(this.txn.sender).value = inFavor;
-
-    // verifyTxn(boxMBRPayment, {
-    //   receiver: this.app.address,
-    //   amount: this.app.address.minBalance - preBoxMBR,
-    // });
 
     this.votesTotal.value = this.votesTotal.value + 1;
     if (inFavor) {
@@ -405,8 +397,8 @@ export class Algohub extends Contract {
     verifyTxn(this.txn, { sender: this.app.creator });
     assert(!this.votersAsaId.exists);
     const votersAsa = sendAssetCreation({
-      configAssetName: 'AlgoHubVote',
-      configAssetUnitName: 'AHV1',
+      configAssetName: 'AlgoHubVote2',
+      configAssetUnitName: 'AHV2',
       configAssetDecimals: 18,
       configAssetTotal: voteAsaTotal,
       configAssetFreeze: this.app.address,

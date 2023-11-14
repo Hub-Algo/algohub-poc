@@ -187,14 +187,14 @@ describe('Algohub App', () => {
     // TODO: Tranfer some of the above to other users for better tests
   });
 
-  // test('Algohub - app creation', async () => {
-  //   const votersDetails = await appClient.getVotersDetails({});
-  //   expect(votersDetails.return?.[0].valueOf()).toBe(BigInt(algoToVoteRatio));
-  //   expect(votersDetails.return?.[1].valueOf()).toBe(BigInt(vipVoteWeight));
-  //   expect(votersDetails.return?.[2].valueOf()).toBe(BigInt(0));
-  //   const votingPeriodOnChain = await appClient.getVotingPeriod({});
-  //   expect(votingPeriodOnChain.return).toBe(BigInt(votingPeriod));
-  // });
+  test('Algohub - app creation', async () => {
+    const votersDetails = await appClient.getVotersDetails({});
+    expect(votersDetails.return?.[0].valueOf()).toBe(BigInt(algoToVoteRatio));
+    expect(votersDetails.return?.[1].valueOf()).toBe(BigInt(vipVoteWeight));
+    expect(votersDetails.return?.[2].valueOf()).toBe(BigInt(0));
+    const votingPeriodOnChain = await appClient.getVotingPeriod({});
+    expect(votingPeriodOnChain.return).toBe(BigInt(votingPeriod));
+  });
   test('Algohub - bootstrap', async () => {
     const bootstrapResult = await appClient.bootstrap(
       { voteAsaTotal },
@@ -206,159 +206,159 @@ describe('Algohub App', () => {
     );
     voteAsa = bootstrapResult.return!.valueOf();
   });
-  // test('Algohub - bootstrap (Negative - non-admin caller)', async () => {
-  //   await expect(
-  //     appClient.bootstrap(
-  //       { voteAsaTotal },
-  //       {
-  //         sender: voter1,
-  //         sendParams: {
-  //           fee: microAlgos(3_000),
-  //         },
-  //       }
-  //     )
-  //   ).rejects.toThrow();
-  // });
-  // test('Algohub - bootstrap (Negative - vote ASA already created)', async () => {
-  //   await expect(
-  //     appClient.bootstrap(
-  //       { voteAsaTotal },
-  //       {
-  //         sendParams: {
-  //           fee: microAlgos(3_000),
-  //         },
-  //       }
-  //     )
-  //   ).rejects.toThrow();
-  // });
-  // test('Algohub - register as voter', async () => {
-  //   let votePower = await appClient.getVotePower(
-  //     { account: voter1.addr, votersAsa: voteAsa },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
-  //   );
-  //   expect(votePower.return?.valueOf()).toBe(BigInt(0));
+  test('Algohub - bootstrap (Negative - non-admin caller)', async () => {
+    await expect(
+      appClient.bootstrap(
+        { voteAsaTotal },
+        {
+          sender: voter1,
+          sendParams: {
+            fee: microAlgos(3_000),
+          },
+        }
+      )
+    ).rejects.toThrow();
+  });
+  test('Algohub - bootstrap (Negative - vote ASA already created)', async () => {
+    await expect(
+      appClient.bootstrap(
+        { voteAsaTotal },
+        {
+          sendParams: {
+            fee: microAlgos(3_000),
+          },
+        }
+      )
+    ).rejects.toThrow();
+  });
+  test('Algohub - register as voter', async () => {
+    let votePower = await appClient.getVotePower(
+      { account: voter1.addr, votersAsa: voteAsa },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
+    expect(votePower.return?.valueOf()).toBe(BigInt(0));
 
-  //   await registerAsVoterHelper(voter1);
-  //   const assetBalance = await algod.accountAssetInformation(voter1.addr, Number(voteAsa)).do();
-  //   expect(assetBalance['asset-holding'].amount).toBe(1);
-  //   expect(assetBalance['asset-holding']['is-frozen']).toBe(true);
-  //   expect(assetBalance['asset-holding']['asset-id'].toString()).toBe(voteAsa.toString());
-  //   const totalVoters = await appClient.getTotalVoters({});
-  //   expect(totalVoters.return?.valueOf()).toBe(BigInt(1));
-  //   votePower = await appClient.getVotePower(
-  //     { account: voter1.addr, votersAsa: voteAsa },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
-  //   );
-  //   expect(votePower.return?.valueOf()).toBe(BigInt(100));
-  // });
-  // test('Algohub - set VIP status', async () => {
-  //   let vipStatus = await appClient.getVipStatus(
-  //     { account: voter1.addr },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
-  //   );
-  //   expect(vipStatus.return?.valueOf()).toBe(false);
-  //   await appClient.setVipStatus(
-  //     { account: voter1.addr, isVip: true, votersAsa: voteAsa },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
-  //   );
-  //   vipStatus = await appClient.getVipStatus(
-  //     { account: voter1.addr },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
-  //   );
-  //   expect(vipStatus.return?.valueOf()).toBe(true);
-  //   let votePower = await appClient.getVotePower(
-  //     { account: voter1.addr, votersAsa: voteAsa },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
-  //   );
-  //   expect(votePower.return?.valueOf()).toBe(BigInt(vipVoteWeight));
+    await registerAsVoterHelper(voter1);
+    const assetBalance = await algod.accountAssetInformation(voter1.addr, Number(voteAsa)).do();
+    expect(assetBalance['asset-holding'].amount).toBe(1);
+    expect(assetBalance['asset-holding']['is-frozen']).toBe(true);
+    expect(assetBalance['asset-holding']['asset-id'].toString()).toBe(voteAsa.toString());
+    const totalVoters = await appClient.getTotalVoters({});
+    expect(totalVoters.return?.valueOf()).toBe(BigInt(1));
+    votePower = await appClient.getVotePower(
+      { account: voter1.addr, votersAsa: voteAsa },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
+    expect(votePower.return?.valueOf()).toBe(BigInt(100));
+  });
+  test('Algohub - set VIP status', async () => {
+    let vipStatus = await appClient.getVipStatus(
+      { account: voter1.addr },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
+    expect(vipStatus.return?.valueOf()).toBe(false);
+    await appClient.setVipStatus(
+      { account: voter1.addr, isVip: true, votersAsa: voteAsa },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
+    vipStatus = await appClient.getVipStatus(
+      { account: voter1.addr },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
+    expect(vipStatus.return?.valueOf()).toBe(true);
+    let votePower = await appClient.getVotePower(
+      { account: voter1.addr, votersAsa: voteAsa },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
+    expect(votePower.return?.valueOf()).toBe(BigInt(vipVoteWeight));
 
-  //   await appClient.setVipStatus(
-  //     { account: voter1.addr, isVip: false, votersAsa: voteAsa },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
-  //   );
-  //   votePower = await appClient.getVotePower(
-  //     { account: voter1.addr, votersAsa: voteAsa },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
-  //   );
-  //   expect(votePower.return?.valueOf()).toBe(BigInt('100'));
-  // });
-  // test('Algohub - set VIP status (negative - access control)', async () => {
-  //   await expect(
-  //     appClient.setVipStatus(
-  //       { account: voter1.addr, isVip: true, votersAsa: voteAsa },
-  //       {
-  //         sender: voter1,
-  //         boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }],
-  //       }
-  //     )
-  //   ).rejects.toThrow();
-  // });
-  // test('Algohub - unregister as voter', async () => {
-  //   await appClient.unregisterAsVoter(
-  //     { votersAsa: voteAsa },
-  //     {
-  //       boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }],
-  //       sender: voter1,
-  //       sendParams: {
-  //         fee: microAlgos(3_000),
-  //       },
-  //     }
-  //   );
-  //   const assetBalance = await algod.accountAssetInformation(voter1.addr, Number(voteAsa)).do();
-  //   expect(assetBalance['asset-holding'].amount).toBe(0);
-  //   expect(assetBalance['asset-holding']['is-frozen']).toBe(false);
-  //   expect(assetBalance['asset-holding']['asset-id'].toString()).toBe(voteAsa.toString());
-  //   const totalVoters = await appClient.getTotalVoters({});
-  //   expect(totalVoters.return?.valueOf()).toBe(BigInt(0));
-  //   const votePower = await appClient.getVotePower(
-  //     { account: voter2.addr, votersAsa: voteAsa },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter2.addr).publicKey }] }
-  //   );
-  //   expect(votePower.return?.valueOf()).toBe(BigInt(0));
-  // });
-  // test('Algohub - register as voter (negative - not enought algo)', async () => {
-  //   await expect(
-  //     appClient.registerAsVoter(
-  //       { votersAsa: voteAsa },
-  //       {
-  //         boxes: [{ appIndex: 0, name: algosdk.decodeAddress(sender1.addr).publicKey }],
-  //         sender: sender1,
-  //         sendParams: {
-  //           fee: microAlgos(3_000),
-  //         },
-  //       }
-  //     )
-  //   ).rejects.toThrow();
-  //   const votePower = await appClient.getVotePower(
-  //     { account: sender1.addr, votersAsa: voteAsa },
-  //     { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(sender1.addr).publicKey }] }
-  //   );
-  //   expect(votePower.return?.valueOf()).toBe(BigInt(0));
-  // });
-  // test('Algohub - unregister as voter (negative - caller not voter)', async () => {
-  //   await expect(
-  //     appClient.unregisterAsVoter(
-  //       { votersAsa: voteAsa },
-  //       {
-  //         boxes: [{ appIndex: 0, name: algosdk.decodeAddress(sender1.addr).publicKey }],
-  //         sender: sender1,
-  //         sendParams: {
-  //           fee: microAlgos(3_000),
-  //         },
-  //       }
-  //     )
-  //   ).rejects.toThrow();
-  // });
-  // test('Algohub - set VIP status (negative - account not a voter)', async () => {
-  //   await expect(
-  //     appClient.setVipStatus(
-  //       { account: sender1.addr, isVip: true, votersAsa: voteAsa },
-  //       {
-  //         boxes: [{ appIndex: 0, name: algosdk.decodeAddress(sender1.addr).publicKey }],
-  //       }
-  //     )
-  //   ).rejects.toThrow();
-  // });
+    await appClient.setVipStatus(
+      { account: voter1.addr, isVip: false, votersAsa: voteAsa },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
+    votePower = await appClient.getVotePower(
+      { account: voter1.addr, votersAsa: voteAsa },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }] }
+    );
+    expect(votePower.return?.valueOf()).toBe(BigInt('100'));
+  });
+  test('Algohub - set VIP status (negative - access control)', async () => {
+    await expect(
+      appClient.setVipStatus(
+        { account: voter1.addr, isVip: true, votersAsa: voteAsa },
+        {
+          sender: voter1,
+          boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }],
+        }
+      )
+    ).rejects.toThrow();
+  });
+  test('Algohub - unregister as voter', async () => {
+    await appClient.unregisterAsVoter(
+      { votersAsa: voteAsa },
+      {
+        boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter1.addr).publicKey }],
+        sender: voter1,
+        sendParams: {
+          fee: microAlgos(3_000),
+        },
+      }
+    );
+    const assetBalance = await algod.accountAssetInformation(voter1.addr, Number(voteAsa)).do();
+    expect(assetBalance['asset-holding'].amount).toBe(0);
+    expect(assetBalance['asset-holding']['is-frozen']).toBe(false);
+    expect(assetBalance['asset-holding']['asset-id'].toString()).toBe(voteAsa.toString());
+    const totalVoters = await appClient.getTotalVoters({});
+    expect(totalVoters.return?.valueOf()).toBe(BigInt(0));
+    const votePower = await appClient.getVotePower(
+      { account: voter2.addr, votersAsa: voteAsa },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(voter2.addr).publicKey }] }
+    );
+    expect(votePower.return?.valueOf()).toBe(BigInt(0));
+  });
+  test('Algohub - register as voter (negative - not enought algo)', async () => {
+    await expect(
+      appClient.registerAsVoter(
+        { votersAsa: voteAsa },
+        {
+          boxes: [{ appIndex: 0, name: algosdk.decodeAddress(sender1.addr).publicKey }],
+          sender: sender1,
+          sendParams: {
+            fee: microAlgos(3_000),
+          },
+        }
+      )
+    ).rejects.toThrow();
+    const votePower = await appClient.getVotePower(
+      { account: sender1.addr, votersAsa: voteAsa },
+      { boxes: [{ appIndex: 0, name: algosdk.decodeAddress(sender1.addr).publicKey }] }
+    );
+    expect(votePower.return?.valueOf()).toBe(BigInt(0));
+  });
+  test('Algohub - unregister as voter (negative - caller not voter)', async () => {
+    await expect(
+      appClient.unregisterAsVoter(
+        { votersAsa: voteAsa },
+        {
+          boxes: [{ appIndex: 0, name: algosdk.decodeAddress(sender1.addr).publicKey }],
+          sender: sender1,
+          sendParams: {
+            fee: microAlgos(3_000),
+          },
+        }
+      )
+    ).rejects.toThrow();
+  });
+  test('Algohub - set VIP status (negative - account not a voter)', async () => {
+    await expect(
+      appClient.setVipStatus(
+        { account: sender1.addr, isVip: true, votersAsa: voteAsa },
+        {
+          boxes: [{ appIndex: 0, name: algosdk.decodeAddress(sender1.addr).publicKey }],
+        }
+      )
+    ).rejects.toThrow();
+  });
 
   /// =========================
   /// === Campaign Creation ===
@@ -372,7 +372,7 @@ describe('Algohub App', () => {
     expect(campaignDetailsOnChain.return?.at(1)).toBe(BigInt(campaign.maxBuyCap));
     expect(campaignDetailsOnChain.return?.at(2)).toBe(BigInt(campaign.softCap));
     expect(campaignDetailsOnChain.return?.at(3)).toBe(BigInt(campaign.hardCap));
-    expect(campaignDetailsOnChain.return?.at(4)).toBe(BigInt(0)); // purchased amount
+    expect(campaignDetailsOnChain.return?.at(4)).toBe(BigInt(0)); // investment amount
     expect(campaignDetailsOnChain.return?.at(5)).toBe(BigInt(0)); // withdrawnAmount
     // TODO: Assert the below - must be now + voting period
     // expect(campaignDetailsOnChain.return?.at(6)).toBe(BigInt(campaign.startTime));
@@ -479,7 +479,7 @@ describe('Algohub App', () => {
       BigInt(usdcBalanceBefore['asset-holding'].amount) - BigInt(buyCost)
     );
     campaignDetailsOnChain = await campaignContract.getCampaign({});
-    expect(campaignDetailsOnChain.return?.at(4)).toBe(BigInt(campaign.maxBuyCap)); // purchased amount
+    expect(campaignDetailsOnChain.return?.at(4)).toBe(BigInt(campaign.maxBuyCap)); // investment amount
   });
   test('Campaign Contract - buy() - negative (hardcap reached)', async () => {
     const buyCost = campaign.price * campaign.maxBuyCap;
@@ -541,7 +541,7 @@ describe('Algohub App', () => {
 
   test('Campaign Contract - withdrawIdoAsa()', async () => {
     const campaingDetails = await campaignContract.getCampaign({});
-    const idoTokensTobeClaimed = (Number(campaign.hardCap) - Number(campaingDetails.return![4])) / campaign.price; // (hardcap - purchased) / price
+    const idoTokensTobeClaimed = (Number(campaign.hardCap) - Number(campaingDetails.return![4])) / campaign.price; // (hardcap - investment) / price
     const idoBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(idoAsa)).do();
     await campaignContract.withdrawIdoAsa(
       { idoAsa },
@@ -582,14 +582,14 @@ describe('Algohub App', () => {
   //   // TODO: Add voting logic in place before testing this out
   // });
 
-  // test('Campaign Contract - withdrawInvestment() - negative (campaign is approved)', async () => {
-  //   await expect(
-  //     campaignContract.withdrawInvestment(
-  //       { buyAsa: usdcAsa },
-  //       {
-  //         boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey]))],
-  //       }
-  //     )
-  //   ).rejects.toThrow();
-  // });
+  test('Campaign Contract - withdrawInvestment() - negative (campaign is approved)', async () => {
+    await expect(
+      campaignContract.withdrawInvestment(
+        { buyAsa: usdcAsa },
+        {
+          boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey]))],
+        }
+      )
+    ).rejects.toThrow();
+  });
 });

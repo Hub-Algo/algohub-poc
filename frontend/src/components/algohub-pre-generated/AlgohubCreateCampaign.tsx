@@ -26,7 +26,7 @@ import Button from '../common/button/Button'
 />
 */
 type AlgohubCreateCampaignArgs =
-  Algohub['methods']['createCampaign(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,string)uint64']['argsObj']
+  Algohub['methods']['createCampaign(asset,asset,asset,uint64,uint64,uint64,uint64,uint64,string, uint64[],uint64[])uint64']['argsObj']
 
 type Props = {
   buttonClass?: string
@@ -43,6 +43,8 @@ type Props = {
   hardCap: AlgohubCreateCampaignArgs['hardCap']
   duration: AlgohubCreateCampaignArgs['duration']
   // metadataUrl: AlgohubCreateCampaignArgs['metadataUrl']
+  // vestingPercentages: AlgohubCreateCampaignArgs['vestingPercentages']
+  // vestingDurations: AlgohubCreateCampaignArgs['vestingDurations']
   onSuccess?: (response: AppCallTransactionResultOfType<bigint>) => void
 }
 
@@ -68,6 +70,8 @@ const AlgohubCreateCampaign = (props: Props) => {
           hardCap: props.hardCap,
           duration: props.duration,
           metadataUrl: metadataResp.url,
+          vestingPercentages: [100],
+          vestingDurations: [0],
         },
         {
           sender,
