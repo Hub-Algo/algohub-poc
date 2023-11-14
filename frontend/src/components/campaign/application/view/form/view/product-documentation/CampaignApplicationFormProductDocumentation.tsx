@@ -1,20 +1,25 @@
 import { useState } from 'react'
-import Input from '../../../../common/input/Input'
-import {
-  CampaignApplicationProductDocumentation,
-  CampaignApplicationFormData,
-  CampaignApplicationFormView,
-} from '../../CampaignApplicationForm.types'
+
+import Input from '../../../../../../common/input/Input'
 import {
   CAMPAIGN_APPLICATION_RAISED_FUNDS_RANGE,
   INITIAL_CAMPAIGN_APPLICATION_PRODUCT_DOCUMENTATION,
 } from '../../CampaignApplicationForm.constants'
-import Button from '../../../../common/button/Button'
+import Button from '../../../../../../common/button/Button'
+import {
+  CampaignApplicationFormData,
+  CampaignApplicationFormView,
+  CampaignApplicationProductDocumentation,
+} from '../../../../../../../pages/campaign-application/CampaignApplication.types'
+import CreatedAssetsSelect from '../../../../../../common/select/CreatedAssetsSelect'
+import { useOutletContext } from 'react-router-dom'
+import { UserDataOutletInterface } from '../../../../../../NavBar'
+import LabelTooltip from '../../../../../../common/LabelTooltip'
 
 interface CampaignApplicationFormProductDocumentationProps {
   onClickNextButton: (data: CampaignApplicationFormData) => void
   onClickPrevButton: (view: CampaignApplicationFormView) => void
-  savedState?: CampaignApplicationProductDocumentation
+  savedState: CampaignApplicationProductDocumentation | null
 }
 
 function CampaignApplicationFormProductDocumentation({
@@ -23,6 +28,8 @@ function CampaignApplicationFormProductDocumentation({
   savedState,
 }: CampaignApplicationFormProductDocumentationProps) {
   const [state, setState] = useState<CampaignApplicationProductDocumentation | null>(savedState ?? null)
+
+  const { userData } = useOutletContext() as UserDataOutletInterface
 
   const isDisabled =
     !state?.assetId ||
@@ -37,7 +44,7 @@ function CampaignApplicationFormProductDocumentation({
     <form
       onSubmit={handleClickNextButton}
       id={CampaignApplicationFormView.CompanyRegistrationInfo}
-      className={'text-gray-900 flex flex-col gap-4 my-20 items-center'}
+      className={'text-gray-900 flex flex-col gap-4 mb-20 items-center'}
     >
       <h2 className={'font-semibold text-3xl mb-5 text-gray-100'}>{'Product Documentation'}</h2>
 
@@ -72,46 +79,55 @@ function CampaignApplicationFormProductDocumentation({
           </ul>
         </div>
 
-        <Input labels={{ inputTitle: 'Link to Roadmap' }} type={'url'} value={state?.roadmap ?? ''} onChange={handleSetRoadmap} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Link to Roadmap" />
+          <Input type={'url'} value={state?.roadmap ?? ''} onChange={handleSetRoadmap} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Link to Whitepaper' }} type={'url'} value={state?.whitepaper ?? ''} onChange={handleSetWhitepaper} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Link to Whitepaper" />
+          <Input type={'url'} value={state?.whitepaper ?? ''} onChange={handleSetWhitepaper} />
+        </div>
+        <div className="w-full">
+          <LabelTooltip labelContent="Link to Token Vesting Schedule" />
+          <Input type={'url'} value={state?.tokenVestingSchedule ?? ''} onChange={handleSetTokenVestingSchedule} />
+        </div>
 
-        <Input
-          labels={{ inputTitle: 'Link to Token Vesting Schedule' }}
-          type={'url'}
-          value={state?.tokenVestingSchedule ?? ''}
-          onChange={handleSetTokenVestingSchedule}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Audit Report" />
+          <Input type={'url'} value={state?.auditReport ?? ''} onChange={handleSetAuditReport} />
+        </div>
 
-        <Input labels={{ inputTitle: `Audit Report` }} type={'url'} value={state?.auditReport ?? ''} onChange={handleSetAuditReport} />
+        <div className="w-full">
+          <LabelTooltip
+            labelContent="Token - Asset ID"
+            tooltipText={
+              'Please note that you will be required to sign an authentication transaction with the creator address for the entered Asset ID.'
+            }
+          />
+          <CreatedAssetsSelect options={userData.user_created_assets} handleSetAssetId={handleSetAssetId} />
+        </div>
+        <div className="w-full">
+          <LabelTooltip
+            labelContent={'Smart Contracts - Application IDs (if applicable)'}
+            tooltipText={
+              "Please note that you will be required to sign an authentication transaction with the creator address for each of the entered Application IDs.'"
+            }
+          />
 
-        <p className="text-gray-100">
-          {'Please note that you will be required to sign an authentication transaction with the creator address for the entered Asset ID.'}
-        </p>
+          <Input type={'text'} value={state?.appId ?? ''} onChange={handleSetAppId} />
+        </div>
 
-        <Input labels={{ inputTitle: `Token - Asset ID` }} type={'number'} value={state?.assetId ?? ''} onChange={handleSetAssetId} />
-
-        <p className="text-gray-100">
-          {
-            'Please note that you will be required to sign an authentication transaction with the creator address for each of the entered Application IDs.'
-          }
-        </p>
-
-        <Input
-          labels={{ inputTitle: `Smart Contracts - Application IDs (if applicable)` }}
-          type={'text'}
-          value={state?.appId ?? ''}
-          onChange={handleSetAppId}
-        />
-
-        <Input labels={{ inputTitle: `Link to Pitch Deck` }} type={'url'} value={state?.pitchDeck ?? ''} onChange={handleSetPitchDeck} />
+        <div className="w-full">
+          <LabelTooltip labelContent={`Link to Pitch Deck`} />
+          <Input type={'url'} value={state?.pitchDeck ?? ''} onChange={handleSetPitchDeck} />
+        </div>
 
         <div className="flex flex-col gap-4">
-          <p className="text-gray-100">{'Do you consent to an in-depth interview regarding your product?'}</p>
+          <p className="text-gray-100 font-bold">{'Do you consent to an in-depth interview regarding your product?'}</p>
 
           <label className={'gap-2 flex text-gray-100'}>
             <input type={'checkbox'} value={'Yes, I consent'} onChange={handleSetConsent} checked={state?.hasConsentToInDepthInterview} />
-
             {'Yes, I consent'}
           </label>
         </div>
@@ -165,11 +181,9 @@ function CampaignApplicationFormProductDocumentation({
     })
   }
 
-  function handleSetAssetId(event: React.SyntheticEvent<HTMLInputElement, Event>) {
-    const { value } = event.currentTarget
-
+  function handleSetAssetId(assetId: number) {
     setState((prev) => {
-      return prev ? { ...prev, assetId: Number(value) } : { ...INITIAL_CAMPAIGN_APPLICATION_PRODUCT_DOCUMENTATION, assetId: Number(value) }
+      return prev ? { ...prev, assetId } : { ...INITIAL_CAMPAIGN_APPLICATION_PRODUCT_DOCUMENTATION, assetId }
     })
   }
   function handleSetAppId(event: React.SyntheticEvent<HTMLInputElement, Event>) {

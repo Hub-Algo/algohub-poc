@@ -1,16 +1,18 @@
 import { useState } from 'react'
-import Input from '../../../../common/input/Input'
+
+import Input from '../../../../../../common/input/Input'
+import { INITIAL_CAMPAIGN_APPLICATION_CONTACT_INFO } from '../../CampaignApplicationForm.constants'
+import Button from '../../../../../../common/button/Button'
 import {
   CampaignApplicationContactInfo,
   CampaignApplicationFormData,
   CampaignApplicationFormView,
-} from '../../CampaignApplicationForm.types'
-import { INITIAL_CAMPAIGN_APPLICATION_CONTACT_INFO } from '../../CampaignApplicationForm.constants'
-import Button from '../../../../common/button/Button'
+} from '../../../../../../../pages/campaign-application/CampaignApplication.types'
+import LabelTooltip from '../../../../../../common/LabelTooltip'
 
 interface CampaignApplicationFormContactInfoViewProps {
   onClickNextButton: (data: CampaignApplicationFormData) => void
-  savedState?: CampaignApplicationContactInfo
+  savedState: CampaignApplicationContactInfo | null
 }
 
 function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState }: CampaignApplicationFormContactInfoViewProps) {
@@ -19,7 +21,7 @@ function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState 
   const isDisabled = !state?.email || !state.name || !state.surname || !state.role
 
   return (
-    <form onSubmit={handleClickNextButton} id={CampaignApplicationFormView.ContactInfo} className={'flex flex-col gap-4 my-20'}>
+    <form onSubmit={handleClickNextButton} id={CampaignApplicationFormView.ContactInfo} className={'flex flex-col gap-4 mb-20'}>
       <h2 className={'font-semibold text-3xl mb-10 mx-auto text-gray-100'}>{'Contact Information'}</h2>
 
       <p className={'max-w-2xl text-center mb-10 mx-auto text-gray-100'}>
@@ -29,19 +31,40 @@ function CampaignApplicationFormContactInfoView({ onClickNextButton, savedState 
       </p>
 
       <div className={'flex flex-col mx-auto max-w-md w-full text-gray-900'}>
-        <Input labels={{ inputTitle: 'First name' }} type={'text'} value={state?.name ?? ''} onChange={handleSetName} />
+        <div className="w-full">
+          <LabelTooltip labelContent="First name" />
+          <Input type={'text'} value={state?.name ?? ''} onChange={handleSetName} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Last name' }} type={'text'} value={state?.surname ?? ''} onChange={handleSetLastName} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Last name" />
+          <Input type={'text'} value={state?.surname ?? ''} onChange={handleSetLastName} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Role within the organization' }} type={'text'} value={state?.role ?? ''} onChange={handleSetRole} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Role within the organization" />
+          <Input type={'text'} value={state?.role ?? ''} onChange={handleSetRole} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Email address' }} type={'email'} value={state?.email ?? ''} onChange={handleSetEmail} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Email address" />
+          <Input type={'email'} value={state?.email ?? ''} onChange={handleSetEmail} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Discord handle' }} type={'text'} value={state?.discord ?? ''} onChange={handleSetDiscord} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Discord handle" />
+          <Input type={'text'} value={state?.discord ?? ''} onChange={handleSetDiscord} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Twitter handle' }} type={'text'} value={state?.twitter ?? ''} onChange={handleSetTwitter} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Twitter handle" />
+          <Input type={'text'} value={state?.twitter ?? ''} onChange={handleSetTwitter} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Telegram channel' }} type={'text'} value={state?.telegram ?? ''} onChange={handleSetTelegram} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Telegram channel" />
+          <Input type={'text'} value={state?.telegram ?? ''} onChange={handleSetTelegram} />
+        </div>
       </div>
 
       <Button type={'submit'} isDisabled={isDisabled} buttonColor={'orange'} customClassName={'ml-auto mt-10'}>

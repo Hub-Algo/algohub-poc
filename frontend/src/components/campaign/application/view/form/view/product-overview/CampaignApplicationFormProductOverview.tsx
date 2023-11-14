@@ -1,18 +1,20 @@
 import { useState } from 'react'
 
-import Button from '../../../../common/button/Button'
+import Button from '../../../../../../common/button/Button'
+
+import Input from '../../../../../../common/input/Input'
+import { CAMPAIGN_APPLICATION_MARKET_TYPES, INITIAL_CAMPAIGN_APPLICATION_PRODUCT_OVERVIEW } from '../../CampaignApplicationForm.constants'
 import {
   CampaignApplicationFormData,
   CampaignApplicationFormView,
   CampaignApplicationProductOverview,
-} from '../../CampaignApplicationForm.types'
-import Input from '../../../../common/input/Input'
-import { CAMPAIGN_APPLICATION_MARKET_TYPES, INITIAL_CAMPAIGN_APPLICATION_PRODUCT_OVERVIEW } from '../../CampaignApplicationForm.constants'
+} from '../../../../../../../pages/campaign-application/CampaignApplication.types'
+import LabelTooltip from '../../../../../../common/LabelTooltip'
 
 interface CampaignApplicationFormProductOverviewProps {
   onClickNextButton: (data: CampaignApplicationFormData) => void
   onClickPrevButton: (view: CampaignApplicationFormView) => void
-  savedState?: CampaignApplicationProductOverview
+  savedState: CampaignApplicationProductOverview | null
 }
 
 function CampaignApplicationFormProductOverview({
@@ -35,7 +37,7 @@ function CampaignApplicationFormProductOverview({
     <form
       onSubmit={handleClickNextButton}
       id={CampaignApplicationFormView.CompanyRegistrationInfo}
-      className={'text-gray-900 flex flex-col gap-4 my-20 items-center'}
+      className={'text-gray-900 flex flex-col gap-4 mb-20 items-center'}
     >
       <h2 className={'font-semibold text-3xl mb-5 text-gray-100'}>{'Product Overview'}</h2>
 
@@ -46,10 +48,13 @@ function CampaignApplicationFormProductOverview({
       </p>
 
       <div className={'flex flex-col mx-auto w-full gap-4 max-w-md'}>
-        <Input labels={{ inputTitle: 'Product Name' }} type={'text'} value={state?.productName ?? ''} onChange={handleSetProductName} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Product Name" />
+          <Input type={'text'} value={state?.productName ?? ''} onChange={handleSetProductName} />
+        </div>
 
         <div className="gap-2">
-          <p className="font-medium">{'Market'}</p>
+          <p className="font-medium text-gray-100">{'Market category'}</p>
 
           <ul>
             {CAMPAIGN_APPLICATION_MARKET_TYPES.map((market) => (
@@ -70,22 +75,35 @@ function CampaignApplicationFormProductOverview({
           </ul>
         </div>
 
-        <Input labels={{ inputTitle: 'Website' }} type={'url'} value={state?.website ?? ''} onChange={handleSetWebsite} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Website" />
+          <Input type={'url'} value={state?.website ?? ''} onChange={handleSetWebsite} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Github' }} type={'url'} value={state?.github ?? ''} onChange={handleSetGithub} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Github" />
+          <Input type={'url'} value={state?.github ?? ''} onChange={handleSetGithub} />
+        </div>
 
-        <Input labels={{ inputTitle: 'X account' }} type={'text'} value={state?.xAccount ?? ''} onChange={handleSetXAccount} />
+        <div className="w-full">
+          <LabelTooltip labelContent="X handle" />
+          <Input type={'text'} value={state?.xAccount ?? ''} onChange={handleSetXAccount} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Discord server' }} type={'text'} value={state?.discordServer ?? ''} onChange={handleSetDiscord} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Discord server" />
+          <Input type={'url'} value={state?.discordServer ?? ''} onChange={handleSetDiscord} />
+        </div>
 
-        <Input labels={{ inputTitle: 'Telegram Channel' }} type={'text'} value={state?.telegram ?? ''} onChange={handleSetTelegram} />
+        <div className="w-full">
+          <LabelTooltip labelContent="Telegram Channel" />
+          <Input type={'text'} value={state?.telegram ?? ''} onChange={handleSetTelegram} />
+        </div>
 
-        <Input
-          labels={{ inputTitle: 'What is the elevator pitch for your project?' }}
-          type={'text'}
-          value={state?.elevatorPitch ?? ''}
-          onChange={handleSetPitch}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="What is the elevator pitch for your project?" />
+          <Input type={'text'} value={state?.elevatorPitch ?? ''} onChange={handleSetPitch} />
+        </div>
       </div>
 
       <div className={'justify-between flex mt-10 w-full'}>

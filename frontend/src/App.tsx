@@ -18,13 +18,13 @@ import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { fetchAllCampaigns } from './services/campaignServices'
-import CampaignApplicationForm from './components/campaign/application-form/CampaignApplicationForm'
 import { userServices } from './services/userServices'
 import AllCampaigns from './pages/AllCampaigns'
 import algod from './core/algosdk/AlgodManager'
 import { AlgohubClient } from './contracts/AlgohubClient'
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
+import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 
 export interface AppState {
   activeAccount?: Account | null
@@ -69,12 +69,16 @@ export default function App() {
   }
 
   const fetchAndAppendUserData = async (walletAddress: string) => {
-    const userAssets = await userService.fetchUserAssets(walletAddress)
+    const userData = await userService.fetchUserAssets(walletAddress)
+
+    const userAssets = (await userService.fetchUserAssets(walletAddress)).assets
+
+    const userCreatedAssets = (await userService.fetchUserAssets(walletAddress)).created_assets
 
     // const user = await userService.signupUser(walletAddress)
     const usdcDecimals = 6
     //Asset needs type
-    const usdcBalance = userAssets.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0]?.amount / 10 ** usdcDecimals
+    const usdcBalance = userAssets?.filter((asset: { assetId: number }) => asset['asset-id'] === 31566704)[0]?.amount / 10 ** usdcDecimals
 
     const { data } = await axios.get(`https://mainnet-api.algonode.cloud/v2/accounts/${walletAddress}`)
 
@@ -90,6 +94,8 @@ export default function App() {
       username,
       usdc_balance: usdcBalance ? Number(usdcBalance.toFixed(2)) : 0,
       algo_balance: Number(algoBalance),
+      user_assets: userAssets,
+      user_created_assets: userCreatedAssets,
     })
   }
 
@@ -134,7 +140,7 @@ export default function App() {
         },
         { path: ROUTES.PROJECT_DETAIL.FULL_PATH, element: <CampaignDetails /> },
         { path: ROUTES.ABOUT.FULL_PATH, element: <About /> },
-        { path: ROUTES.CAMPAIGN_APPLICATION_FORM.FULL_PATH, element: <CampaignApplicationForm /> },
+        { path: ROUTES.CAMPAIGN_APPLICATION_FORM.FULL_PATH, element: <CampaignApplicationContextProvider /> },
         { path: ROUTES.ALL_CAMPAIGNS.FULL_PATH, element: <AllCampaigns /> },
       ],
     },

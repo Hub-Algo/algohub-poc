@@ -2,6 +2,7 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import Button from '../common/button/Button'
 
 /* Example usage
 <CampaignDepositIdoAsa
@@ -16,12 +17,12 @@ import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 type CampaignDepositIdoAsaArgs = Campaign['methods']['depositIdoAsa(axfer,asset)void']['argsObj']
 
 type Props = {
-  buttonClass: string
-  buttonLoadingNode?: ReactNode
-  buttonNode: ReactNode
+  children: ReactNode
   typedClient: CampaignClient
-  idoXfer: CampaignDepositIdoAsaArgs['idoXfer']
-  idoAsa: CampaignDepositIdoAsaArgs['idoAsa']
+  idoXfer?: CampaignDepositIdoAsaArgs['idoXfer']
+  idoAsa?: CampaignDepositIdoAsaArgs['idoAsa']
+  isDisabled?: boolean
+  buttonClass?: string
 }
 
 const CampaignDepositIdoAsa = (props: Props) => {
@@ -32,20 +33,28 @@ const CampaignDepositIdoAsa = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling depositIdoAsa`)
-    await props.typedClient.depositIdoAsa(
-      {
-        idoXfer: props.idoXfer,
-        idoAsa: props.idoAsa,
-      },
-      { sender },
-    )
-    setLoading(false)
+    if (props.idoXfer && props.idoAsa) {
+      await props.typedClient
+        .depositIdoAsa(
+          {
+            idoXfer: props.idoXfer,
+            idoAsa: props.idoAsa,
+          },
+          { sender },
+        )
+        .then(() => setLoading(false))
+        .catch((error) => {
+          setLoading(false)
+
+          return Promise.reject(new Error(error))
+        })
+    }
   }
 
   return (
-    <button className={props.buttonClass} onClick={callMethod}>
-      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
-    </button>
+    <Button customClassName={props.buttonClass} onClick={callMethod} shouldDisplaySpinner={loading}>
+      {props.children}
+    </Button>
   )
 }
 

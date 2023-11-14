@@ -14,8 +14,6 @@ export interface UserDataOutletInterface {
 const NavBar = ({ userData, resetUserData }: UserPropsInterface) => {
   const links = [{ title: 'About us', path: routes.ABOUT.ROUTE }]
 
-  const state = useAppContext()
-
   const linksRenderer = links.map((link) => (
     <li key={link.title} className="hidden md:block">
       <Link to={link.path}>{link.title}</Link>
@@ -33,8 +31,8 @@ const NavBar = ({ userData, resetUserData }: UserPropsInterface) => {
         <ul className="menu menu-horizontal px-1 gap-3 flex items-center w-full">
           {linksRenderer}
           <li className="md:block">
-            {state?.activeAccount ? (
-              <WalletWidget username={userData?.username} walletAddress={state.activeAccount.address} resetUserData={resetUserData} />
+            {userData ? (
+              <WalletWidget username={userData?.username} walletAddress={userData.wallet_address} resetUserData={resetUserData} />
             ) : (
               <ConnectDropdown />
             )}

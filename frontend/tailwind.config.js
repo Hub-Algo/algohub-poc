@@ -16,7 +16,8 @@ module.exports = {
     themes: [
       {
         default: {
-          primary: '#3c787e',
+          orange:'#f97316',
+          primary: '#f97316',
           secondary: '#e952de',
           accent: '#140d4f',
           neutral: '#6b7280',

@@ -1,13 +1,18 @@
 import { useState } from 'react'
-import Input from '../../../../common/input/Input'
-import { CampaignApplicationFormData, CampaignApplicationFormView, CampaignApplicationTeamInfo } from '../../CampaignApplicationForm.types'
+import Input from '../../../../../../common/input/Input'
 import { INITIAL_CAMPAIGN_APPLICATION_TEAM_INFO } from '../../CampaignApplicationForm.constants'
-import Button from '../../../../common/button/Button'
+import Button from '../../../../../../common/button/Button'
+import {
+  CampaignApplicationFormData,
+  CampaignApplicationFormView,
+  CampaignApplicationTeamInfo,
+} from '../../../../../../../pages/campaign-application/CampaignApplication.types'
+import LabelTooltip from '../../../../../../common/LabelTooltip'
 
 interface CampaignApplicatioFormTeamInfoViewProps {
   onClickPrevButton: (view: CampaignApplicationFormView) => void
   onClickNextButton: (data: CampaignApplicationFormData) => void
-  savedState?: CampaignApplicationTeamInfo
+  savedState: CampaignApplicationTeamInfo | null
 }
 
 function CampaignApplicatioFormTeamInfoView({ onClickNextButton, onClickPrevButton, savedState }: CampaignApplicatioFormTeamInfoViewProps) {
@@ -19,32 +24,25 @@ function CampaignApplicatioFormTeamInfoView({ onClickNextButton, onClickPrevButt
     <form
       onSubmit={handleClickNextButton}
       id={CampaignApplicationFormView.ContactInfo}
-      className={'text-gray-900 flex flex-col gap-4 my-20'}
+      className={'text-gray-900 flex flex-col gap-4 mb-20'}
     >
       <div className={'flex flex-col items-center mx-auto max-w-md w-full'}>
         <h2 className={'font-semibold text-3xl mb-10 text-cente text-gray-100'}>{'Team Information'}</h2>
 
-        <Input
-          labels={{ inputTitle: 'Number of employees' }}
-          type={'number'}
-          value={state?.employeeNumber ?? ''}
-          onChange={handleSetEmployeeNumber}
-          min={0}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Number of employees" />
+          <Input type={'number'} value={state?.employeeNumber ?? ''} onChange={handleSetEmployeeNumber} min={0} />
+        </div>
 
-        <Input
-          labels={{ inputTitle: 'Founder information' }}
-          type={'text'}
-          value={state?.founder ?? ''}
-          onChange={handleSetFounderInformation}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Founder information" />
+          <Input type={'text'} value={state?.founder ?? ''} onChange={handleSetFounderInformation} />
+        </div>
 
-        <Input
-          labels={{ inputTitle: 'Cofounder information' }}
-          type={'text'}
-          value={state?.cofounder ?? ''}
-          onChange={handleSetCofounderInformation}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Cofounder information" />
+          <Input type={'text'} value={state?.cofounder ?? ''} onChange={handleSetCofounderInformation} />
+        </div>
       </div>
 
       <div className={'justify-between flex mt-10'}>

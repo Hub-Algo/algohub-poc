@@ -1,17 +1,20 @@
 import { useState } from 'react'
-import Input from '../../../../common/input/Input'
+
+import Input from '../../../../../../common/input/Input'
+
+import { INITIAL_CAMPAIGN_APPLICATION_COMPANY_REGISTRATION_INFO } from '../../CampaignApplicationForm.constants'
+import Button from '../../../../../../common/button/Button'
 import {
   CampaignApplicationCompanyRegistrationInfo,
   CampaignApplicationFormData,
   CampaignApplicationFormView,
-} from '../../CampaignApplicationForm.types'
-import { INITIAL_CAMPAIGN_APPLICATION_COMPANY_REGISTRATION_INFO } from '../../CampaignApplicationForm.constants'
-import Button from '../../../../common/button/Button'
+} from '../../../../../../../pages/campaign-application/CampaignApplication.types'
+import LabelTooltip from '../../../../../../common/LabelTooltip'
 
 interface CampaignApplicationFormCompanyRegistrationViewProps {
   onClickNextButton: (data: CampaignApplicationFormData) => void
   onClickPrevButton: (view: CampaignApplicationFormView) => void
-  savedState?: CampaignApplicationCompanyRegistrationInfo
+  savedState: CampaignApplicationCompanyRegistrationInfo | null
 }
 
 function CampaignApplicationFormCompanyRegistrationView({
@@ -28,7 +31,7 @@ function CampaignApplicationFormCompanyRegistrationView({
     <form
       onSubmit={handleClickNextButton}
       id={CampaignApplicationFormView.CompanyRegistrationInfo}
-      className={'text-gray-900 flex flex-col gap-4 my-20 items-center'}
+      className={'text-gray-900 flex flex-col gap-4 mb-20 items-center'}
     >
       <h2 className={'font-semibold text-3xl mb-10 text-gray-100'}>{'Company Registration Information'}</h2>
 
@@ -39,35 +42,32 @@ function CampaignApplicationFormCompanyRegistrationView({
       </p>
 
       <div className={'flex flex-col items-center max-w-md'}>
-        <Input
-          labels={{ inputTitle: 'Registered company name' }}
-          type={'text'}
-          value={state?.registeredCompanyName ?? ''}
-          onChange={handleSetRegisteredCompanyName}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Registered company name" />
+          <Input type={'text'} value={state?.registeredCompanyName ?? ''} onChange={handleSetRegisteredCompanyName} />
+        </div>
 
-        <Input
-          labels={{ inputTitle: 'Date of registration' }}
-          type={'date'}
-          value={state?.dateOfRegistration ?? ''}
-          onChange={handleSetDateOfRegistration}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Date of registration" />
+          <Input type={'date'} value={state?.dateOfRegistration ?? ''} onChange={handleSetDateOfRegistration} />
+        </div>
 
-        <Input
-          labels={{ inputTitle: 'Country of registration' }}
-          type={'text'}
-          value={state?.countryOfRegistration ?? ''}
-          onChange={handleSetCountryOfRegistration}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Country of registration" />
+          <Input type={'text'} value={state?.countryOfRegistration ?? ''} onChange={handleSetCountryOfRegistration} />
+        </div>
 
-        <Input
-          labels={{ inputTitle: `Chamber of Commerce Registration Number (or equivalent)` }}
-          type={'number'}
-          value={state?.chamberOfCommerceRegistrationNumber ?? ''}
-          onChange={handleChamberOfCommerceRegNumber}
-          min={1}
-        />
+        <div className="w-full">
+          <LabelTooltip labelContent="Chamber of Commerce Registration Number (or equivalent)" />
+          <Input
+            type={'number'}
+            value={state?.chamberOfCommerceRegistrationNumber ?? ''}
+            onChange={handleChamberOfCommerceRegNumber}
+            min={1}
+          />
+        </div>
       </div>
+
       <div className={'justify-between flex mt-10 w-full'}>
         <Button buttonColor="orange" type="button" onClick={handleClickPrevButton}>
           {'Prev'}
