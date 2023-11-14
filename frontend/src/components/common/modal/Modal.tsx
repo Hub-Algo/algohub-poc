@@ -15,7 +15,7 @@ function Modal({ id, children, modalButtonName }: ModalProps) {
       </Button>
 
       <dialog id={id} className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
+        <div className="modal-box bg-gray-800">
           <div className="modal-action mt-0">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}

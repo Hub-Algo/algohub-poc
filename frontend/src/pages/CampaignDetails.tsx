@@ -8,12 +8,15 @@ import { TabItem } from '../components/common/tab/Tab.types'
 import { CampaignInterface } from '../interfaces/campaign-interface'
 import Modal from '../components/common/modal/Modal'
 import InvestModal from '../components/invest-modal/InvestModal'
+import AlgohubGetAllCampaignApps from '../components/algohub-pre-generated/AlgohubGetAllCampaignApps'
+import useAppContext from '../core/util/useAppContext'
 
 export interface CampaignOutletInterface {
   campaignList: CampaignInterface[]
 }
 
 const CampaignDetails = () => {
+  const state = useAppContext()
   const hasVoted = false
   const { campaignList } = useOutletContext() as CampaignOutletInterface
 
@@ -37,6 +40,8 @@ const CampaignDetails = () => {
   return (
     <PageContainer>
       <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.campaign_title}`]} />
+      {state.algohubClient && <AlgohubGetAllCampaignApps typedClient={state.algohubClient}>{'get all'}</AlgohubGetAllCampaignApps>}
+
       <section>
         <div className="flex gap-5">
           <div className="w-16 h-16 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">
@@ -96,7 +101,8 @@ const CampaignDetails = () => {
 
   function getTxnModal() {
     if ((campaign?.campaign_status === 'new' && hasVoted) || campaign?.campaign_status === 'pending') {
-      return <InvestModal campaignStatus={campaign.campaign_status} />
+      // TODO: Get campaign id dynamically
+      return <InvestModal campaignStatus={campaign.campaign_status} campaignId={479460351n} />
     } else if (campaign?.campaign_status === 'new' && !hasVoted) {
       return <VoteModal />
     }

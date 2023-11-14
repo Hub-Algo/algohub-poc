@@ -8,13 +8,14 @@ interface InvestModalConfirmViewProps {
   onCancel: VoidFunction
   inputAmount: number
   state?: 'success' | 'failed'
+  shouldDisplaySpinner?: boolean
 }
 
-function InvestModalConfirmView({ onConfirm, inputAmount, state, onCancel }: InvestModalConfirmViewProps) {
+function InvestModalConfirmView({ onConfirm, inputAmount, state, onCancel, shouldDisplaySpinner }: InvestModalConfirmViewProps) {
   const outputTokenAmount = inputAmount / 10
   const algoFee = '0.03 ALGO'
 
-  return <div className={'flex flex-col gap-4'}>{renderContent()}</div>
+  return <div className={'flex flex-col gap-4 text-gray-100'}>{renderContent()}</div>
 
   function renderContent() {
     if (!state) {
@@ -33,11 +34,17 @@ function InvestModalConfirmView({ onConfirm, inputAmount, state, onCancel }: Inv
           </ul>
 
           <div className={'md:grid-cols-2 gap-4 grid grid-cols-1'}>
-            <Button onClick={onCancel} customClassName={'w-full'}>
+            <Button onClick={onCancel} customClassName={'w-full'} size="md">
               {'Cancel'}
             </Button>
 
-            <Button onClick={onConfirm} isDisabled={state === 'success'} customClassName={'w-full'}>
+            <Button
+              onClick={onConfirm}
+              isDisabled={state === 'success'}
+              shouldDisplaySpinner={shouldDisplaySpinner}
+              customClassName={'w-full'}
+              size="md"
+            >
               {'Confirm'}
             </Button>
           </div>
@@ -86,11 +93,17 @@ function InvestModalConfirmView({ onConfirm, inputAmount, state, onCancel }: Inv
             </div>
 
             <div className={'md:grid-cols-2 gap-4 grid grid-cols-1'}>
-              <Button onClick={onCancel} customClassName={'w-full'}>
+              <Button
+                onClick={onCancel}
+                customClassName={'w-full'}
+                shouldDisplaySpinner={shouldDisplaySpinner}
+                size={'md'}
+                buttonColor={'neutral'}
+              >
                 {'Cancel'}
               </Button>
 
-              <Button onClick={onConfirm} customClassName={'w-full'}>
+              <Button onClick={onConfirm} customClassName={'w-full'} size={'md'}>
                 {'Try again'}
               </Button>
             </div>

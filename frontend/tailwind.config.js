@@ -8,15 +8,15 @@ module.exports = {
         'onramp-green': '#a0dd1d',
         'card-bg': '#D9D9D9',
       },
-      height:{"120":"28rem"},
-      scale:{"101":"1.01"}
+      height: { 120: '28rem' },
+      scale: { 101: '1.01' },
     },
   },
   daisyui: {
     themes: [
       {
         default: {
-          orange:'#f97316',
+          orange: '#f97316',
           primary: '#f97316',
           secondary: '#e952de',
           accent: '#140d4f',
