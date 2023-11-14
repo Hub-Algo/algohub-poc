@@ -12,7 +12,7 @@ import CampaignDetailsDashboard from '../components/campaign/campaign-details/Ca
 
 const images = [
   'https://pbs.twimg.com/profile_banners/1429713964288471040/1661936165/1500x500',
-  'https://pbs.twimg.com/profile_banners/1503154439909167115/1660838512/600x200',
+  'https://pbs.twimg.com/profile_banners/1493176263888015368/1656668873/1500x500',
   'https://pbs.twimg.com/profile_banners/1414619378323267585/1699203622/1500x500',
   'https://pbs.twimg.com/profile_banners/1441430126303055873/1680594213/1500x500',
 ]
