@@ -41,7 +41,7 @@ function CampaignApplicationConfirmationPage() {
           duration={86400} // 1 day
           metadataUrl={''}
           idoAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId ?? 0}
-          buyAsa={113638050} // USDC
+          buyAsa={10458941} //TODO:Set USDC mainnet
           onSuccess={handleSuccessfulApplication}
         >
           {'Submit application'}
