@@ -16,7 +16,9 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
               <span>{'Investment, beyond funds'}</span>
             </p>
             <div className="flex w-full gap-6 md:hidden mt-6">
-              <Button buttonColor="orange">CREATE CAMPAIGN</Button>
+              <Button buttonColor="orange">
+                <a href={routes.CAMPAIGN_APPLICATION_FORM.ROUTE}>CREATE CAMPAIGN</a>
+              </Button>
               <Button buttonColor="orange">
                 <a href={routes.ALL_CAMPAIGNS.ROUTE}>VIEW ALL CAMPAIGNS</a>
               </Button>
@@ -35,18 +37,14 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
                     <p className="font-normal">{userData.usdc_balance} USDC</p>
                   </div>
                 </div>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <p>CONNECT WALLET</p> <BiWallet />
-                </div>
-              )}
+              ) : null}
             </div>
-            <div className="font-oswald text-xl text-orange-800 border-b border-t border-transparent hover:border-orange-500 cursor-pointer transition-all py-2">
+            <a
+              href={routes.ABOUT.ROUTE}
+              className="font-oswald text-xl text-orange-800 border-b border-t border-transparent hover:border-orange-500 cursor-pointer transition-all py-2"
+            >
               ABOUT US
-            </div>
-            <div className="font-oswald text-xl text-orange-800 border-b border-t border-transparent hover:border-orange-500 cursor-pointer transition-all py-2">
-              ABOUT ALGOHUB
-            </div>
+            </a>
           </div>
         </div>
       </div>

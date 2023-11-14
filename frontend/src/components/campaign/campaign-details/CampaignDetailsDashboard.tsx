@@ -1,4 +1,5 @@
 import { CampaignInterface } from '../../../interfaces/new-campaign-interface'
+import { AssetServices } from '../../../services/assetServices'
 import CategoryBadge from '../../CategoryBadge'
 
 interface CampaignDetailsDashboardPropsInterface {
@@ -18,19 +19,19 @@ const CampaignDetailsDashboard = ({ children, campaign }: CampaignDetailsDashboa
         </div>
         <div>
           <p className="text-sm md:text-lg text-gray-400">Fundraise goal</p>
-          <h2 className="text-xl md:text-4xl font-bold font-oswald text-gray-100 ">${campaign?.record.fundraisingGoal.minAmount}</h2>
+          <h2 className="text-xl md:text-4xl font-bold font-oswald text-gray-100 ">USDC {campaign?.record.fundraisingGoal.minAmount}</h2>
         </div>
       </div>
       <div className="text-gray-300 flex w-full items-center justify-between">
-        <p className="w-3/6 fontb">Max allocation</p>
-        <div className="w-1/6 border h-px border-dashed border-gray-600"></div>
-        <p className="w-1/6">$500</p>
+        <p className="w-2/6 fontb">Max allocation</p>
+        <div className="w-2/6 border h-px border-dashed border-gray-600"></div>
+        <p className="w-2/6 flex justify-end">USDC 500</p>
       </div>
 
       <div className="text-gray-300 flex w-full items-center justify-between">
-        <p className="w-3/6">Max allocation</p>
-        <div className="w-1/6 border h-px border-dashed border-gray-600"></div>
-        <p className="w-1/6">${campaign?.record.fundraisingGoal.maxAmount}</p>
+        <p className="w-2/6">Min allocation</p>
+        <div className="w-2/6 border h-px border-dashed border-gray-600"></div>
+        <p className="w-2/6 flex justify-end">USDC {campaign?.record.fundraisingGoal.maxAmount}</p>
       </div>
 
       {children}

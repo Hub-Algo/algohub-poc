@@ -22,7 +22,7 @@ export default function About() {
               </p>
             </li>
 
-            <li className="hover:scale-101 transition-all hover:bg-gray-950 p-6 rounded-md select-none">
+            <li className="hover:scale-101 transition-all hover:bg-gray-950 p-3 rounded-md select-none">
               <h3 className="text-2xl font-bold text-orange-500">Crowdfunding:</h3>
               <p className="text-gray-400 text-xl">
                 A Kickstarter-like platform for consumer projects seeking community support and funding. Features post-raise accountability
@@ -30,7 +30,7 @@ export default function About() {
               </p>
             </li>
 
-            <li className="hover:scale-101 transition-all hover:bg-gray-950 p-6 rounded-md select-none">
+            <li className="hover:scale-101 transition-all hover:bg-gray-950 p-3 rounded-md select-none">
               <h3 className="text-2xl font-bold text-orange-500">Talent Labs:</h3>
               <p className="text-gray-400 text-xl">
                 A decentralized freelancing marketplace dedicated to Algorand. An UpWork- like platform for finding either talent or jobs,
@@ -38,14 +38,7 @@ export default function About() {
               </p>
             </li>
 
-            <li className="hover:scale-101 transition-all hover:bg-gray-950 p-6 rounded-md select-none">
-              <h3 className="text-2xl font-bold text-orange-500">AlgoCrypt:</h3>
-              <p className="text-gray-400 text-xl">
-                Time-locked token vaults and multi-sig treasuries. Basically, UniCrypt and Gnosis Vaults made available for the Algorand
-                ecosystem.
-              </p>
-            </li>
-            <li className="hover:scale-101 transition-all hover:bg-gray-950 p-6 rounded-md select-none">
+            <li className="hover:scale-101 transition-all hover:bg-gray-950 p-3 rounded-md select-none">
               <h3 className="text-2xl font-bold text-orange-500">AlgoCrypt:</h3>
               <p className="text-gray-400 text-xl">
                 Time-locked token vaults and multi-sig treasuries. Basically, UniCrypt and Gnosis Vaults made available for the Algorand
