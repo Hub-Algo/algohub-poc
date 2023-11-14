@@ -36,7 +36,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
   })
 
   return (
-    <div className={'flex gap-4 md:gap-14 items-center h-120 w-full justify-between bg-gray-950 px-2 mt-5 my-2'}>
+    <div className={'flex gap-4 md:gap-14 items-center h-120 w-full justify-start bg-gray-950 px-2 mt-5 my-2'}>
       <Button
         aria-label={'previous-button'}
         onClick={handleDisplayPrevious}
@@ -47,7 +47,7 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
         <TiMediaPlayReverse className="text-3xl group-hover:text-orange-600" />
       </Button>
 
-      <div className="flex gap-10 py-5 w-full justify-center md:justify-between">
+      <div className="flex gap-10 py-5 w-full justify-center md:justify-start">
         {campaigns.length <= 0 ? (
           <div className="w-full text-3xl text-center text-gray-500">No campaigns to display</div>
         ) : (
