@@ -70,7 +70,6 @@ export default function App() {
 
   const fetchAndAppendUserData = async (walletAddress: string) => {
     const userData = await userService.fetchUserAssets(walletAddress)
-    console.log('userData before sany', userData)
 
     const userAssets = (await userService.fetchUserAssets(walletAddress)).assets
 
@@ -107,7 +106,6 @@ export default function App() {
   useEffect(() => {
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
-      console.log('userData', userData)
     }
   }, [activeAccount])
 

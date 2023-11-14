@@ -14,8 +14,6 @@ export class userServices {
         `https://testnet-idx.algonode.cloud/v2/accounts/${walletAddress}?exclude=apps-local-state,created-apps`,
       )
       const { data } = response
-      console.log('data', data)
-
       return { assets: data.account.assets, created_assets: data.account['created-assets'] }
     } catch (error) {
       throw new Error('error fetchin user assets')

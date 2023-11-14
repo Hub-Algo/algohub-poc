@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { BiQuestionMark } from 'react-icons/bi'
-import LabelTooltip from '../LabelTooltip'
 
 const CreatedAssetsSelect = ({ options, handleSetAssetId }) => {
   console.log('options', options)
@@ -8,12 +6,8 @@ const CreatedAssetsSelect = ({ options, handleSetAssetId }) => {
   const [selectedAsset, setSelectedAsset] = useState<number>()
 
   const handleAssetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log('event', event)
     const value = event.target.value
-
     const assetId = Number(value.split(' - ')[1])
-
-    console.log('change selected asset', assetId)
 
     setSelectedAsset(assetId)
     handleSetAssetId(selectedAsset)

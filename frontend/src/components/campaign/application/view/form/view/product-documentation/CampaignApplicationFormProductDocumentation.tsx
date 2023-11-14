@@ -31,8 +31,6 @@ function CampaignApplicationFormProductDocumentation({
 
   const { userData } = useOutletContext() as UserDataOutletInterface
 
-  console.log('user data from form', userData)
-
   const isDisabled =
     !state?.assetId ||
     !state.hasConsentToInDepthInterview ||
@@ -187,8 +185,6 @@ function CampaignApplicationFormProductDocumentation({
     setState((prev) => {
       return prev ? { ...prev, assetId } : { ...INITIAL_CAMPAIGN_APPLICATION_PRODUCT_DOCUMENTATION, assetId }
     })
-
-    console.log('formState', state)
   }
   function handleSetAppId(event: React.SyntheticEvent<HTMLInputElement, Event>) {
     const { value } = event.currentTarget

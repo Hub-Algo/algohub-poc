@@ -14,7 +14,6 @@ export interface UserDataOutletInterface {
 
 function Profile() {
   const { userData } = useOutletContext() as UserDataOutletInterface
-  const { campaignList } = useOutletContext() as CampaignOutletInterface
 
   const tabItems: TabItem[] = [
     { id: 'Invested campaigns', content: 'Invested campaigns' },
