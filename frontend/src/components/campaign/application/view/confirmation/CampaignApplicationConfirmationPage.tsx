@@ -36,7 +36,7 @@ function CampaignApplicationConfirmationPage() {
           typedClient={state?.algohubClient}
           votersAsa={478560182}
           metadata={formData as CampaignApplicationData}
-          price={Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken) ?? 0}
+          conversionRate={Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken) ?? 0}
           maxInvestmentPerAccount={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
           minTotalInvestment={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
           maxTotalInvestment={convertToBaseUnits(6, formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ?? 0)}

@@ -12,7 +12,7 @@ import { useWallet } from '@txnlab/use-wallet'
   votersAsa={votersAsa}
   idoAsa={idoAsa}
   investmentAsa={investmentAsa}
-  price={price}
+  conversionRate={conversionRate}
   maxInvestmentPerAccount={maxInvestmentPerAccount}
   minTotalInvestment={minTotalInvestment}
   maxTotalInvestment={maxTotalInvestment}
@@ -32,7 +32,7 @@ type Props = {
   votersAsa: AlgohubCreateCampaignArgs['votersAsa']
   idoAsa: AlgohubCreateCampaignArgs['idoAsa']
   investmentAsa: AlgohubCreateCampaignArgs['investmentAsa']
-  price: AlgohubCreateCampaignArgs['price']
+  conversionRate: AlgohubCreateCampaignArgs['conversionRate']
   maxInvestmentPerAccount: AlgohubCreateCampaignArgs['maxInvestmentPerAccount']
   minTotalInvestment: AlgohubCreateCampaignArgs['minTotalInvestment']
   maxTotalInvestment: AlgohubCreateCampaignArgs['maxTotalInvestment']
@@ -55,7 +55,7 @@ const AlgohubCreateCampaign = (props: Props) => {
         votersAsa: props.votersAsa,
         idoAsa: props.idoAsa,
         investmentAsa: props.investmentAsa,
-        price: props.price,
+        conversionRate: props.conversionRate,
         maxInvestmentPerAccount: props.maxInvestmentPerAccount,
         minTotalInvestment: props.minTotalInvestment,
         maxTotalInvestment: props.maxTotalInvestment,

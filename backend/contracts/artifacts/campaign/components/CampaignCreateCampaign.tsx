@@ -13,7 +13,7 @@ import { useWallet } from '@txnlab/use-wallet'
   votersAsa={votersAsa}
   idoAsa={idoAsa}
   investmentAsa={investmentAsa}
-  price={price}
+  conversionRate={conversionRate}
   maxInvestmentPerAccount={maxInvestmentPerAccount}
   minTotalInvestment={minTotalInvestment}
   maxTotalInvestment={maxTotalInvestment}
@@ -33,7 +33,7 @@ type Props = {
   votersAsa: CampaignCreateCampaignArgs['votersAsa']
   idoAsa: CampaignCreateCampaignArgs['idoAsa']
   investmentAsa: CampaignCreateCampaignArgs['investmentAsa']
-  price: CampaignCreateCampaignArgs['price']
+  conversionRate: CampaignCreateCampaignArgs['conversionRate']
   maxInvestmentPerAccount: CampaignCreateCampaignArgs['maxInvestmentPerAccount']
   minTotalInvestment: CampaignCreateCampaignArgs['minTotalInvestment']
   maxTotalInvestment: CampaignCreateCampaignArgs['maxTotalInvestment']
@@ -56,7 +56,7 @@ const CampaignCreateCampaign = (props: Props) => {
         votersAsa: props.votersAsa,
         idoAsa: props.idoAsa,
         investmentAsa: props.investmentAsa,
-        price: props.price,
+        conversionRate: props.conversionRate,
         maxInvestmentPerAccount: props.maxInvestmentPerAccount,
         minTotalInvestment: props.minTotalInvestment,
         maxTotalInvestment: props.maxTotalInvestment,

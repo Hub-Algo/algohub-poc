@@ -1,47 +1,32 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import { CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
-<CampaignBuy
+<CampaignGetInvestmentAsa
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call invest"
+  buttonNode="Call getInvestmentAsa"
   typedClient={typedClient}
-  investmentAsaXfer={investmentAsaXfer}
-  investmentAsa={investmentAsa}
-  investmentAmount={investmentAmount}
 />
 */
-type CampaignBuyArgs = Campaign['methods']['invest(axfer,asset,uint64)void']['argsObj']
-
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  investmentAsaXfer: CampaignBuyArgs['investmentAsaXfer']
-  investmentAsa: CampaignBuyArgs['investmentAsa']
-  investmentAmount: CampaignBuyArgs['investmentAmount']
 }
 
-const CampaignBuy = (props: Props) => {
+const CampaignGetInvestmentAsa = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling invest`)
-    await props.typedClient.invest(
-      {
-        investmentAsaXfer: props.investmentAsaXfer,
-        investmentAsa: props.investmentAsa,
-        investmentAmount: props.investmentAmount,
-      },
-      { sender },
-    )
+    console.log(`Calling getInvestmentAsa`)
+    await props.typedClient.getInvestmentAsa({}, { sender })
     setLoading(false)
   }
 
@@ -52,4 +37,4 @@ const CampaignBuy = (props: Props) => {
   )
 }
 
-export default CampaignBuy
+export default CampaignGetInvestmentAsa

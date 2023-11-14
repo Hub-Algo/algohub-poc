@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
-import { CampaignClient } from '../../contracts/CampaignClient'
+import { Campaign, CampaignClient } from '../contracts/DaoClient'
+import { useWallet } from '@txnlab/use-wallet'
 
 /* Example usage
-<CampaignGetBuyAsa
+<CampaignGetInvestmentAsa
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getBuyAsa"
+  buttonNode="Call getInvestmentAsa"
   typedClient={typedClient}
 />
 */
@@ -18,15 +18,18 @@ type Props = {
   typedClient: CampaignClient
 }
 
-const CampaignGetBuyAsa = (props: Props) => {
+const CampaignGetInvestmentAsa = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getBuyAsa`)
-    await props.typedClient.getBuyAsa({}, { sender })
+    console.log(`Calling getInvestmentAsa`)
+    await props.typedClient.getInvestmentAsa(
+      {},
+      { sender },
+    )
     setLoading(false)
   }
 
@@ -37,4 +40,4 @@ const CampaignGetBuyAsa = (props: Props) => {
   )
 }
 
-export default CampaignGetBuyAsa
+export default CampaignGetInvestmentAsa

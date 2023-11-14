@@ -7,7 +7,7 @@ type VestingDetails = {
 };
 
 type CampaignObj = {
-  price: number;
+  conversionRate: number;
   maxInvestmentPerAccount: number;
   minTotalInvestment: number;
   maxTotalInvestment: number;
@@ -94,8 +94,8 @@ export default class Campaign extends Contract {
   }
 
   private convertToAsaAmount(purchaseAmount: number, asaToCovertTo: Asset): number {
-    if (asaToCovertTo === this.investmentAsaId.value) return purchaseAmount / this.campaign.value.price;
-    if (asaToCovertTo === this.idoAsaId.value) return purchaseAmount * this.campaign.value.price;
+    if (asaToCovertTo === this.investmentAsaId.value) return purchaseAmount / this.campaign.value.conversionRate;
+    if (asaToCovertTo === this.idoAsaId.value) return purchaseAmount * this.campaign.value.conversionRate;
     return 0;
   }
 
@@ -104,7 +104,7 @@ export default class Campaign extends Contract {
     votersAsa: Asset,
     idoAsa: Asset,
     investmentAsa: Asset,
-    price: number,
+    conversionRate: number,
     maxInvestmentPerAccount: number,
     minTotalInvestment: number,
     maxTotalInvestment: number,
@@ -122,10 +122,13 @@ export default class Campaign extends Contract {
     this.optInToAsa(investmentAsa);
 
     this.campaign.value = {
-      price: price,
-      maxInvestmentPerAccount: maxInvestmentPerAccount,
-      minTotalInvestment: minTotalInvestment,
-      maxTotalInvestment: maxTotalInvestment,
+      // TODO: deal with decimals - 2.00 --> 200 // 0.50 --> 50
+      // invest 100$ at a conversion rate of 0.50$ I should get 200 IDOs
+      // 100 / (50 / 100) = 200
+      conversionRate: conversionRate,
+      maxInvestmentPerAccount: maxInvestmentPerAccount * 10 ** investmentAsa.decimals,
+      minTotalInvestment: minTotalInvestment * 10 ** investmentAsa.decimals,
+      maxTotalInvestment: maxTotalInvestment * 10 ** investmentAsa.decimals,
       investedAmount: 0,
       withdrawnAmount: 0,
       startTime: globals.latestTimestamp + votingPeriod,
@@ -149,7 +152,7 @@ export default class Campaign extends Contract {
     // TODO: Allow deposit only once
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
-    const idoAsaToTransfer = this.campaign.value.maxTotalInvestment / this.campaign.value.price;
+    const idoAsaToTransfer = (this.campaign.value.maxTotalInvestment * 100) / this.campaign.value.conversionRate;
     verifyTxn(idoXfer, {
       assetAmount: idoAsaToTransfer,
       assetReceiver: this.app.address,
@@ -172,31 +175,30 @@ export default class Campaign extends Contract {
     // check campaing is not finished
     // assert(this.campaign.value.endTime > globals.latestTimestamp);
     // Check amount to invest is not more than max invest cap
-    assert(this.campaign.value.maxInvestmentPerAccount >= investmentAmount);
+    const investmentAsaToTransfer = investmentAmount * 10 ** investmentAsa.decimals;
+    assert(this.campaign.value.maxInvestmentPerAccount >= investmentAsaToTransfer);
     // Allow hypelisted addresses to invest before start time
     if (!this.isHypelisted(this.txn.sender)) {
       assert(this.campaign.value.startTime < globals.latestTimestamp);
     }
     // check that hardcap is not reached
-    assert(this.campaign.value.maxTotalInvestment >= this.campaign.value.investedAmount + investmentAmount);
+    assert(this.campaign.value.maxTotalInvestment >= this.campaign.value.investedAmount + investmentAsaToTransfer);
     // TODO: allow set approve campaign in case invest cannot be called due to hardcap reached
     if (!this.isApprovedCampaign.value) {
       this.isApprovedCampaign.value = true;
     }
-
-    const investmentAsaToTransfer = investmentAmount * this.campaign.value.price;
     verifyTxn(investmentAsaXfer, {
       assetAmount: investmentAsaToTransfer,
       assetReceiver: this.app.address,
       sender: this.txn.sender,
       xferAsset: this.investmentAsaId.value,
     });
-    this.campaign.value.investedAmount = this.campaign.value.investedAmount + investmentAmount;
+    this.campaign.value.investedAmount = this.campaign.value.investedAmount + investmentAsaToTransfer;
 
     if (this.purchases(this.txn.sender).exists) {
-      this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + investmentAmount;
+      this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + investmentAsaToTransfer;
     } else {
-      this.purchases(this.txn.sender).value = investmentAmount;
+      this.purchases(this.txn.sender).value = investmentAsaToTransfer;
     }
   }
 
@@ -224,10 +226,12 @@ export default class Campaign extends Contract {
     assert(this.isApproved());
     // assert(this.campaign.value.endTime < globals.latestTimestamp);
     assert(this.purchases(this.txn.sender).exists);
-    const totalClaimableAmount = this.purchases(this.txn.sender).value / this.campaign.value.price;
+
+    const totalClaimableAmount = (this.purchases(this.txn.sender).value * 100) / this.campaign.value.conversionRate;
     const alreadyClaimedAmount = this.claimedAmount(this.txn.sender).exists
       ? this.claimedAmount(this.txn.sender).value
       : 0;
+
     assert(totalClaimableAmount > alreadyClaimedAmount);
     const totalAmountToClaim = totalClaimableAmount - alreadyClaimedAmount;
     // const eligibleAmountToClaim = this.calculateAllowedClaimAmountBasedOnVestingSchedule(totalAmountToClaim);
@@ -260,7 +264,7 @@ export default class Campaign extends Contract {
       sender: this.app.address,
       assetReceiver: this.txn.sender,
       xferAsset: this.investmentAsaId.value,
-      assetAmount: this.convertToAsaAmount(this.purchases(this.txn.sender).value, this.investmentAsaId.value),
+      assetAmount: this.purchases(this.txn.sender).value,
     });
   }
 
@@ -283,7 +287,7 @@ export default class Campaign extends Contract {
         sender: this.app.address,
         assetReceiver: this.txn.sender,
         xferAsset: idoAsa,
-        assetAmount: totalUnsoldAmount / this.campaign.value.price, // this.convertToAsaAmount(totalUnsoldAmount, this.idoAsaId.value),
+        assetAmount: (totalUnsoldAmount * 100) / this.campaign.value.conversionRate,
       });
     } else {
       sendAssetTransfer({
@@ -339,7 +343,7 @@ export default class Campaign extends Contract {
     return this.idoAsaId.value;
   }
 
-  getBuyAsa(): Asset {
+  getInvestmentAsa(): Asset {
     return this.investmentAsaId.value;
   }
 
@@ -427,7 +431,7 @@ export class Algohub extends Contract {
     votersAsa: Asset,
     idoAsa: Asset,
     investmentAsa: Asset,
-    price: number,
+    conversionRate: number,
     maxInvestmentPerAccount: number,
     minTotalInvestment: number,
     maxTotalInvestment: number,
@@ -473,7 +477,7 @@ export class Algohub extends Contract {
         this.votersAsaId.value,
         idoAsa,
         investmentAsa,
-        price,
+        conversionRate,
         maxInvestmentPerAccount,
         minTotalInvestment,
         maxTotalInvestment,

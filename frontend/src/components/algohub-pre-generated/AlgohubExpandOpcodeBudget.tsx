@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../contracts/DaoClient'
 import { useWallet } from '@txnlab/use-wallet'
+import { ReactNode, useState } from 'react'
+import { AlgohubClient } from '../../contracts/AlgohubClient'
 
 /* Example usage
-<CampaignGetBuyAsa
+<AlgohubExpandOpcodeBudget
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call getBuyAsa"
+  buttonNode="Call expandOpcodeBudget"
   typedClient={typedClient}
 />
 */
@@ -15,21 +15,18 @@ type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
-  typedClient: CampaignClient
+  typedClient: AlgohubClient
 }
 
-const CampaignGetBuyAsa = (props: Props) => {
+const AlgohubExpandOpcodeBudget = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling getBuyAsa`)
-    await props.typedClient.getBuyAsa(
-      {},
-      { sender },
-    )
+    console.log(`Calling expandOpcodeBudget`)
+    await props.typedClient.expandOpcodeBudget({}, { sender })
     setLoading(false)
   }
 
@@ -40,4 +37,4 @@ const CampaignGetBuyAsa = (props: Props) => {
   )
 }
 
-export default CampaignGetBuyAsa
+export default AlgohubExpandOpcodeBudget

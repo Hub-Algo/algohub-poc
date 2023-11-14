@@ -86,7 +86,7 @@
           "desc": ""
         },
         {
-          "name": "price",
+          "name": "conversionRate",
           "type": "uint64",
           "desc": ""
         },

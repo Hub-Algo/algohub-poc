@@ -41,7 +41,7 @@
           "desc": ""
         },
         {
-          "name": "price",
+          "name": "conversionRate",
           "type": "uint64",
           "desc": ""
         },
@@ -279,7 +279,7 @@
       }
     },
     {
-      "name": "getBuyAsa",
+      "name": "getInvestmentAsa",
       "args": [],
       "desc": "",
       "returns": {
