@@ -182,9 +182,13 @@ function CampaignApplicationFormProductDocumentation({
   }
 
   function handleSetAssetId(assetId: number) {
+    console.log(assetId)
+
     setState((prev) => {
       return prev ? { ...prev, assetId } : { ...INITIAL_CAMPAIGN_APPLICATION_PRODUCT_DOCUMENTATION, assetId }
     })
+
+    console.log(state)
   }
   function handleSetAppId(event: React.SyntheticEvent<HTMLInputElement, Event>) {
     const { value } = event.currentTarget

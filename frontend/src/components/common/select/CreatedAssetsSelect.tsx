@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 
 const CreatedAssetsSelect = ({ options, handleSetAssetId }) => {
-  console.log('options', options)
-
   const [selectedAsset, setSelectedAsset] = useState<number>()
 
   const handleAssetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -10,7 +8,7 @@ const CreatedAssetsSelect = ({ options, handleSetAssetId }) => {
     const assetId = Number(value.split(' - ')[1])
 
     setSelectedAsset(assetId)
-    handleSetAssetId(selectedAsset)
+    handleSetAssetId(assetId)
   }
 
   const optionsRenderer = options.map((option) => (
@@ -22,7 +20,7 @@ const CreatedAssetsSelect = ({ options, handleSetAssetId }) => {
   return (
     <div className="w-full">
       <select onChange={handleAssetChange} className="select select-primary border-px border-gray-800 w-full bg-gray-950 text-gray-100">
-        <option disabled>Select an asset</option>
+        <option>Select an asset</option>
         {optionsRenderer}
       </select>
     </div>
