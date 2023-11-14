@@ -41,7 +41,7 @@ const CategoryBadge = ({ marketCategory, size }: CategoryBadgePropsInterface) =>
   }
 
   return (
-    <div className={`${getMarketCategoryBadgeColor()} ${getBadgeSize()} rounded-full text-center w-auto px-2 font-bold`}>
+    <div className={`${getMarketCategoryBadgeColor()} ${getBadgeSize()} rounded-full text-center w-auto px-2 font-bold font-oswald`}>
       {marketCategory}
     </div>
   )

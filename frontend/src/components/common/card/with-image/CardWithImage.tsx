@@ -34,16 +34,16 @@ function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
           <CategoryBadge size="md" marketCategory={campaign.record.productOverview.marketType} />
         </div>
         <div className="flex items-center">
-          <p className="text-lg font-bold">Goal:</p>
+          <p className="text-lg font-bold font-oswald">Goal:</p>
           <h3>${campaign.record.fundraisingGoal.maxAmount}</h3>
         </div>
         <ProgressBar hard_goal={campaign.record.fundraisingGoal.maxAmount} invested_amount={campaign.record.fundraisingGoal.minAmount} />
-        <div className={'bg-gray-950 p-2 rounded-md'}>
+        <div className={'bg-gray-950 p-2 rounded-md font-oswald'}>
           <div className={'flex gap-4 w-max'}>
             <p>{'Start date'}</p> <p>{campaign.record.companyRegistrationInfo.dateOfRegistration}</p>
           </div>
 
-          <div className={'flex gap-4 w-max'}>
+          <div className={'flex gap-4 w-max font-oswald'}>
             <p>{'End date'}</p> <p>{formatCreationDate(campaign.metadata.createdAt)}</p>
           </div>
         </div>

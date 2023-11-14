@@ -56,7 +56,9 @@ const CampaignDetails = () => {
             />
           </div>
           <div>
-            <h2 className="font-bold text-4xl text-gray-100">{campaign?.record.companyRegistrationInfo.registeredCompanyName}</h2>
+            <h2 className="font-bold text-4xl text-gray-100 font-oswald">
+              {campaign?.record.companyRegistrationInfo.registeredCompanyName}
+            </h2>
             <h3 className="text-gray-100">Community for everyone</h3>
           </div>
         </div>
