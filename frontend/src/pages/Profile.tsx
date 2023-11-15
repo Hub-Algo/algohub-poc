@@ -2,11 +2,9 @@ import { useOutletContext } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
 import ProfileStatsWidget from '../components/ProfileStatsWidget'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
-import { TabItem } from '../components/common/tab/Tab.types'
 import Tab from '../components/common/tab/Tab'
+import { TabItem } from '../components/common/tab/Tab.types'
 import { UserInterface } from '../interfaces/userInterface'
-import { CampaignOutletInterface } from './CampaignDetails'
-import CampaignList from '../components/campaign/list/CampaignList'
 
 export interface UserDataOutletInterface {
   userData: UserInterface

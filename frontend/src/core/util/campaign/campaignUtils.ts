@@ -10,4 +10,15 @@ const formatCreationDate = (date: string) => {
   return formattedDate
 }
 
-export { formatCreationDate }
+const formatTimeStamp = (date: number) => {
+  const convertedDate = new Date(date * 1000) // Multiply by 1000 to convert seconds to milliseconds
+
+  const day = convertedDate.getDate().toString().padStart(2, '0')
+  const month = (convertedDate.getMonth() + 1).toString().padStart(2, '0') // Months are zero-based
+  const year = convertedDate.getFullYear()
+
+  const formattedDate = `${day}/${month}/${year}`
+  return formattedDate
+}
+
+export { formatCreationDate, formatTimeStamp }

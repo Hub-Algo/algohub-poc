@@ -1,21 +1,21 @@
+import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
+import algosdk from 'algosdk'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
 import CampaignDetailsDashboard from '../components/campaign/campaign-details/CampaignDetailsDashboard'
 import ProjectInformation from '../components/campaign/campaign-tabs/ProjectInformation'
+import CampaignTransactionsButtonGroup from '../components/campaign/txns-button-group/CampaignTransactionsButtonGroup'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import Carousel from '../components/common/carousel/Carousel'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
+import { CampaignClient } from '../contracts/CampaignClient'
+import algod from '../core/algosdk/AlgodManager'
+import useAppContext from '../core/util/useAppContext'
 import { AssetInfoInterface } from '../interfaces/AssetInfoInterface'
 import { assetServices } from '../services/assetServices'
 import { CampaignObj } from '../services/campaignServices'
-import CampaignTransactionsButtonGroup from '../components/campaign/txns-button-group/CampaignTransactionsButtonGroup'
-import useAppContext from '../core/util/useAppContext'
-import { CampaignClient } from '../contracts/CampaignClient'
-import algod from '../core/algosdk/AlgodManager'
-import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
-import algosdk from 'algosdk'
 
 const images = [
   'https://pbs.twimg.com/profile_banners/1429713964288471040/1661936165/1500x500',
@@ -85,7 +85,7 @@ const CampaignDetails = () => {
 
   return (
     <PageContainer>
-      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.metadata.record['company-registration-info'].registeredCompanyName}`]} />
+      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.metadata.record['product-overview'].productName}`]} />
 
       <section>
         <div className="flex gap-5 items-center">
@@ -97,9 +97,7 @@ const CampaignDetails = () => {
             />
           </div>
           <div>
-            <h2 className="font-bold text-6xl text-gray-100 ">
-              {campaign?.metadata.record['company-registration-info'].registeredCompanyName}
-            </h2>
+            <h2 className="font-bold text-6xl text-gray-100 ">{campaign?.metadata.record['product-overview'].productName}</h2>
             <h3 className="text-gray-100 text-xl ">Developing the future for everyone</h3>
           </div>
         </div>

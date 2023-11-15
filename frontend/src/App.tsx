@@ -13,7 +13,7 @@ import NavBar from './components/NavBar'
 import { AlgohubClient } from './contracts/AlgohubClient'
 import algod from './core/algosdk/AlgodManager'
 import ROUTES from './core/routes'
-import { USDC_ASSET } from './core/util/asset/assetConstants'
+import { USDC_ASSET } from './core/util/asset/usdcConstants'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
@@ -130,7 +130,6 @@ export default function App() {
       allCampaigns.push(campaigndetails)
     }
 
-    console.log('allCampaigns', allCampaigns)
     setCampaignList(allCampaigns)
   }, [algohubClient])
 

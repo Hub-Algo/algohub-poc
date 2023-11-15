@@ -13,8 +13,8 @@ const Carousel = ({ images }: CarouselPropsInterface) => {
 
   const renderedThumbnails = images.map((image, index) => {
     return (
-      <a href={`#item${index}`}>
-        <div key={index} id={`item${index}`} className="">
+      <a key={index} href={`#item${index}`}>
+        <div id={`item${index}`} className="">
           <img src={image} className="w-16 h-16 rounded-md object-cover" />
         </div>
       </a>

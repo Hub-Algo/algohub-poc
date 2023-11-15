@@ -12,8 +12,14 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
     <div className="flex flex-col gap-5 text-lg md:text-xl">
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100 ">Project name:</h4>
-        <h3 className=" text-gray-100">{campaign?.metadata.record['company-registration-info'].registeredCompanyName}</h3>
+        <h3 className=" text-gray-100">{campaign?.metadata.record['product-overview'].productName}</h3>
       </div>
+
+      <div className="flex items-end gap-6">
+        <h4 className="font-bold text-gray-100 ">Token price:</h4>
+        <h3 className=" text-gray-100">{campaign?.metadata.record['fundraising-goal'].usdPricePerToken} USDC</h3>
+      </div>
+
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100">Asset id:</h4>
 
@@ -72,12 +78,47 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
         </ul>
       </div>
 
+      <div className="flex items-end gap-6">
+        <h4 className="font-bold text-gray-100">Have alredy raised funds:</h4>
+        <h3 className=" text-gray-100">{campaign?.metadata.record['product-documentation'].raisedFundsRange}</h3>
+      </div>
+
       <div className="flex items-end gap-6 text-gray-100">
         <a
           className="flex items-center gap-2 text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600"
           href={campaign?.metadata.record['product-documentation'].whitepaper}
         >
-          <h4 className="font-bold ">Whitepaper</h4>
+          <h4 className="font-bold ">Project Whitepaper</h4>
+          <FaLink />
+        </a>
+      </div>
+
+      <div className="flex items-end gap-6 text-gray-100">
+        <a
+          className="flex items-center gap-2 text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600"
+          href={campaign?.metadata.record['product-documentation'].roadmap}
+        >
+          <h4 className="font-bold ">Project Roadmap</h4>
+          <FaLink />
+        </a>
+      </div>
+
+      <div className="flex items-end gap-6 text-gray-100">
+        <a
+          className="flex items-center gap-2 text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600"
+          href={campaign?.metadata.record['product-documentation'].pitchDeck}
+        >
+          <h4 className="font-bold ">Project Pitch Deck</h4>
+          <FaLink />
+        </a>
+      </div>
+
+      <div className="flex items-end gap-6 text-gray-100">
+        <a
+          className="flex items-center gap-2 text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600"
+          href={campaign?.metadata.record['product-documentation'].tokenVestingSchedule}
+        >
+          <h4 className="font-bold ">Token Vesting Schedule</h4>
           <FaLink />
         </a>
       </div>

@@ -1,8 +1,8 @@
-import { BiDollarCircle, BiWallet } from 'react-icons/bi'
+import { BiDollarCircle } from 'react-icons/bi'
+import routes from '../core/routes'
 import HeroButton from './HeroButton'
 import { UserDataOutletInterface } from './NavBar'
 import Button from './common/button/Button'
-import routes from '../core/routes'
 
 const HeroSection = ({ userData }: UserDataOutletInterface) => {
   return (
@@ -33,13 +33,13 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
           <div className="flex flex-col justify-center items-center gap-6">
             <div className=" text-xl font-bold text-orange-500 border-b-2 border-t-2 border-transparent hover:border-orange-500 cursor-pointer transition-all py-2 flex items-center gap-2">
               {userData ? (
-                <div className="flex flex-col items-center justify-center">
+                <a className="flex flex-col items-center justify-center">
                   <p>{userData.username.toUpperCase()}</p>
                   <div className="flex">
                     <BiDollarCircle className="h-8" />
                     <p className="font-normal">{userData.usdc_balance} USDC</p>
                   </div>
-                </div>
+                </a>
               ) : null}
             </div>
             <a

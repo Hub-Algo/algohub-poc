@@ -9,7 +9,7 @@ const CategoryBadge = ({ marketCategory, size }: CategoryBadgePropsInterface) =>
       case 'consumer':
         return 'bg-yellow-500 text-gray-100'
       case 'defi':
-        return 'bg-teal-500 text-gray-100'
+        return 'bg-gulçin-pink text-gray-100'
       case 'gamefi':
         return 'bg-green-500 text-gray-100'
       case 'impact':
