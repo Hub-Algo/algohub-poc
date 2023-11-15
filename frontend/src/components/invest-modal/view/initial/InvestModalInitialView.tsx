@@ -1,9 +1,10 @@
 import { FormEvent } from 'react'
+import { convertFromBaseUnits } from '../../../../core/util/transaction/transactionUtils'
 import useAppContext from '../../../../core/util/useAppContext'
+import { AssetInfoInterface } from '../../../../interfaces/AssetInfoInterface'
+import { CampaignObj } from '../../../../services/campaignServices'
 import Button from '../../../common/button/Button'
 import Input from '../../../common/input/Input'
-import { CampaignObj } from '../../../../services/campaignServices'
-import { AssetInfoInterface } from '../../../../interfaces/AssetInfoInterface'
 
 interface InvestModalInitialViewProps {
   inputProps: {
@@ -39,7 +40,13 @@ function InvestModalInitialView({ inputProps, onInvestButtonClick, campaign, ido
       />
 
       <ul className="text-gray-100">
-        <li>{`Output token: ${outputToken}${idoAsa?.params['unit-name']}`} </li>
+        <li>
+          {`Available Investment: ${convertFromBaseUnits(
+            idoAsa?.params?.decimals || 0,
+            campaign.maxTotalInvestment - campaign.investedAmount,
+          )} ${idoAsa?.params['unit-name']}`}{' '}
+        </li>
+        <li>{`Output token: ${outputToken} ${idoAsa?.params['unit-name']}`} </li>
         <li>{`Fee: ${algoFee}`}</li>
       </ul>
 

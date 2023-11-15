@@ -1,5 +1,10 @@
+import { useEffect, useState } from 'react'
 import { generatePath, useNavigate } from 'react-router-dom'
 import routes from '../../../../core/routes'
+import { convertTimestampToDate } from '../../../../core/util/timeUtil'
+import { convertFromBaseUnits } from '../../../../core/util/transaction/transactionUtils'
+import { AssetInfoInterface } from '../../../../interfaces/AssetInfoInterface'
+import { assetServices } from '../../../../services/assetServices'
 import { CampaignObj } from '../../../../services/campaignServices'
 import CategoryBadge from '../../../CategoryBadge'
 import ProgressBar from '../../ProgressBar'
@@ -15,6 +20,18 @@ interface CardWithImageProps {
 
 function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
   const navigate = useNavigate()
+  const [investAssetInfo, setInvestAssetInfo] = useState<AssetInfoInterface>()
+
+  const fetchIdoAssetInfo = async (assetId: number) => {
+    const { asset } = await assetServices.getAssetInformation(assetId)
+    setInvestAssetInfo(asset)
+  }
+
+  useEffect(() => {
+    if (campaign) {
+      fetchIdoAssetInfo(campaign.investAsa)
+    }
+  }, [campaign])
 
   return (
     <div
@@ -32,15 +49,20 @@ function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
         </div>
         <div className="flex items-center">
           <p className="text-lg font-bold ">Goal:</p>
-          <h3>{campaign.metadata.record.fundraisingGoal?.maxAmount} USDC</h3>
+          <h3>
+            {convertFromBaseUnits(investAssetInfo?.params.decimals || 0, campaign.maxInvestmentPerAccount).toLocaleString('en-US')}{' '}
+            {investAssetInfo?.params['unit-name']}
+          </h3>
         </div>
-        <ProgressBar hard_goal={campaign.maxTotalInvestment} invested_amount={campaign.investedAmount} />
+        <ProgressBar hard_goal={campaign.maxTotalInvestment} asset_info={investAssetInfo} invested_amount={campaign.investedAmount} />
         <div className={'bg-gray-950 p-2 rounded-md '}>
           <div className={'flex gap-4 w-max'}>
-            <p>{'Start date'}</p> <p>{campaign.startTime}</p>
+            <p>{'Start date'}</p> <p>{convertTimestampToDate(campaign.startTime)}</p>
           </div>
 
-          <div className={'flex gap-4 w-max '}>{/* <p>{'End date'}</p> <p>{formatCreationDate(campaign.)}</p> */}</div>
+          <div className={'flex gap-4 w-max '}>
+            <p>{'End date'}</p> <p>{convertTimestampToDate(campaign.endTime)}</p>
+          </div>
         </div>
         <Button
           buttonColor={'orange'}
