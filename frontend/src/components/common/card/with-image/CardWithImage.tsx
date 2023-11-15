@@ -27,8 +27,8 @@ function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
       <div className="card-body bg-gray-800 px-3 py-3 rounded-t-none rounded-md text-gray-100">
         {' '}
         <div className="flex justify-between items-center">
-          <h2 className={'card-title '}>{campaign.metadata.record.companyRegistrationInfo?.registeredCompanyName}</h2>
-          <CategoryBadge size="md" marketCategory={campaign.metadata.record.productOverview?.marketType} />
+          <h2 className={'card-title '}>{campaign?.metadata.record['company-registration-info'].registeredCompanyName}</h2>
+          <CategoryBadge size="md" marketCategory={campaign?.metadata.record['product-overview'].marketType} />
         </div>
         <div className="flex items-center">
           <p className="text-lg font-bold ">Goal:</p>

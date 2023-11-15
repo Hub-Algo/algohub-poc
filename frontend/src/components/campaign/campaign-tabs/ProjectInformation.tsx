@@ -12,7 +12,7 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
     <div className="flex flex-col gap-5 text-lg md:text-xl">
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100 ">Project name:</h4>
-        <h3 className=" text-gray-100">{campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName}</h3>
+        <h3 className=" text-gray-100">{campaign?.metadata.record['company-registration-info'].registeredCompanyName}</h3>
       </div>
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100">Asset id:</h4>
@@ -36,25 +36,25 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100">Founder:</h4>
         <h3 className=" text-gray-100">
-          {campaign?.metadata?.record?.contactInfo?.name} {campaign?.metadata?.record?.contactInfo?.surname} -{' '}
-          {campaign?.metadata?.record?.contactInfo?.role}
+          {campaign?.metadata.record['contact-info'].name} {campaign?.metadata.record['contact-info'].surname} -{' '}
+          {campaign?.metadata.record['contact-info'].role.toUpperCase()}
         </h3>
       </div>
 
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100">Country:</h4>
-        <h3 className=" text-gray-100">{campaign?.metadata?.record?.companyRegistrationInfo?.countryOfRegistration}</h3>
+        <h3 className=" text-gray-100">{campaign?.metadata.record['company-registration-info'].countryOfRegistration}</h3>
       </div>
 
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100">Number of employees:</h4>
-        <h3 className=" text-gray-100">{campaign?.metadata?.record?.teamInfo?.employeeNumber}</h3>
+        <h3 className=" text-gray-100">{campaign?.metadata.record['team-info'].employeeNumber}</h3>
       </div>
 
       <div className="flex items-center gap-6">
         <h4 className="font-bold text-gray-100">Project socials:</h4>
         <ul className="text-gray-100 flex gap-4">
-          <a href={campaign?.metadata?.record?.productOverview?.discordServer}>
+          <a href={campaign?.metadata.record['product-overview'].discordServer}>
             <li className="hover:text-blue-500 hover:border-blue-600 border-b border-blue-500 pb-1">
               <FaDiscord />
             </li>
@@ -64,12 +64,7 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
               <FaSquareXTwitter />
             </li>
           </a>
-          <a href={campaign?.metadata?.record?.productOverview?.telegram}>
-            <li className="hover:text-blue-500 hover:border-blue-600 border-b border-blue-500 pb-1">
-              <FaTelegram />
-            </li>
-          </a>
-          <a href={campaign?.metadata?.record?.productOverview?.github}>
+          <a href={campaign?.metadata.record['product-overview'].github}>
             <li className="hover:text-blue-500 hover:border-blue-600 border-b border-blue-500 pb-1">
               <FaGithub />
             </li>
@@ -80,7 +75,7 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
       <div className="flex items-end gap-6 text-gray-100">
         <a
           className="flex items-center gap-2 text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600"
-          href={`https://testnet.algoexplorer.io/address/${assetInfo?.params.creator}`}
+          href={campaign?.metadata.record['product-documentation'].whitepaper}
         >
           <h4 className="font-bold ">Whitepaper</h4>
           <FaLink />

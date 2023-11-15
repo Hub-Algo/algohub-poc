@@ -2,6 +2,7 @@ import { convertFromBaseUnits } from '../../../core/util/transaction/transaction
 import { AssetInfoInterface } from '../../../interfaces/AssetInfoInterface'
 import { CampaignObj } from '../../../services/campaignServices'
 import CategoryBadge from '../../CategoryBadge'
+import ProgressBar from '../../common/ProgressBar'
 
 interface CampaignDetailsDashboardPropsInterface {
   children: React.ReactNode
@@ -15,13 +16,15 @@ const CampaignDetailsDashboard = ({ children, campaign, investAssetInfo }: Campa
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl md:text-5xl font-bold  text-gray-100">
-            {campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName}
+            {campaign?.metadata.record['company-registration-info'].registeredCompanyName}
           </h2>
-          <CategoryBadge marketCategory={campaign?.metadata?.record?.productOverview?.marketType} size="lg" />
+
+          <CategoryBadge marketCategory={campaign?.metadata.record['product-overview'].marketType} size="lg" />
         </div>
+        <ProgressBar hard_goal={campaign.maxTotalInvestment} invested_amount={campaign.investedAmount} />
         <div>
           <p className="text-sm md:text-lg text-gray-400">
-            {campaign?.maxTotalInvestment > campaign?.minTotalInvestment ? 'Streach' : 'Fundraise'} goal
+            {campaign?.maxTotalInvestment > campaign?.minTotalInvestment ? 'Stretch' : 'Fundraise'} goal
           </p>
           <h2 className="text-xl md:text-4xl font-bold  text-gray-100 ">
             {convertFromBaseUnits(investAssetInfo?.params.decimals || 0, campaign?.maxTotalInvestment)}{' '}
@@ -50,7 +53,7 @@ const CampaignDetailsDashboard = ({ children, campaign, investAssetInfo }: Campa
 
       {children}
 
-      <a className="btn" href={campaign?.metadata?.record?.productOverview?.website} target="_blank" rel="noopener noreferrer">
+      <a className="btn" href={campaign?.metadata.record['product-overview'].website} target="_blank" rel="noopener noreferrer">
         {'Visit project Website'}
       </a>
     </div>
