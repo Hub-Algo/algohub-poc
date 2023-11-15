@@ -45,8 +45,8 @@ function CampaignTransactionsButtonGroup({
   } as AppDetails
 
   const campaignClient = new CampaignClient(appDetails, algod.client)
-  const hasUserOptedInToIdoAsa = userData?.user_assets.some((asset) => asset['asset-id'] === idoAsaId)
-  const hasUserOptedInToInvestAsa = userData?.user_assets.some((asset) => asset['asset-id'] === USDC_ASSET.id)
+  const hasUserOptedInToIdoAsa = userData?.user_assets?.some((asset) => asset['asset-id'] === idoAsaId)
+  const hasUserOptedInToInvestAsa = userData?.user_assets?.some((asset) => asset['asset-id'] === USDC_ASSET.id)
 
   return !activeAccount ? <WalletConnectModal buttonLabel="Connect to vote" /> : renderContent()
 
