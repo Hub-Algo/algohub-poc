@@ -1,19 +1,18 @@
+import { useWallet } from '@txnlab/use-wallet'
+import { useEffect, useState } from 'react'
 import { useOutletContext, useParams } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
+import CampaignDetailsDashboard from '../components/campaign/campaign-details/CampaignDetailsDashboard'
+import ProjectInformation from '../components/campaign/campaign-tabs/ProjectInformation'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import Carousel from '../components/common/carousel/Carousel'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
-import { CampaignInterface } from '../interfaces/campaign-interface'
-import InvestModal from '../components/invest-modal/InvestModal'
 import WalletConnectModal from '../components/common/wallet-connect-modal/WalletConnectModal'
-import { useWallet } from '@txnlab/use-wallet'
-import CampaignDetailsDashboard from '../components/campaign/campaign-details/CampaignDetailsDashboard'
-import { AssetServices } from '../services/assetServices'
-import { useEffect, useState } from 'react'
-import { ellipseAddress } from '../core/util/wallet/ellipseAddress'
+import InvestModal from '../components/invest-modal/InvestModal'
 import { AssetInfoInterface } from '../interfaces/AssetInfoInterface'
-import ProjectInformation from '../components/campaign/campaign-tabs/ProjectInformation'
+import { AssetServices } from '../services/assetServices'
+import { CampaignObj } from '../services/campaignServices'
 
 const images = [
   'https://pbs.twimg.com/profile_banners/1429713964288471040/1661936165/1500x500',
@@ -23,7 +22,7 @@ const images = [
 ]
 
 export interface CampaignOutletInterface {
-  campaignList: CampaignInterface[]
+  campaignList: CampaignObj[]
 }
 
 const CampaignDetails = () => {
@@ -50,10 +49,10 @@ const CampaignDetails = () => {
 
   const assetServices = new AssetServices()
 
-  const campaign = campaignList.filter((campaign) => campaign.metadata.id === campaignId)[0]
+  const campaign = campaignList.filter((campaign) => campaign.appId === campaignId)[0]
 
   const fetchAssetInfo = async () => {
-    const { asset } = await assetServices.getAssetInformation(campaign.record.productDocumentation.assetId)
+    const { asset } = await assetServices.getAssetInformation(campaign?.metadata?.record?.productDocumentation?.assetId)
     setAssetInfo(asset)
   }
 
@@ -63,7 +62,7 @@ const CampaignDetails = () => {
 
   return (
     <PageContainer>
-      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.record.companyRegistrationInfo.registeredCompanyName}`]} />
+      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.metadata.record.companyRegistrationInfo.registeredCompanyName}`]} />
       <section>
         <div className="flex gap-5 items-center">
           <div className="w-20 h-20 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">
@@ -74,7 +73,9 @@ const CampaignDetails = () => {
             />
           </div>
           <div>
-            <h2 className="font-bold text-6xl text-gray-100 ">{campaign?.record.companyRegistrationInfo.registeredCompanyName}</h2>
+            <h2 className="font-bold text-6xl text-gray-100 ">
+              {campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName}
+            </h2>
             <h3 className="text-gray-100 text-xl ">Developing the future for everyone</h3>
           </div>
         </div>

@@ -4,7 +4,6 @@ import CampaignList from '../components/campaign/list/CampaignList'
 // import { filterCampaignsByStatus } from '../services/campaignServices'
 import { CampaignOutletInterface } from './CampaignDetails'
 import { UserDataOutletInterface } from './Profile'
-import AllCampaigns from './AllCampaigns'
 
 export default function Home() {
   const { campaignList } = useOutletContext() as CampaignOutletInterface
