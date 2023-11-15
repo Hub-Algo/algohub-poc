@@ -1,4 +1,4 @@
-import { FaDiscord, FaGithub, FaLink, FaSquareXTwitter, FaTelegram } from 'react-icons/fa6'
+import { FaDiscord, FaGithub, FaLink, FaSquareXTwitter } from 'react-icons/fa6'
 import { ellipseAddress } from '../../../core/util/wallet/ellipseAddress'
 import { AssetInfoInterface } from '../../../interfaces/AssetInfoInterface'
 import { CampaignObj } from '../../../services/campaignServices'

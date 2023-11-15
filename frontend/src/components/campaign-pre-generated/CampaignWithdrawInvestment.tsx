@@ -2,6 +2,7 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import Button from '../common/button/Button'
 
 /* Example usage
 <CampaignWithdrawInvestment
@@ -16,10 +17,10 @@ type CampaignWithdrawInvestmentArgs = Campaign['methods']['withdrawInvestment(as
 
 type Props = {
   buttonClass: string
-  buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
   investmentAsa: CampaignWithdrawInvestmentArgs['investmentAsa']
+  isDisabled?: boolean
 }
 
 const CampaignWithdrawInvestment = (props: Props) => {
@@ -40,9 +41,9 @@ const CampaignWithdrawInvestment = (props: Props) => {
   }
 
   return (
-    <button className={props.buttonClass} onClick={callMethod}>
-      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
-    </button>
+    <Button customClassName={props.buttonClass} onClick={callMethod} shouldDisplaySpinner={loading} isDisabled={props.isDisabled}>
+      {props.buttonNode}
+    </Button>
   )
 }
 

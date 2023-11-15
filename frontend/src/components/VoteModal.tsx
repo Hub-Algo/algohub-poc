@@ -3,9 +3,8 @@ import Modal from './common/modal/Modal'
 import Button from './common/button/Button'
 import classNames from 'classnames'
 
-function VoteModal() {
+function VoteModal({ hasVotedAlready }: { hasVotedAlready: boolean }) {
   const votingPower = 2
-  const hasVotedAlready = false
 
   const [state, setState] = useState<'initial' | 'success' | 'error'>('initial')
   const [vote, setVote] = useState<'YES' | 'NO'>()

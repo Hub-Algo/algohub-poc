@@ -69,3 +69,16 @@ export interface CampaignInterface {
   record: Records
   metadata: Metadata
 }
+
+export enum CampaignClientStatus {
+  Vote = 'vote',
+  Hypelist = 'hypelist',
+  Whitelist = 'whitelist',
+  Claim = 'claim',
+  WithdrawInvestment = 'withdraw-investment',
+}
+
+export enum CampaignOwnerStatus {
+  ClaimSales = 'claim-sales',
+  WithdrawIdoAsa = 'withdraw-ido-asa',
+}

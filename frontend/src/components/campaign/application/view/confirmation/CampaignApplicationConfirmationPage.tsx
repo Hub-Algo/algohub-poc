@@ -1,8 +1,7 @@
 import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
 import { useState } from 'react'
-import { USDC_ASSET } from '../../../../../core/util/asset/AssetConstants'
+import { USDC_ASSET } from '../../../../../core/util/asset/assetConstants'
 import { filterTruthyObjectValues } from '../../../../../core/util/object/objectUtils'
-import { convertToBaseUnits } from '../../../../../core/util/transaction/transactionUtils'
 import useAppContext from '../../../../../core/util/useAppContext'
 import {
   useCampaignApplicationDispatchContext,
@@ -34,12 +33,15 @@ function CampaignApplicationConfirmationPage() {
       {state?.algohubClient && Object.keys(filterTruthyObjectValues(formData)).length === 6 && (
         <AlgohubCreateCampaign
           typedClient={state?.algohubClient}
-          votersAsa={478560182}
           metadata={formData as CampaignApplicationData}
           conversionRate={Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken) ?? 0}
           maxInvestmentPerAccount={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
           minTotalInvestment={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
-          maxTotalInvestment={convertToBaseUnits(6, formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ?? 0)}
+          maxTotalInvestment={
+            formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ??
+            formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ??
+            0
+          }
           duration={86400} // 1 day
           idoAsa={formData[CampaignApplicationFormView.ProductDocumentation]?.assetId ?? 0}
           investmentAsa={USDC_ASSET.id} // TODO: Set USDC mainnet id

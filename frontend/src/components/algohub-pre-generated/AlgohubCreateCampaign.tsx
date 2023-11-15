@@ -34,7 +34,6 @@ type Props = {
   children: ReactNode
   typedClient: AlgohubClient
   metadata: CampaignApplicationData
-  votersAsa: AlgohubCreateCampaignArgs['votersAsa']
   idoAsa: AlgohubCreateCampaignArgs['idoAsa']
   investmentAsa: AlgohubCreateCampaignArgs['investmentAsa']
   conversionRate: AlgohubCreateCampaignArgs['conversionRate']
@@ -58,10 +57,13 @@ const AlgohubCreateCampaign = (props: Props) => {
     setLoading(true)
     console.log(`Calling createCampaign`)
     const metadataResp = await metadataSrvc.uploadMetadata(props.metadata)
+
+    const state = await props.typedClient.appClient.getGlobalState()
+
     await props.typedClient
       .createCampaign(
         {
-          votersAsa: props.votersAsa,
+          votersAsa: Number(state.votersAsaId.value),
           idoAsa: props.idoAsa,
           investmentAsa: props.investmentAsa,
           conversionRate: props.conversionRate,

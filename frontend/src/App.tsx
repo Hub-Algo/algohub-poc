@@ -13,7 +13,6 @@ import NavBar from './components/NavBar'
 import { AlgohubClient } from './contracts/AlgohubClient'
 import algod from './core/algosdk/AlgodManager'
 import ROUTES from './core/routes'
-import { USDC_ASSET } from './core/util/asset/AssetConstants'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
@@ -26,12 +25,14 @@ import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 import { CampaignObj, fetchAllCampaignIds, fetchCampaignDetails } from './services/campaignServices'
 import { userService } from './services/userServices'
+import { USDC_ASSET } from './core/util/asset/assetConstants'
 
 export interface AppState {
   activeAccount?: Account | null
   campaignList: CampaignObj[]
   userData?: UserInterface
   algohubClient: AlgohubClient | undefined
+  fetchAndAppendUserData: (walletAddress: string) => Promise<void>
 }
 
 export default function App() {
@@ -149,6 +150,7 @@ export default function App() {
     }
 
     setAlgohubClient(activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeAccount, activeAddress, connectedAccounts, fetchAndAppendUserData])
 
   useEffect(() => {
@@ -170,7 +172,7 @@ export default function App() {
       element: (
         <>
           <NavBar userData={userData} resetUserData={resetUserData} providerId={activeAccount?.providerId} />
-          <Outlet context={{ activeAccount, campaignList, userData, algohubClient } satisfies AppState} />
+          <Outlet context={{ activeAccount, campaignList, userData, algohubClient, fetchAndAppendUserData } satisfies AppState} />
           <Footer />
         </>
       ),

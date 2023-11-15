@@ -36,6 +36,7 @@ function Profile() {
           <ProfileStatsWidget username={userData?.username} usdc_balance={userData?.usdc_balance} algo_balance={userData?.algo_balance} />
         </div>
       </PageContainer>
+
       <Tab items={tabItems}>
         <div className="h-96 flex items-center justify-center">
           <p className="text-3xl text-gray-300">Comming soon</p>
