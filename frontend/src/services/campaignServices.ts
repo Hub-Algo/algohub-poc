@@ -82,7 +82,7 @@ const fetchAllCampaigns = async () => {
 
 const filterCampaignByCategory = (campaigns: CampaignObj[], category: string) => {
   if (category) {
-    const filteredCampaigns = campaigns.filter((campaign) => campaign.metadata.record.productOverview.marketType === category)
+    const filteredCampaigns = campaigns.filter((campaign) => campaign.metadata.record['product-overview'].marketType === category)
     return filteredCampaigns
   }
 
