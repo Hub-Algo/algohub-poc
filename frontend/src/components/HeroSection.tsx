@@ -10,13 +10,13 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
       <div className="grid grid-cols-1 md:grid-cols-2 h-full">
         <div className="rounded-md flex flex-col items-center justify-center ">
           <div className="flex flex-col items-center text-center md:text-start md:items-start">
-            <div className="flex">
-              <img className="h-14" src="/images/algohub_logo_light.png" alt="" />
-              <p className="text-6xl  font-bold text-gray-100">ALGOHUB</p>
+            <div className="flex items-center">
+              <h3 className="text-5xl text-gray-100">ALGO</h3>
+              <img className="h-16" src="/images/algohub_logo_light.png" alt="" />
+              <h3 className="text-5xl text-gray-100">HUB</h3>
             </div>
             <p className=" text-xl font-normal text-gray-400 w-96 flex flex-col md:text-left">
-              <span>{'Powerful Projects. Vetted Quality.'}</span>
-              <span>{'Investment, beyond funds.'}</span>
+              <span>{'The Home of Algorand Projects.'}</span>
             </p>
             <div className="flex w-full justify-around md:hidden mt-6 items-center">
               <Button buttonColor="orange">
