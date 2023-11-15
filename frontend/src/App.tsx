@@ -13,6 +13,7 @@ import NavBar from './components/NavBar'
 import { AlgohubClient } from './contracts/AlgohubClient'
 import algod from './core/algosdk/AlgodManager'
 import ROUTES from './core/routes'
+import { USDC_ASSET } from './core/util/asset/AssetConstants'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
@@ -25,7 +26,6 @@ import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 import { CampaignObj, fetchAllCampaignIds, fetchCampaignDetails } from './services/campaignServices'
 import { userService } from './services/userServices'
-import { USDC_ASSET } from './core/util/asset/assetConstants'
 
 export interface AppState {
   activeAccount?: Account | null
