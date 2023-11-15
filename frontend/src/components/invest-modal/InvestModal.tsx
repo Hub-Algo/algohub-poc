@@ -4,7 +4,7 @@ import algosdk, { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algo
 import { FormEvent, Fragment, useEffect, useState } from 'react'
 import { CampaignClient } from '../../contracts/CampaignClient'
 import algod from '../../core/algosdk/AlgodManager'
-import { USDC_ASSET } from '../../core/util/asset/assetConstants'
+import { USDC_ASSET } from '../../core/util/asset/usdcConstants'
 import { convertToBaseUnits } from '../../core/util/transaction/transactionUtils'
 import useAppContext from '../../core/util/useAppContext'
 import { AssetInfoInterface } from '../../interfaces/AssetInfoInterface'

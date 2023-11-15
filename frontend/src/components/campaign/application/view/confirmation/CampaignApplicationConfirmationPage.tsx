@@ -1,6 +1,6 @@
 import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
 import { useState } from 'react'
-import { USDC_ASSET } from '../../../../../core/util/asset/assetConstants'
+import { USDC_ASSET } from '../../../../../core/util/asset/usdcConstants'
 import { filterTruthyObjectValues } from '../../../../../core/util/object/objectUtils'
 import useAppContext from '../../../../../core/util/useAppContext'
 import {
