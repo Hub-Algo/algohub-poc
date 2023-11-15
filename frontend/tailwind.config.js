@@ -2,7 +2,7 @@
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    fontFamily: { oswald: ['Kanit'] },
+    fontFamily: {sans:['Kanit'], oswald: ['Kanit'] },
     extend: {
       colors: {
         'onramp-green': '#a0dd1d',

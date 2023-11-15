@@ -9,7 +9,7 @@ interface CampaignDetailsDashboardPropsInterface {
 
 const CampaignDetailsDashboard = ({ children, campaign }: CampaignDetailsDashboardPropsInterface) => {
   return (
-    <div className="w-full bg-gray-950 rounded-md p-6 gap-6 flex flex-col col-span-4">
+    <div className="w-full  bg-gradient-to-b from-black via-gray-950 to-gray-950 rounded-md p-6 gap-6 flex flex-col col-span-4 font-oswald">
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl md:text-5xl font-bold font-oswald text-gray-100">
@@ -37,7 +37,7 @@ const CampaignDetailsDashboard = ({ children, campaign }: CampaignDetailsDashboa
       {children}
 
       <a className="btn" href={campaign.record.productOverview.website} target="_blank" rel="noopener noreferrer">
-        {'Website'}
+        {'Visit project Website'}
       </a>
     </div>
   )
