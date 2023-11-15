@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
-import { useWallet } from '@txnlab/use-wallet'
-import { ReactNode, useState } from 'react'
-import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
-import Button from '../common/button/Button'
-import Toast from '../common/toast/Toast'
-import algod from '../../core/algosdk/AlgodManager'
+import { microAlgos } from '@algorandfoundation/algokit-utils'
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
+import { useWallet } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
-import { microAlgos } from '@algorandfoundation/algokit-utils'
+import { ReactNode, useState } from 'react'
+import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
+import algod from '../../core/algosdk/AlgodManager'
+import Button from '../common/button/Button'
+import Toast from '../common/toast/Toast'
 
 /* Example usage
 <CampaignClaim
@@ -61,7 +61,7 @@ const CampaignClaim = (props: Props) => {
             },
             boxes: [
               new Uint8Array(Buffer.concat([Buffer.from('c'), algosdk.decodeAddress(activeAddress).publicKey])),
-              new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(activeAddress).publicKey])),
+              new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(activeAddress).publicKey])),
             ],
           },
         )

@@ -504,7 +504,7 @@ describe('Algohub App', () => {
       },
       {
         sender: sender1,
-        boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey]))],
+        boxes: [new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey]))],
       }
     );
     const usdcBalanceAfter = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa.index)).do();
@@ -538,7 +538,7 @@ describe('Algohub App', () => {
           boxes: [
             {
               appIndex: 0,
-              name: new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey])),
+              name: new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey])),
             },
           ],
         }
@@ -549,7 +549,7 @@ describe('Algohub App', () => {
   test('Campaign Contract - claim()', async () => {
     const claimAmount = await campaignContract.getAccountTotalPurchases(
       { account: sender1.addr },
-      { boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey]))] }
+      { boxes: [new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey]))] }
     );
     const idoTokensTobeClaimed = (Number(claimAmount.return!) * 100) / campaign.conversionRate; // * 0.25;
     const idoBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(idoAsa.index)).do();
@@ -563,7 +563,7 @@ describe('Algohub App', () => {
         // apps: [algohubAppId],
         boxes: [
           new Uint8Array(Buffer.concat([Buffer.from('c'), algosdk.decodeAddress(sender1.addr).publicKey])),
-          new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey])),
+          new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey])),
         ],
       }
     );
@@ -627,7 +627,7 @@ describe('Algohub App', () => {
       campaignContract.withdrawInvestment(
         { investmentAsa: usdcAsa.index },
         {
-          boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(sender1.addr).publicKey]))],
+          boxes: [new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey]))],
         }
       )
     ).rejects.toThrow();

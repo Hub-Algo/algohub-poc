@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
+import { microAlgos } from '@algorandfoundation/algokit-utils'
 import { useWallet } from '@txnlab/use-wallet'
+import algosdk from 'algosdk'
 import { ReactNode, useState } from 'react'
 import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 import Button from '../common/button/Button'
-import algosdk from 'algosdk'
 import Toast from '../common/toast/Toast'
-import { microAlgos } from '@algorandfoundation/algokit-utils'
 
 /* Example usage
 <CampaignWithdrawInvestment
@@ -46,7 +46,7 @@ const CampaignWithdrawInvestment = (props: Props) => {
             sendParams: {
               fee: microAlgos(3_000),
             },
-            boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(activeAddress).publicKey]))],
+            boxes: [new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(activeAddress).publicKey]))],
           },
         )
         .then(() => {

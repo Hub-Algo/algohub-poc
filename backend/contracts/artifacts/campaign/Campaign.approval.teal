@@ -39,31 +39,31 @@ abi_route_createApplication:
 createApplication:
 	proto 1 0
 
-	// contracts/campaign/campaign.algo.ts:57
+	// contracts/campaign/campaign.algo.ts:59
 	// this.algohub.value = algohubApp
 	byte 0x616c676f687562 // "algohub"
 	frame_dig -1 // algohubApp: application
 	app_global_put
 
-	// contracts/campaign/campaign.algo.ts:58
+	// contracts/campaign/campaign.algo.ts:60
 	// this.votersAsaId.value = Asset.zeroIndex
 	byte 0x766f746572734173614964 // "votersAsaId"
 	int 0
 	app_global_put
 
-	// contracts/campaign/campaign.algo.ts:59
+	// contracts/campaign/campaign.algo.ts:61
 	// this.idoAsaId.value = Asset.zeroIndex
 	byte 0x69646f4173614964 // "idoAsaId"
 	int 0
 	app_global_put
 
-	// contracts/campaign/campaign.algo.ts:60
+	// contracts/campaign/campaign.algo.ts:62
 	// this.investmentAsaId.value = Asset.zeroIndex
 	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
 	int 0
 	app_global_put
 
-	// contracts/campaign/campaign.algo.ts:61
+	// contracts/campaign/campaign.algo.ts:63
 	// this.isApprovedCampaign.value = false
 	byte 0x6973417070726f76656443616d706169676e // "isApprovedCampaign"
 	int 0
@@ -80,7 +80,7 @@ createApplication:
 expandOpcodeBugdet:
 	proto 0 0
 
-	// contracts/campaign/campaign.algo.ts:68
+	// contracts/campaign/campaign.algo.ts:70
 	// sendMethodCall<[], void>({
 	//       applicationID: this.algohub.value,
 	//       name: 'expandOpcodeBudget',
@@ -91,7 +91,7 @@ expandOpcodeBugdet:
 	method "expandOpcodeBudget()void"
 	itxn_field ApplicationArgs
 
-	// contracts/campaign/campaign.algo.ts:69
+	// contracts/campaign/campaign.algo.ts:71
 	// applicationID: this.algohub.value
 	byte 0x616c676f687562 // "algohub"
 	app_global_get
@@ -109,7 +109,7 @@ isApproved:
 	proto 0 1
 
 	// if0_condition
-	// contracts/campaign/campaign.algo.ts:75
+	// contracts/campaign/campaign.algo.ts:77
 	// !this.isApprovedCampaign.value
 	byte 0x6973417070726f76656443616d706169676e // "isApprovedCampaign"
 	app_global_get
@@ -119,13 +119,13 @@ isApproved:
 	bz if0_end
 
 	// if0_consequent
-	// contracts/campaign/campaign.algo.ts:77
+	// contracts/campaign/campaign.algo.ts:79
 	// return true;
 	int 1
 	retsub
 
 if0_end:
-	// contracts/campaign/campaign.algo.ts:79
+	// contracts/campaign/campaign.algo.ts:81
 	// return this.isApprovedCampaign.value;
 	byte 0x6973417070726f76656443616d706169676e // "isApprovedCampaign"
 	app_global_get
@@ -136,7 +136,7 @@ if0_end:
 isHypelisted:
 	proto 1 1
 
-	// contracts/campaign/campaign.algo.ts:85
+	// contracts/campaign/campaign.algo.ts:87
 	// return true;
 	int 1
 	retsub
@@ -144,7 +144,7 @@ isHypelisted:
 optInToAsa:
 	proto 1 0
 
-	// contracts/campaign/campaign.algo.ts:89
+	// contracts/campaign/campaign.algo.ts:91
 	// sendAssetTransfer({
 	//       assetReceiver: this.app.address,
 	//       xferAsset: asaToOptIn,
@@ -154,17 +154,17 @@ optInToAsa:
 	int axfer
 	itxn_field TypeEnum
 
-	// contracts/campaign/campaign.algo.ts:90
+	// contracts/campaign/campaign.algo.ts:92
 	// assetReceiver: this.app.address
 	global CurrentApplicationAddress
 	itxn_field AssetReceiver
 
-	// contracts/campaign/campaign.algo.ts:91
+	// contracts/campaign/campaign.algo.ts:93
 	// xferAsset: asaToOptIn
 	frame_dig -1 // asaToOptIn: asset
 	itxn_field XferAsset
 
-	// contracts/campaign/campaign.algo.ts:92
+	// contracts/campaign/campaign.algo.ts:94
 	// assetAmount: 0
 	int 0
 	itxn_field AssetAmount
@@ -181,7 +181,7 @@ convertToAsaAmount:
 	proto 2 1
 
 	// if1_condition
-	// contracts/campaign/campaign.algo.ts:97
+	// contracts/campaign/campaign.algo.ts:99
 	// asaToCovertTo === this.investmentAsaId.value
 	frame_dig -2 // asaToCovertTo: asset
 	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
@@ -190,7 +190,7 @@ convertToAsaAmount:
 	bz if1_end
 
 	// if1_consequent
-	// contracts/campaign/campaign.algo.ts:97
+	// contracts/campaign/campaign.algo.ts:99
 	// return purchaseAmount / this.campaign.value.conversionRate;
 	frame_dig -1 // purchaseAmount: uint64
 	byte 0x63616d706169676e // "campaign"
@@ -204,7 +204,7 @@ convertToAsaAmount:
 
 if1_end:
 	// if2_condition
-	// contracts/campaign/campaign.algo.ts:98
+	// contracts/campaign/campaign.algo.ts:100
 	// asaToCovertTo === this.idoAsaId.value
 	frame_dig -2 // asaToCovertTo: asset
 	byte 0x69646f4173614964 // "idoAsaId"
@@ -213,7 +213,7 @@ if1_end:
 	bz if2_end
 
 	// if2_consequent
-	// contracts/campaign/campaign.algo.ts:98
+	// contracts/campaign/campaign.algo.ts:100
 	// return purchaseAmount * this.campaign.value.conversionRate;
 	frame_dig -1 // purchaseAmount: uint64
 	byte 0x63616d706169676e // "campaign"
@@ -226,7 +226,7 @@ if1_end:
 	retsub
 
 if2_end:
-	// contracts/campaign/campaign.algo.ts:99
+	// contracts/campaign/campaign.algo.ts:101
 	// return 0;
 	int 0
 	retsub
@@ -289,7 +289,7 @@ abi_route_createCampaign:
 createCampaign:
 	proto 11 0
 
-	// contracts/campaign/campaign.algo.ts:115
+	// contracts/campaign/campaign.algo.ts:117
 	// assert(!this.campaign.exists)
 	txna Applications 0
 	byte 0x63616d706169676e // "campaign"
@@ -299,45 +299,42 @@ createCampaign:
 	!
 	assert
 
-	// contracts/campaign/campaign.algo.ts:116
+	// contracts/campaign/campaign.algo.ts:118
 	// this.admin.value = adminAccount
 	byte 0x61646d696e // "admin"
 	frame_dig -1 // adminAccount: account
 	app_global_put
 
-	// contracts/campaign/campaign.algo.ts:118
+	// contracts/campaign/campaign.algo.ts:120
 	// this.votersAsaId.value = votersAsa
 	byte 0x766f746572734173614964 // "votersAsaId"
 	frame_dig -2 // votersAsa: asset
 	app_global_put
 
-	// contracts/campaign/campaign.algo.ts:119
+	// contracts/campaign/campaign.algo.ts:121
 	// this.idoAsaId.value = idoAsa
 	byte 0x69646f4173614964 // "idoAsaId"
 	frame_dig -3 // idoAsa: asset
 	app_global_put
 
-	// contracts/campaign/campaign.algo.ts:120
+	// contracts/campaign/campaign.algo.ts:122
 	// this.investmentAsaId.value = investmentAsa
 	byte 0x696e766573746d656e744173614964 // "investmentAsaId"
 	frame_dig -4 // investmentAsa: asset
 	app_global_put
 
-	// contracts/campaign/campaign.algo.ts:121
+	// contracts/campaign/campaign.algo.ts:123
 	// this.optInToAsa(idoAsa)
 	frame_dig -3 // idoAsa: asset
 	callsub optInToAsa
 
-	// contracts/campaign/campaign.algo.ts:122
+	// contracts/campaign/campaign.algo.ts:124
 	// this.optInToAsa(investmentAsa)
 	frame_dig -4 // investmentAsa: asset
 	callsub optInToAsa
 
-	// contracts/campaign/campaign.algo.ts:124
+	// contracts/campaign/campaign.algo.ts:126
 	// this.campaign.value = {
-	//       // TODO: deal with decimals - 2.00 --> 200 // 0.50 --> 50
-	//       // invest 100$ at a conversion rate of 0.50$ I should get 200 IDOs
-	//       // 100 / (50 / 100) = 200
 	//       conversionRate: conversionRate,
 	//       maxInvestmentPerAccount: maxInvestmentPerAccount * 10 ** investmentAsa.decimals,
 	//       minTotalInvestment: minTotalInvestment * 10 ** investmentAsa.decimals,
@@ -429,7 +426,7 @@ abi_route_setVestingSchedule:
 setVestingSchedule:
 	proto 2 0
 
-	// contracts/campaign/campaign.algo.ts:141
+	// contracts/campaign/campaign.algo.ts:140
 	// assert(!this.campaign.exists)
 	txna Applications 0
 	byte 0x63616d706169676e // "campaign"
@@ -439,7 +436,7 @@ setVestingSchedule:
 	!
 	assert
 
-	// contracts/campaign/campaign.algo.ts:142
+	// contracts/campaign/campaign.algo.ts:141
 	// assert(vestingDurations.length === vestingPercentages.length)
 	frame_dig -2 // vestingDurations: uint64[]
 	len
@@ -452,7 +449,7 @@ setVestingSchedule:
 	==
 	assert
 
-	// contracts/campaign/campaign.algo.ts:143
+	// contracts/campaign/campaign.algo.ts:142
 	// this.vestingSchedule.value = {
 	//       vestingPeriods: vestingDurations.length,
 	//       percentages: vestingPercentages,
@@ -522,7 +519,7 @@ abi_route_depositIdoAsa:
 depositIdoAsa:
 	proto 3 0
 
-	// contracts/campaign/campaign.algo.ts:153
+	// contracts/campaign/campaign.algo.ts:152
 	// assert(this.campaign.exists)
 	txna Applications 0
 	byte 0x63616d706169676e // "campaign"
@@ -531,7 +528,7 @@ depositIdoAsa:
 	pop
 	assert
 
-	// contracts/campaign/campaign.algo.ts:154
+	// contracts/campaign/campaign.algo.ts:153
 	// verifyTxn(this.txn, { sender: this.admin.value })
 	// verify sender
 	txn Sender
@@ -540,7 +537,7 @@ depositIdoAsa:
 	==
 	assert
 
-	// contracts/campaign/campaign.algo.ts:155
+	// contracts/campaign/campaign.algo.ts:154
 	// idoAsaToTransfer = (this.campaign.value.maxTotalInvestment * 100) / this.campaign.value.conversionRate
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
@@ -559,7 +556,7 @@ depositIdoAsa:
 	/
 	frame_bury -3 // idoAsaToTransfer: uint64
 
-	// contracts/campaign/campaign.algo.ts:156
+	// contracts/campaign/campaign.algo.ts:155
 	// verifyTxn(idoXfer, {
 	//       assetAmount: idoAsaToTransfer,
 	//       assetReceiver: this.app.address,
@@ -606,7 +603,7 @@ abi_route_lockApprovedStatus:
 lockApprovedStatus:
 	proto 0 0
 
-	// contracts/campaign/campaign.algo.ts:165
+	// contracts/campaign/campaign.algo.ts:164
 	// assert(this.campaign.exists)
 	txna Applications 0
 	byte 0x63616d706169676e // "campaign"
@@ -615,12 +612,12 @@ lockApprovedStatus:
 	pop
 	assert
 
-	// contracts/campaign/campaign.algo.ts:166
+	// contracts/campaign/campaign.algo.ts:165
 	// assert(this.isApproved())
 	callsub isApproved
 	assert
 
-	// contracts/campaign/campaign.algo.ts:167
+	// contracts/campaign/campaign.algo.ts:166
 	// assert(!this.isApprovedCampaign.value)
 	byte 0x6973417070726f76656443616d706169676e // "isApprovedCampaign"
 	app_global_get
@@ -629,7 +626,7 @@ lockApprovedStatus:
 	!
 	assert
 
-	// contracts/campaign/campaign.algo.ts:168
+	// contracts/campaign/campaign.algo.ts:167
 	// this.isApprovedCampaign.value = true
 	byte 0x6973417070726f76656443616d706169676e // "isApprovedCampaign"
 	int 1
@@ -673,7 +670,7 @@ abi_route_invest:
 invest:
 	proto 4 0
 
-	// contracts/campaign/campaign.algo.ts:173
+	// contracts/campaign/campaign.algo.ts:172
 	// assert(this.campaign.exists)
 	txna Applications 0
 	byte 0x63616d706169676e // "campaign"
@@ -682,12 +679,24 @@ invest:
 	pop
 	assert
 
-	// contracts/campaign/campaign.algo.ts:174
+	// contracts/campaign/campaign.algo.ts:173
 	// assert(this.isApproved())
 	callsub isApproved
 	assert
 
-	// contracts/campaign/campaign.algo.ts:178
+	// contracts/campaign/campaign.algo.ts:175
+	// assert(this.campaign.value.endTime > globals.latestTimestamp)
+	byte 0x63616d706169676e // "campaign"
+	app_global_get
+	store 0 // full array
+	load 0 // full array
+	extract 56 8
+	btoi
+	global LatestTimestamp
+	>
+	assert
+
+	// contracts/campaign/campaign.algo.ts:177
 	// investmentAsaToTransfer = investmentAmount * 10 ** investmentAsa.decimals
 	frame_dig -3 // investmentAmount: uint64
 	int 10
@@ -698,7 +707,7 @@ invest:
 	*
 	frame_bury -4 // investmentAsaToTransfer: uint64
 
-	// contracts/campaign/campaign.algo.ts:179
+	// contracts/campaign/campaign.algo.ts:178
 	// assert(this.campaign.value.maxInvestmentPerAccount >= investmentAsaToTransfer)
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
@@ -711,7 +720,7 @@ invest:
 	assert
 
 	// if3_condition
-	// contracts/campaign/campaign.algo.ts:181
+	// contracts/campaign/campaign.algo.ts:180
 	// !this.isHypelisted(this.txn.sender)
 	txn Sender
 	callsub isHypelisted
@@ -719,7 +728,7 @@ invest:
 	bz if3_end
 
 	// if3_consequent
-	// contracts/campaign/campaign.algo.ts:182
+	// contracts/campaign/campaign.algo.ts:181
 	// assert(this.campaign.value.startTime < globals.latestTimestamp)
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
@@ -732,7 +741,7 @@ invest:
 	assert
 
 if3_end:
-	// contracts/campaign/campaign.algo.ts:185
+	// contracts/campaign/campaign.algo.ts:184
 	// assert(this.campaign.value.maxTotalInvestment >= this.campaign.value.investedAmount + investmentAsaToTransfer)
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
@@ -752,7 +761,7 @@ if3_end:
 	assert
 
 	// if4_condition
-	// contracts/campaign/campaign.algo.ts:187
+	// contracts/campaign/campaign.algo.ts:186
 	// !this.isApprovedCampaign.value
 	byte 0x6973417070726f76656443616d706169676e // "isApprovedCampaign"
 	app_global_get
@@ -762,7 +771,7 @@ if3_end:
 	bz if4_end
 
 	// if4_consequent
-	// contracts/campaign/campaign.algo.ts:188
+	// contracts/campaign/campaign.algo.ts:187
 	// this.isApprovedCampaign.value = true
 	byte 0x6973417070726f76656443616d706169676e // "isApprovedCampaign"
 	int 1
@@ -773,7 +782,7 @@ if3_end:
 	app_global_put
 
 if4_end:
-	// contracts/campaign/campaign.algo.ts:190
+	// contracts/campaign/campaign.algo.ts:189
 	// verifyTxn(investmentAsaXfer, {
 	//       assetAmount: investmentAsaToTransfer,
 	//       assetReceiver: this.app.address,
@@ -809,7 +818,7 @@ if4_end:
 	==
 	assert
 
-	// contracts/campaign/campaign.algo.ts:196
+	// contracts/campaign/campaign.algo.ts:195
 	// this.campaign.value.investedAmount = this.campaign.value.investedAmount + investmentAsaToTransfer
 	byte 0x63616d706169676e // "campaign"
 	app_global_get
@@ -831,9 +840,9 @@ if4_end:
 	app_global_put
 
 	// if5_condition
-	// contracts/campaign/campaign.algo.ts:198
-	// this.purchases(this.txn.sender).exists
-	byte 0x70 // "p"
+	// contracts/campaign/campaign.algo.ts:197
+	// this.investments(this.txn.sender).exists
+	byte 0x69 // "i"
 	txn Sender
 	concat
 	box_len
@@ -842,12 +851,12 @@ if4_end:
 	bz if5_else
 
 	// if5_consequent
-	// contracts/campaign/campaign.algo.ts:199
-	// this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + investmentAsaToTransfer
-	byte 0x70 // "p"
+	// contracts/campaign/campaign.algo.ts:198
+	// this.investments(this.txn.sender).value = this.investments(this.txn.sender).value + investmentAsaToTransfer
+	byte 0x69 // "i"
 	txn Sender
 	concat
-	byte 0x70 // "p"
+	byte 0x69 // "i"
 	txn Sender
 	concat
 	box_get
@@ -860,9 +869,9 @@ if4_end:
 	b if5_end
 
 if5_else:
-	// contracts/campaign/campaign.algo.ts:201
-	// this.purchases(this.txn.sender).value = investmentAsaToTransfer
-	byte 0x70 // "p"
+	// contracts/campaign/campaign.algo.ts:200
+	// this.investments(this.txn.sender).value = investmentAsaToTransfer
+	byte 0x69 // "i"
 	txn Sender
 	concat
 	frame_dig -4 // investmentAsaToTransfer: uint64
@@ -870,102 +879,6 @@ if5_else:
 	box_put
 
 if5_end:
-	retsub
-
-calculateAllowedClaimAmountBasedOnVestingSchedule:
-	proto 6 1
-
-	// contracts/campaign/campaign.algo.ts:206
-	// durationAfterEndTime = globals.latestTimestamp - this.campaign.value.endTime
-	global LatestTimestamp
-	byte 0x63616d706169676e // "campaign"
-	app_global_get
-	store 0 // full array
-	load 0 // full array
-	extract 56 8
-	btoi
-	-
-	frame_bury -2 // durationAfterEndTime: uint64
-
-	// contracts/campaign/campaign.algo.ts:207
-	// durationInVestingPeriod = 0
-	int 0
-	frame_bury -3 // durationInVestingPeriod: uint64
-
-	// contracts/campaign/campaign.algo.ts:208
-	// totalPercentageEligibleForClaim = 0
-	int 0
-	frame_bury -4 // totalPercentageEligibleForClaim: uint64
-
-	// contracts/campaign/campaign.algo.ts:209
-	// i = 0
-	int 0
-	frame_bury -5 // i: uint64
-
-for_0:
-	int 0 // i: uint64
-
-	// contracts/campaign/campaign.algo.ts:209
-	// this.vestingSchedule.value.vestingPeriods
-	byte 0x76657374696e675363686564756c65 // "vestingSchedule"
-	app_global_get
-	store 0 // full array
-	load 0 // full array
-	extract 0 8
-	btoi
-	<
-	bz for_0_end
-
-	// if6_condition
-	// contracts/campaign/campaign.algo.ts:210
-	// durationAfterEndTime > durationInVestingPeriod
-	frame_dig -2 // durationAfterEndTime: uint64
-	frame_dig -3 // durationInVestingPeriod: uint64
-	>
-	bz if6_end
-
-	// if6_consequent
-	// contracts/campaign/campaign.algo.ts:211
-	// durationInVestingPeriod = durationInVestingPeriod + this.vestingSchedule.value.durations[i]
-	frame_dig -3 // durationInVestingPeriod: uint64
-	byte 0x76657374696e675363686564756c65 // "vestingSchedule"
-	app_global_get
-	store 0 // full array
-	load 0 // full array
-	extract 12 8
-	btoi
-	+
-	frame_bury -3 // durationInVestingPeriod: uint64
-
-	// contracts/campaign/campaign.algo.ts:212
-	// totalPercentageEligibleForClaim = totalPercentageEligibleForClaim + this.vestingSchedule.value.percentages[i]
-	frame_dig -4 // totalPercentageEligibleForClaim: uint64
-	byte 0x76657374696e675363686564756c65 // "vestingSchedule"
-	app_global_get
-	store 0 // full array
-	load 0 // full array
-	extract 10 8
-	btoi
-	+
-	frame_bury -4 // totalPercentageEligibleForClaim: uint64
-
-if6_end:
-	int 1
-	b for_0
-
-for_0_end:
-	// contracts/campaign/campaign.algo.ts:215
-	// eligibleAmountToClaim = (totalAmount * totalPercentageEligibleForClaim) / 100
-	frame_dig -1 // totalAmount: uint64
-	frame_dig -4 // totalPercentageEligibleForClaim: uint64
-	*
-	int 100
-	/
-	frame_bury -6 // eligibleAmountToClaim: uint64
-
-	// contracts/campaign/campaign.algo.ts:217
-	// return eligibleAmountToClaim;
-	frame_dig -6 // eligibleAmountToClaim: uint64
 	retsub
 
 // claim(asset)void
@@ -1002,8 +915,8 @@ claim:
 	assert
 
 	// contracts/campaign/campaign.algo.ts:228
-	// assert(this.purchases(this.txn.sender).exists)
-	byte 0x70 // "p"
+	// assert(this.investments(this.txn.sender).exists)
+	byte 0x69 // "i"
 	txn Sender
 	concat
 	box_len
@@ -1012,8 +925,8 @@ claim:
 	assert
 
 	// contracts/campaign/campaign.algo.ts:230
-	// totalClaimableAmount = (this.purchases(this.txn.sender).value * 100) / this.campaign.value.conversionRate
-	byte 0x70 // "p"
+	// totalClaimableAmount = (this.investments(this.txn.sender).value * 100) / this.campaign.value.conversionRate
+	byte 0x69 // "i"
 	txn Sender
 	concat
 	box_get
@@ -1113,7 +1026,7 @@ ternary1_end:
 	// Submit inner transaction
 	itxn_submit
 
-	// if7_condition
+	// if6_condition
 	// contracts/campaign/campaign.algo.ts:246
 	// this.claimedAmount(this.txn.sender).exists
 	byte 0x63 // "c"
@@ -1122,9 +1035,9 @@ ternary1_end:
 	box_len
 	swap
 	pop
-	bz if7_else
+	bz if6_else
 
-	// if7_consequent
+	// if6_consequent
 	// contracts/campaign/campaign.algo.ts:247
 	// this.claimedAmount(this.txn.sender).value = this.claimedAmount(this.txn.sender).value + eligibleAmountToClaim
 	byte 0x63 // "c"
@@ -1140,9 +1053,9 @@ ternary1_end:
 	+
 	itob
 	box_put
-	b if7_end
+	b if6_end
 
-if7_else:
+if6_else:
 	// contracts/campaign/campaign.algo.ts:249
 	// this.claimedAmount(this.txn.sender).value = eligibleAmountToClaim
 	byte 0x63 // "c"
@@ -1152,7 +1065,7 @@ if7_else:
 	itob
 	box_put
 
-if7_end:
+if6_end:
 	retsub
 
 // withdrawInvestment(asset)void
@@ -1182,8 +1095,8 @@ withdrawInvestment:
 	assert
 
 	// contracts/campaign/campaign.algo.ts:261
-	// assert(this.purchases(this.txn.sender).exists)
-	byte 0x70 // "p"
+	// assert(this.investments(this.txn.sender).exists)
+	byte 0x69 // "i"
 	txn Sender
 	concat
 	box_len
@@ -1196,7 +1109,7 @@ withdrawInvestment:
 	//       sender: this.app.address,
 	//       assetReceiver: this.txn.sender,
 	//       xferAsset: this.investmentAsaId.value,
-	//       assetAmount: this.purchases(this.txn.sender).value,
+	//       assetAmount: this.investments(this.txn.sender).value,
 	//     })
 	itxn_begin
 	int axfer
@@ -1219,8 +1132,8 @@ withdrawInvestment:
 	itxn_field XferAsset
 
 	// contracts/campaign/campaign.algo.ts:267
-	// assetAmount: this.purchases(this.txn.sender).value
-	byte 0x70 // "p"
+	// assetAmount: this.investments(this.txn.sender).value
+	byte 0x69 // "i"
 	txn Sender
 	concat
 	box_get
@@ -1271,13 +1184,13 @@ withdrawIdoAsa:
 	==
 	assert
 
-	// if8_condition
+	// if7_condition
 	// contracts/campaign/campaign.algo.ts:283
 	// this.isApproved()
 	callsub isApproved
-	bz if8_else
+	bz if7_else
 
-	// if8_consequent
+	// if7_consequent
 	// contracts/campaign/campaign.algo.ts:284
 	// totalUnsoldAmount = this.campaign.value.maxTotalInvestment - this.campaign.value.investedAmount
 	byte 0x63616d706169676e // "campaign"
@@ -1348,9 +1261,9 @@ withdrawIdoAsa:
 
 	// Submit inner transaction
 	itxn_submit
-	b if8_end
+	b if7_end
 
-if8_else:
+if7_else:
 	// contracts/campaign/campaign.algo.ts:293
 	// sendAssetTransfer({
 	//         sender: this.app.address,
@@ -1392,7 +1305,7 @@ if8_else:
 	// Submit inner transaction
 	itxn_submit
 
-if8_end:
+if7_end:
 	retsub
 
 // withdrawSales(asset)void
@@ -1538,13 +1451,13 @@ vote:
 	+
 	app_global_put
 
-	// if9_condition
+	// if8_condition
 	// contracts/campaign/campaign.algo.ts:325
 	// inFavor
 	frame_dig -1 // inFavor: bool
-	bz if9_end
+	bz if8_end
 
-	// if9_consequent
+	// if8_consequent
 	// contracts/campaign/campaign.algo.ts:326
 	// this.votesInFavor.value = this.votesInFavor.value + 1
 	byte 0x766f746573496e4661766f72 // "votesInFavor"
@@ -1554,7 +1467,7 @@ vote:
 	+
 	app_global_put
 
-if9_end:
+if8_end:
 	retsub
 
 // getAccountTotalPurchases(account)uint64
@@ -1573,8 +1486,8 @@ getAccountTotalPurchases:
 	proto 1 0
 
 	// contracts/campaign/campaign.algo.ts:331
-	// return this.purchases(account).value;
-	byte 0x70 // "p"
+	// return this.investments(account).value;
+	byte 0x69 // "i"
 	frame_dig -1 // account: account
 	concat
 	box_get

@@ -48,9 +48,11 @@ export default class Campaign extends Contract {
 
   inFavor = BoxMap<Address, boolean>({ prefix: 'v' });
 
-  purchases = BoxMap<Address, number>({ prefix: 'p' });
+  investments = BoxMap<Address, number>({ prefix: 'i' });
 
   claimedAmount = BoxMap<Address, number>({ prefix: 'c' });
+
+  hypelist = BoxMap<Address, boolean>({ prefix: 'h' });
 
   // eslint-disable-next-line no-unused-vars
   createApplication(algohubApp: Application): void {
@@ -77,12 +79,6 @@ export default class Campaign extends Contract {
       return true;
     }
     return this.isApprovedCampaign.value;
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  private isHypelisted(account: Account): boolean {
-    // Check if caller is hypelisted
-    return true;
   }
 
   private optInToAsa(asaToOptIn: Asset): void {
@@ -122,9 +118,6 @@ export default class Campaign extends Contract {
     this.optInToAsa(investmentAsa);
 
     this.campaign.value = {
-      // TODO: deal with decimals - 2.00 --> 200 // 0.50 --> 50
-      // invest 100$ at a conversion rate of 0.50$ I should get 200 IDOs
-      // 100 / (50 / 100) = 200
       conversionRate: conversionRate,
       maxInvestmentPerAccount: maxInvestmentPerAccount * 10 ** investmentAsa.decimals,
       minTotalInvestment: minTotalInvestment * 10 ** investmentAsa.decimals,
@@ -147,9 +140,17 @@ export default class Campaign extends Contract {
     };
   }
 
+  setHypelistedAccount(account: Account, isHypelisted: boolean): void {
+    this.hypelist(account).value = isHypelisted;
+  }
+
+  isHypelisted(account: Account): boolean {
+    return this.hypelist(account).value;
+  }
+
   // eslint-disable-next-line no-unused-vars
   depositIdoAsa(idoXfer: AssetTransferTxn, idoAsa: Asset): void {
-    // TODO: Allow deposit only once
+    // TODO: Safeguard the allowance of deposit IDO Assets only once
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
     const idoAsaToTransfer = (this.campaign.value.maxTotalInvestment * 100) / this.campaign.value.conversionRate;
@@ -173,7 +174,7 @@ export default class Campaign extends Contract {
     assert(this.campaign.exists);
     assert(this.isApproved());
     // check campaing is not finished
-    // assert(this.campaign.value.endTime > globals.latestTimestamp);
+    assert(this.campaign.value.endTime > globals.latestTimestamp);
     // Check amount to invest is not more than max invest cap
     const investmentAsaToTransfer = investmentAmount * 10 ** investmentAsa.decimals;
     assert(this.campaign.value.maxInvestmentPerAccount >= investmentAsaToTransfer);
@@ -195,27 +196,28 @@ export default class Campaign extends Contract {
     });
     this.campaign.value.investedAmount = this.campaign.value.investedAmount + investmentAsaToTransfer;
 
-    if (this.purchases(this.txn.sender).exists) {
-      this.purchases(this.txn.sender).value = this.purchases(this.txn.sender).value + investmentAsaToTransfer;
+    if (this.investments(this.txn.sender).exists) {
+      this.investments(this.txn.sender).value = this.investments(this.txn.sender).value + investmentAsaToTransfer;
     } else {
-      this.purchases(this.txn.sender).value = investmentAsaToTransfer;
+      this.investments(this.txn.sender).value = investmentAsaToTransfer;
     }
   }
 
-  private calculateAllowedClaimAmountBasedOnVestingSchedule(totalAmount: number): number {
-    const durationAfterEndTime = globals.latestTimestamp - this.campaign.value.endTime;
-    let durationInVestingPeriod = 0;
-    let totalPercentageEligibleForClaim = 0;
-    for (let i = 0; i < this.vestingSchedule.value.vestingPeriods; i + 1) {
-      if (durationAfterEndTime > durationInVestingPeriod) {
-        durationInVestingPeriod = durationInVestingPeriod + this.vestingSchedule.value.durations[i];
-        totalPercentageEligibleForClaim = totalPercentageEligibleForClaim + this.vestingSchedule.value.percentages[i];
-      }
-    }
-    const eligibleAmountToClaim = (totalAmount * totalPercentageEligibleForClaim) / 100;
+  // TODO: Revisit the logic for vesting tokens on claim
+  // private calculateAllowedClaimAmountBasedOnVestingSchedule(totalAmount: number): number {
+  //   const durationAfterEndTime = globals.latestTimestamp - this.campaign.value.endTime;
+  //   let durationInVestingPeriod = 0;
+  //   let totalPercentageEligibleForClaim = 0;
+  //   for (let i = 0; i < this.vestingSchedule.value.vestingPeriods; i + 1) {
+  //     if (durationAfterEndTime > durationInVestingPeriod) {
+  //       durationInVestingPeriod = durationInVestingPeriod + this.vestingSchedule.value.durations[i];
+  //       totalPercentageEligibleForClaim = totalPercentageEligibleForClaim + this.vestingSchedule.value.percentages[i];
+  //     }
+  //   }
+  //   const eligibleAmountToClaim = (totalAmount * totalPercentageEligibleForClaim) / 100;
 
-    return eligibleAmountToClaim;
-  }
+  //   return eligibleAmountToClaim;
+  // }
 
   // eslint-disable-next-line no-unused-vars
   claim(idoAsa: Asset): void {
@@ -224,10 +226,10 @@ export default class Campaign extends Contract {
     assert(this.campaign.exists);
     // assert(this.vestingSchedule.exists);
     assert(this.isApproved());
-    // assert(this.campaign.value.endTime < globals.latestTimestamp);
-    assert(this.purchases(this.txn.sender).exists);
+    assert(this.campaign.value.endTime < globals.latestTimestamp);
+    assert(this.investments(this.txn.sender).exists);
 
-    const totalClaimableAmount = (this.purchases(this.txn.sender).value * 100) / this.campaign.value.conversionRate;
+    const totalClaimableAmount = (this.investments(this.txn.sender).value * 100) / this.campaign.value.conversionRate;
     const alreadyClaimedAmount = this.claimedAmount(this.txn.sender).exists
       ? this.claimedAmount(this.txn.sender).value
       : 0;
@@ -255,16 +257,15 @@ export default class Campaign extends Contract {
     // if a wallet bought tokens during the voting period due to hypelisting
     // they can withdraw their tokens if the campaign did not collected required votes
     assert(this.campaign.exists);
-    // TODO: Add the checks below
-    // assert(!this.isApproved());
-    // assert(this.campaign.value.startTime > globals.latestTimestamp);
-    assert(this.purchases(this.txn.sender).exists);
+    assert(!this.isApproved());
+    assert(this.campaign.value.startTime > globals.latestTimestamp);
+    assert(this.investments(this.txn.sender).exists);
 
     sendAssetTransfer({
       sender: this.app.address,
       assetReceiver: this.txn.sender,
       xferAsset: this.investmentAsaId.value,
-      assetAmount: this.purchases(this.txn.sender).value,
+      assetAmount: this.investments(this.txn.sender).value,
     });
   }
 
@@ -278,8 +279,7 @@ export default class Campaign extends Contract {
     // in latter case, can withdraw all the Ido tokens
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
-    // TODO: Add check for end time
-    // assert(this.campaign.value.endTime > globals.latestTimestamp);
+    assert(this.campaign.value.endTime > globals.latestTimestamp);
     if (this.isApproved()) {
       const totalUnsoldAmount = this.campaign.value.maxTotalInvestment - this.campaign.value.investedAmount;
       assert(totalUnsoldAmount > 0);
@@ -304,9 +304,8 @@ export default class Campaign extends Contract {
     // to allow them to withdaw all or part of the sale/invest tokens.
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
-    // TODO: Add check for end time
-    // assert(this.campaign.value.endTime > globals.latestTimestamp);
-    // TODO: We might want to add vesting period here as well
+    assert(this.campaign.value.endTime > globals.latestTimestamp);
+    // TODO: We might want to introduce some vesting schedule for admin as well
     sendAssetTransfer({
       sender: this.app.address,
       assetReceiver: this.txn.sender,
@@ -327,8 +326,8 @@ export default class Campaign extends Contract {
     }
   }
 
-  getAccountTotalPurchases(account: Account): number {
-    return this.purchases(account).value;
+  getAccountTotalInvestment(account: Account): number {
+    return this.investments(account).value;
   }
 
   getVotes(): [number, number] {
