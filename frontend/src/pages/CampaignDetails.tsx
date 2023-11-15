@@ -33,6 +33,7 @@ const CampaignDetails = () => {
   const { campaignId } = useParams()
 
   const [assetInfo, setAssetInfo] = useState<AssetInfoInterface>()
+  const [assetInvestInfo, setAssetInvestInfo] = useState<AssetInfoInterface>()
 
   const tabItems: TabItem[] = [
     { id: 'project-info', content: 'Project information' },
@@ -51,13 +52,19 @@ const CampaignDetails = () => {
 
   const campaign = campaignList.filter((campaign) => campaign.appId === campaignId)[0]
 
-  const fetchAssetInfo = async () => {
+  const fetchIdoAssetInfo = async () => {
     const { asset } = await assetServices.getAssetInformation(campaign?.idoAsa)
     setAssetInfo(asset)
   }
 
+  const fetchInvestAssetInfo = async () => {
+    const { asset } = await assetServices.getAssetInformation(campaign?.investAsa)
+    setAssetInvestInfo(asset)
+  }
+
   useEffect(() => {
-    fetchAssetInfo()
+    fetchIdoAssetInfo()
+    fetchInvestAssetInfo()
   }, [])
 
   return (
@@ -85,7 +92,9 @@ const CampaignDetails = () => {
       <section>
         <div className="flex flex-col gap-6 md:grid md:grid-cols-9 md:gap-10">
           <Carousel images={images} />
-          <CampaignDetailsDashboard campaign={campaign}>{getTxnModal()}</CampaignDetailsDashboard>
+          <CampaignDetailsDashboard investAssetInfo={assetInvestInfo!} campaign={campaign}>
+            {getTxnModal()}
+          </CampaignDetailsDashboard>
         </div>
       </section>
       <section>
