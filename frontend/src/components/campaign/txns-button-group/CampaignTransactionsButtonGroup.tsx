@@ -4,7 +4,9 @@ import { useWallet } from '@txnlab/use-wallet'
 import { Fragment } from 'react'
 import { CampaignClient } from '../../../contracts/CampaignClient'
 import algod from '../../../core/algosdk/AlgodManager'
+import { USDC_ASSET } from '../../../core/util/asset/assetConstants'
 import useAppContext from '../../../core/util/useAppContext'
+import { CampaignObj } from '../../../services/campaignServices'
 import VoteModal from '../../VoteModal'
 import CampaignClaim from '../../campaign-pre-generated/CampaignClaim'
 import CampaignWithdrawIdoAsa from '../../campaign-pre-generated/CampaignWithdrawIdoAsa'
@@ -13,8 +15,6 @@ import CampaignWithdrawSales from '../../campaign-pre-generated/CampaignWithdraw
 import WalletConnectModal from '../../common/wallet-connect-modal/WalletConnectModal'
 import InvestModal from '../../invest-modal/InvestModal'
 import OptInButton from '../../opt-in/OptInButton'
-import { USDC_ASSET } from '../../../core/util/asset/assetConstants'
-import { CampaignObj } from '../../../services/campaignServices'
 
 function CampaignTransactionsButtonGroup({
   campaign,
@@ -45,8 +45,8 @@ function CampaignTransactionsButtonGroup({
   } as AppDetails
 
   const campaignClient = new CampaignClient(appDetails, algod.client)
-  const hasUserOptedInToIdoAsa = userData?.user_assets.some((asset) => asset['asset-id'] === idoAsaId)
-  const hasUserOptedInToInvestAsa = userData?.user_assets.some((asset) => asset['asset-id'] === USDC_ASSET.id)
+  const hasUserOptedInToIdoAsa = userData?.user_assets?.some((asset) => asset['asset-id'] === idoAsaId)
+  const hasUserOptedInToInvestAsa = userData?.user_assets?.some((asset) => asset['asset-id'] === USDC_ASSET.id)
 
   return !activeAccount ? <WalletConnectModal buttonLabel="Connect to vote" /> : renderContent()
 
