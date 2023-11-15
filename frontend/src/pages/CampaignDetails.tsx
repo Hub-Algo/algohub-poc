@@ -52,6 +52,8 @@ const CampaignDetails = () => {
 
   const campaign = campaignList.filter((campaign) => campaign.appId === campaignId)[0]
 
+  console.log(campaign)
+
   const fetchIdoAssetInfo = async (assetId: number) => {
     const { asset } = await assetServices.getAssetInformation(assetId)
     setAssetInfo(asset)
