@@ -74,10 +74,8 @@ const CampaignDetails = () => {
             />
           </div>
           <div>
-            <h2 className="font-bold text-6xl text-gray-100 font-oswald">
-              {campaign?.record.companyRegistrationInfo.registeredCompanyName}
-            </h2>
-            <h3 className="text-gray-100 text-xl font-oswald">Developing the future for everyone</h3>
+            <h2 className="font-bold text-6xl text-gray-100 ">{campaign?.record.companyRegistrationInfo.registeredCompanyName}</h2>
+            <h3 className="text-gray-100 text-xl ">Developing the future for everyone</h3>
           </div>
         </div>
       </section>
@@ -87,7 +85,7 @@ const CampaignDetails = () => {
           <CampaignDetailsDashboard campaign={campaign}>{getTxnModal()}</CampaignDetailsDashboard>
         </div>
       </section>
-      <section className="mt-6">
+      <section>
         <Tab items={tabItems}>
           <ProjectInformation campaign={campaign} assetInfo={assetInfo!} />
           <div>

@@ -12,9 +12,9 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
           <div className="flex flex-col items-center text-center md:text-start md:items-start">
             <div className="flex">
               <img className="h-14" src="../public/images/algohub_logo_light.png" alt="" />
-              <p className="text-6xl font-oswald font-bold text-gray-100">ALGOHUB</p>
+              <p className="text-6xl  font-bold text-gray-100">ALGOHUB</p>
             </div>
-            <p className="font-oswald text-xl font-normal text-gray-400 w-96 flex flex-col md:text-left">
+            <p className=" text-xl font-normal text-gray-400 w-96 flex flex-col md:text-left">
               <span>{'Powerful Projects. Vetted Quality.'}</span>
               <span>{'Investment, beyond funds'}</span>
             </p>
@@ -31,7 +31,7 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
 
         <div className="border-2 border-orange-500 rounded-3xl hidden md:flex items-center justify-center h-full md:h-full rounded-b-none md:border-r-0 md:rounded-bl-xl rounded-t-none md:rounded-br-none border-t-0">
           <div className="flex flex-col justify-center items-center gap-6">
-            <div className="font-oswald text-xl font-bold text-orange-500 border-b-2 border-t-2 border-transparent hover:border-orange-500 cursor-pointer transition-all py-2 flex items-center gap-2">
+            <div className=" text-xl font-bold text-orange-500 border-b-2 border-t-2 border-transparent hover:border-orange-500 cursor-pointer transition-all py-2 flex items-center gap-2">
               {userData ? (
                 <div className="flex flex-col items-center justify-center">
                   <p>{userData.username.toUpperCase()}</p>
@@ -44,7 +44,7 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
             </div>
             <a
               href={routes.ABOUT.ROUTE}
-              className="font-oswald text-xl text-orange-500 border-b border-t border-transparent hover:border-orange-500 cursor-pointer transition-all py-2"
+              className=" text-xl text-orange-500 border-b border-t border-transparent hover:border-orange-500 cursor-pointer transition-all py-2"
             >
               ABOUT US
             </a>

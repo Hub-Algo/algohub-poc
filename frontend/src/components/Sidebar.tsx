@@ -19,7 +19,7 @@ const Sidebar = () => {
         <ul className="menu p-4 w-80 min-h-full bg-gray-900 text-gray-100 flex flex-col h-full">
           <div className="py-2 border-b-2 border-orange-500">
             <li className="font-bold ">
-              <a className="hover:text-gray-100 font-oswald text-4xl" onClick={() => navigate(routes.BASE)}>
+              <a className="hover:text-gray-100  text-4xl" onClick={() => navigate(routes.BASE)}>
                 <img className="h-10" src="../public/images/algohub_logo_light.png" />
                 <h3>Algohub</h3>
               </a>

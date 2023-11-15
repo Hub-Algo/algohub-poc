@@ -28,20 +28,20 @@ function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
       <div className="card-body bg-gray-800 px-3 py-3 rounded-t-none rounded-md text-gray-100">
         {' '}
         <div className="flex justify-between items-center">
-          <h2 className={'card-title font-oswald'}>{campaign.record.companyRegistrationInfo.registeredCompanyName}</h2>
+          <h2 className={'card-title '}>{campaign.record.companyRegistrationInfo.registeredCompanyName}</h2>
           <CategoryBadge size="md" marketCategory={campaign.record.productOverview.marketType} />
         </div>
         <div className="flex items-center">
-          <p className="text-lg font-bold font-oswald">Goal:</p>
+          <p className="text-lg font-bold ">Goal:</p>
           <h3>USDC {campaign.record.fundraisingGoal.maxAmount}</h3>
         </div>
         <ProgressBar hard_goal={campaign.record.fundraisingGoal.maxAmount} invested_amount={campaign.record.fundraisingGoal.minAmount} />
-        <div className={'bg-gray-950 p-2 rounded-md font-oswald'}>
+        <div className={'bg-gray-950 p-2 rounded-md '}>
           <div className={'flex gap-4 w-max'}>
             <p>{'Start date'}</p> <p>{campaign.record.companyRegistrationInfo.dateOfRegistration}</p>
           </div>
 
-          <div className={'flex gap-4 w-max font-oswald'}>
+          <div className={'flex gap-4 w-max '}>
             <p>{'End date'}</p> <p>{formatCreationDate(campaign.metadata.createdAt)}</p>
           </div>
         </div>

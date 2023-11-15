@@ -8,7 +8,7 @@ export default function About() {
       <PageContainer>
         <Breadcrumbs pathList={['Home', 'About us']} />
         <div className="text-gray-100 flex flex-col gap-3">
-          <h1 className="text-5xl font-oswald font-black">About Algohub</h1>
+          <h1 className="text-5xl  font-black">About Algohub</h1>
           <p className="text-xl text-gray-400">
             AlgoHub is an early-stage organization building a decentralized “one-stop-shop" platform for Algorand related fundraising and
             collaboration services.
