@@ -6,7 +6,7 @@ export class AlgohubService {
     if (algohubClient === undefined) return null
     const state = await algohubClient.appClient.getGlobalState()
 
-    return state.algohubCampaigns ? algosdk.ABIType.from('uint64[]').decode(state.algohubCampaigns.valueRaw) : null
+    return state.algohubCampaigns ? algosdk.ABIType.from('uint64[]').decode(state.algohubCampaigns?.['valueRaw']) : null
   }
 
   fetchVoteAsaId = async (algohubClient: AlgohubClient | undefined): Promise<ABIValue | null> => {

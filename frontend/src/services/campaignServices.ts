@@ -23,33 +23,29 @@ export type CampaignObj = {
 }
 
 const fetchAllCampaignIds = async (algohubClient: AlgohubClient | undefined): Promise<number[]> => {
-  console.log('algohubClient', algohubClient)
   if (algohubClient === undefined || algohubClient === null) return []
   const state = await algohubClient.appClient.getGlobalState()
 
-  return state.algohubCampaigns ? (algosdk.ABIType.from('uint64[]').decode(state.algohubCampaigns.valueRaw) as number[]) : []
+  return state.algohubCampaigns ? (algosdk.ABIType.from('uint64[]').decode(state.algohubCampaigns?.['valueRaw']) as number[]) : []
 }
 
 const fetchCampaignDetails = async (appId: number, algod: algosdk.Algodv2): Promise<CampaignObj> => {
   const appDetails: AppDetails = {
     resolveBy: 'id',
-    // id: 479535990,
     id: appId,
   }
   const campaignClient = new CampaignClient(appDetails, algod)
   const state = await campaignClient.appClient.getGlobalState()
   const contactTupleType = algosdk.ABITupleType.from('(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)')
-  const decodedTuple = contactTupleType.decode(state.campaign.valueRaw).valueOf() as string[]
-  console.log(state)
+  const decodedTuple = contactTupleType.decode(state.campaign?.['valueRaw']).valueOf() as string[]
 
   const metadata = await axios.get(decodedTuple[8])
-  console.log(metadata)
 
   return {
     appId: appId.toString(),
     conversionRate: Number(decodedTuple[0]),
-    idoAsa: state.idoAsaId.value,
-    investAsa: state.investmentAsaId.value,
+    idoAsa: Number(state.idoAsaId.value),
+    investAsa: Number(state.investmentAsaId.value),
     maxInvestmentPerAccount: Number(decodedTuple[1]),
     minTotalInvestment: Number(decodedTuple[2]),
     maxTotalInvestment: Number(decodedTuple[3]),
