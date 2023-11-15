@@ -16,7 +16,7 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
             </div>
             <p className=" text-xl font-normal text-gray-400 w-96 flex flex-col md:text-left">
               <span>{'Powerful Projects. Vetted Quality.'}</span>
-              <span>{'Investment, beyond funds'}</span>
+              <span>{'Investment, beyond funds.'}</span>
             </p>
             <div className="flex w-full justify-around md:hidden mt-6 items-center">
               <Button buttonColor="orange">
