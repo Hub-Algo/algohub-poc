@@ -39,9 +39,10 @@ function CampaignApplicationDepositIdoAsa() {
 
       <p>{`Deposit amount: ${
         formData[CampaignApplicationFormView.FundraisingGoal]
-          ? (formData[CampaignApplicationFormView.FundraisingGoal].maxAmount ??
-              formData[CampaignApplicationFormView.FundraisingGoal].minAmount) /
-            (Number(formData[CampaignApplicationFormView.FundraisingGoal].usdPricePerToken) / 100)
+          ? ((formData[CampaignApplicationFormView.FundraisingGoal].maxAmount ??
+              formData[CampaignApplicationFormView.FundraisingGoal].minAmount) *
+              100) /
+            Number(formData[CampaignApplicationFormView.FundraisingGoal].usdPricePerToken ?? 0)
           : 0
       }`}</p>
 
@@ -73,9 +74,10 @@ function CampaignApplicationDepositIdoAsa() {
         const appMetadata = await campaignContract.appClient.getAppReference()
 
         const idoAsaAmountToTransfer = formData[CampaignApplicationFormView.FundraisingGoal]
-          ? (formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ??
-              formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount) *
-            Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken ?? 0)
+          ? ((formData[CampaignApplicationFormView.FundraisingGoal].maxAmount ??
+              formData[CampaignApplicationFormView.FundraisingGoal].minAmount) *
+              100) /
+            Number(formData[CampaignApplicationFormView.FundraisingGoal].usdPricePerToken ?? 0)
           : 0
 
         const idoXferTxn = makeAssetTransferTxnWithSuggestedParamsFromObject({

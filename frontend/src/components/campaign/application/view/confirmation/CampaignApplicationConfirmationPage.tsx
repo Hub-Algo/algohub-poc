@@ -35,8 +35,12 @@ function CampaignApplicationConfirmationPage() {
           typedClient={state?.algohubClient}
           metadata={formData as CampaignApplicationData}
           conversionRate={Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken) ?? 0}
-          maxInvestmentPerAccount={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
-          minTotalInvestment={formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ?? 0}
+          maxInvestmentPerAccount={
+            formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ??
+            formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ??
+            0
+          }
+          minTotalInvestment={formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ?? 0}
           maxTotalInvestment={
             formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ??
             formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount ??
