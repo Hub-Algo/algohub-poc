@@ -17,7 +17,7 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
 
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100 ">Token price:</h4>
-        <h3 className=" text-gray-100">{campaign?.metadata.record['fundraising-goal'].usdPricePerToken} USDC</h3>
+        <h3 className=" text-gray-100">{Number(campaign?.metadata.record['fundraising-goal'].usdPricePerToken / 100)} USDC</h3>
       </div>
 
       <div className="flex items-end gap-6">

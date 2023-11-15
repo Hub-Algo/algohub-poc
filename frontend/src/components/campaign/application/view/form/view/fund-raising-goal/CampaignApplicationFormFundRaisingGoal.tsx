@@ -50,16 +50,16 @@ function CampaignApplicationFormFundRaisingGoal({
 
         <div className="w-full">
           <LabelTooltip
-            labelContent="Minimum funding target"
-            tooltipText="This will be the minimum amount of funds required for the campaign to be considered successful. In the event that this target is not met within the specified timeframe, it will trigger the automatic termination of the token sale, followed by the prompt refund of all collected capital to the respective investors."
+            labelContent="Minimum USDC funding target"
+            tooltipText="This will be the minimum amount of USDC funds required for the campaign to be considered successful. In the event that this target is not met within the specified timeframe, it will trigger the automatic termination of the token sale, followed by the prompt refund of all collected capital to the respective investors."
           />
           <Input type={'number'} value={state?.minAmount ?? ''} onChange={handleSetMinAmount} />
         </div>
 
         <div className="w-full">
           <LabelTooltip
-            labelContent="Maximum Funding Target (if applicable)"
-            tooltipText="In the event that this target is met within the specified timeframe, the token sales will be considered completed, with no possibility to raise additional funds beyond the Maximum Funding Target."
+            labelContent="Maximum USDC Funding Target (if applicable)"
+            tooltipText="In the event that this target is met within the specified timeframe, the token sales will be considered completed, with no possibility to raise additional USDC funds beyond the Maximum Funding Target."
           />
           <Input type={'number'} value={state?.maxAmount ?? ''} onChange={handleSetMaxAmount} />
         </div>
@@ -182,7 +182,6 @@ function CampaignApplicationFormFundRaisingGoal({
       value = value.slice(0, value.length - 1)
     }
 
-    value = parseFloat(value).toFixed(2)
     setState((prev) => {
       return prev
         ? { ...prev, usdPricePerToken: String(parseFloat(value) * 100) }
