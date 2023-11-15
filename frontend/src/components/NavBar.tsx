@@ -23,12 +23,12 @@ const NavBar = ({ userData, resetUserData }: UserPropsInterface) => {
     <div className="navbar bg-gray-950 top-0 z-10 text-gray-100 shadow-sm">
       <div className="flex-1">
         <a href={routes.BASE} className="btn btn-ghost normal-case text-xl">
-          <img className="h-8" src="../public/images/algohub_logo_light.png" />
-          <h2 className="font-oswald">AlgoHub</h2>
+          <img className="h-6 md:h-8" src="../public/images/algohub_logo_light.png" />
+          <h2 className="font-oswald text-md md:text-2xl">AlgoHub</h2>
         </a>
       </div>
       <div className="flex-none">
-        <ul className="menu menu-horizontal px-1 gap-3 flex items-center w-full">
+        <ul className="menu menu-horizontal px-1 gap-1 flex items-center w-full">
           {linksRenderer}
           <li className="md:block">
             {userData ? (

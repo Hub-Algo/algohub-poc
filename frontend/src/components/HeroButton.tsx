@@ -11,22 +11,24 @@ function HeroButton({ children, customClassName, ...otherProps }: HeroButtonProp
       className={classNames(
         customClassName,
         'h-64',
+        'group',
         'btn',
-        'no-animation',
+        'transition-all',
         'p-0',
-        'rounded-3xl',
+        'rounded-xl',
         'relative',
         'border-2',
         'border-orange-500',
         'bg-gray-900',
-        'hover:bg-orange-500',
-        'hover:first:border',
+        'hover:border-4',
+        'hover:bg-gray-950',
         'hover:border-orange-500',
       )}
       {...otherProps}
     >
-      <div className={'absolute bg-gray-900 top-0 left-0 right-5 bottom-5 rounded-3xl border-black'}></div>
-      <div className={'z-10 text-orange-500'}>{children}</div>
+      <div className={'z-10 text-orange-500 border-b-2 border-t-2 border-transparent p-2 group-hover:border-orange-500 transition-all'}>
+        {children}
+      </div>
     </a>
   )
 }
