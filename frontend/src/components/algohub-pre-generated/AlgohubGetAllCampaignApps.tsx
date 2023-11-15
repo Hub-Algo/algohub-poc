@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { useWallet } from '@txnlab/use-wallet'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { AlgohubClient } from '../../contracts/AlgohubClient'
 
 /* Example usage
@@ -12,9 +12,7 @@ import { AlgohubClient } from '../../contracts/AlgohubClient'
 />
 */
 type Props = {
-  buttonClass: string
-  buttonLoadingNode?: ReactNode
-  buttonNode: ReactNode
+  buttonClass?: string
   typedClient: AlgohubClient
 }
 
@@ -26,13 +24,14 @@ const AlgohubGetAllCampaignApps = (props: Props) => {
   const callMethod = async () => {
     setLoading(true)
     console.log(`Calling getAllCampaignApps`)
-    await props.typedClient.getAllCampaignApps({}, { sender })
+    const allCampaigns = await props.typedClient.getAllCampaignApps({}, { sender })
+    console.log(allCampaigns)
     setLoading(false)
   }
 
   return (
     <button className={props.buttonClass} onClick={callMethod}>
-      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
+      Get All Campaigns
     </button>
   )
 }

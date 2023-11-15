@@ -172,14 +172,19 @@ describe('Algohub App', () => {
       algod
     );
 
-    await appClient.create.createApplication({
-      algoToVoteRatio,
-      vipVoteWeight,
-      votingPeriod,
-    });
+    await appClient.create.createApplication(
+      {
+        algoToVoteRatio,
+        vipVoteWeight,
+        votingPeriod,
+      },
+      {
+        sender: deployer,
+      }
+    );
 
     // TODO: How much do we need to fund with?
-    await appClient.appClient.fundAppAccount(microAlgos(2_000_000));
+    await appClient.appClient.fundAppAccount({ amount: microAlgos(2_000_000), sender: sender1 });
     algohubAppId = Number((await appClient.appClient.getAppReference()).appId);
 
     const idoAsaId = await createAsa(sender1, 'IDO', 'IDO', totalIdoTokens, algod);
@@ -190,7 +195,19 @@ describe('Algohub App', () => {
   });
 
   test('Algohub - app creation', async () => {
-    const votersDetails = await appClient.getVotersDetails({});
+    // console.log('==============================');
+
+    const votersDetails = await appClient.getVotersDetails({}, { sender: sender1 });
+    // const simulateResult = await (
+    //   await appClient.compose().getVotersDetails({}, { sender: sender1 }).atc()
+    // ).simulate(algod);
+
+    // expect(simulateResult.methodResults?.[0].returnValue).toBe(expectedValue);
+    // console.log(simulateResult);
+    // const state = await appClient.appClient.getGlobalState();
+    // console.log(state);
+
+    // console.log('==============================');
     expect(votersDetails.return?.[0].valueOf()).toBe(BigInt(algoToVoteRatio));
     expect(votersDetails.return?.[1].valueOf()).toBe(BigInt(vipVoteWeight));
     expect(votersDetails.return?.[2].valueOf()).toBe(BigInt(0));

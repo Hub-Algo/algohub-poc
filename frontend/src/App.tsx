@@ -6,7 +6,7 @@ import { PeraWalletConnect } from '@perawallet/connect'
 import { Account, PROVIDER_ID, ProvidersArray, WalletProvider, useInitializeProviders, useWallet } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
 import axios from 'axios'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
@@ -17,7 +17,6 @@ import { USDC_ASSET } from './core/util/asset/AssetConstants'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
-import { CampaignInterface } from './interfaces/new-campaign-interface'
 import { UserInterface } from './interfaces/userInterface'
 import About from './pages/About'
 import AllCampaigns from './pages/AllCampaigns'
@@ -25,19 +24,30 @@ import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
+import { CampaignObj, fetchAllCampaignIds, fetchCampaignDetails } from './services/campaignServices'
 import { userService } from './services/userServices'
 
 export interface AppState {
   activeAccount?: Account | null
-  campaignList: CampaignInterface[]
+  campaignList: CampaignObj[]
   userData?: UserInterface
-  algohubClient: AlgohubClient | null
+  algohubClient: AlgohubClient | undefined
 }
 
 export default function App() {
-  const [campaignList, _setCampaignList] = useState<CampaignInterface[]>([])
+  const [campaignList, setCampaignList] = useState<CampaignObj[]>([])
   const [userData, setUserData] = useState<UserInterface>()
-  const { activeAccount, signer, activeAddress } = useWallet()
+  const [algohubClient, setAlgohubClient] = useState<AlgohubClient>()
+  const { activeAccount, signer, activeAddress, connectedAccounts } = useWallet()
+
+  // const algohubClientAppDetails: AppDetails = {
+  //   resolveBy: 'id',
+  //   // id: 479483526,
+  //   id: 479564984,
+  //   sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+  // }
+
+  // const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined
 
   let providersArray: ProvidersArray
 
@@ -50,16 +60,6 @@ export default function App() {
       { id: PROVIDER_ID.DAFFI, clientStatic: DaffiWalletConnect },
     ]
   }
-
-  const algohubClient = useMemo(() => {
-    const algohubClientAppDetails: AppDetails = {
-      resolveBy: 'id',
-      id: 478556883,
-      sender: { signer, addr: activeAddress } as TransactionSignerAccount,
-    }
-
-    return activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : null
-  }, [activeAddress, signer])
 
   const algodConfig = getAlgodConfigFromViteEnvironment()
 
@@ -77,13 +77,6 @@ export default function App() {
   const resetUserData = useCallback(() => {
     setUserData(undefined)
   }, [])
-
-  const fetchCampaigns = useCallback(async () => {
-    if (algohubClient) {
-      const response = await algohubClient.getAllCampaignApps({})
-      console.log(response)
-    }
-  }, [algohubClient])
 
   const fetchAndAppendUserData = useCallback(async (walletAddress: string) => {
     const userAssets = (await userService.fetchUserAssets(walletAddress)).assets
@@ -114,23 +107,46 @@ export default function App() {
     })
   }, [])
 
-  useEffect(() => {
-    if (activeAddress) {
-      fetchAndAppendUserData(activeAddress)
-    } else {
-      resetUserData()
+  const fetchCampaigns = useCallback(async () => {
+    if (algohubClient === undefined || algohubClient === null) {
+      setCampaignList([])
     }
-  }, [activeAddress, fetchAndAppendUserData, resetUserData])
+    const allCampaignIds = await fetchAllCampaignIds(algohubClient)
+    // console.log('allCampaignIds', allCampaignIds)
+    const allCampaigns: CampaignObj[] = []
+    for (let i = 0; i < allCampaignIds.length; i++) {
+      const campaigndetails = await fetchCampaignDetails(Number(allCampaignIds[i]), algod.client)
+      // console.log('capmaignDetails', campaigndetails)
+      allCampaigns.push(campaigndetails)
+    }
+
+    console.log('allCampaigns', allCampaigns)
+    setCampaignList(allCampaigns)
+  }, [algohubClient])
 
   useEffect(() => {
     fetchCampaigns()
-  }, [fetchCampaigns])
+  }, [fetchCampaigns, activeAccount])
+
+  useEffect(() => {
+    if (activeAccount) {
+      fetchAndAppendUserData(activeAccount?.address)
+    }
+    const algohubClientAppDetails: AppDetails = {
+      resolveBy: 'id',
+      // id: 479483526,
+      id: 479564984,
+      sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+    }
+
+    setAlgohubClient(activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined)
+  }, [activeAccount, activeAddress, connectedAccounts, fetchAndAppendUserData])
 
   const router = createBrowserRouter([
     {
       element: (
         <>
-          <NavBar userData={userData} resetUserData={resetUserData} providerId={activeAccount?.providerId}/>
+          <NavBar userData={userData} resetUserData={resetUserData} providerId={activeAccount?.providerId} />
           <Outlet context={{ activeAccount, campaignList, userData, algohubClient } satisfies AppState} />
           <Footer />
         </>
