@@ -18,8 +18,8 @@ const CampaignFilter = ({ handleFilterCampaigns }: campaignFilterProps) => {
       key={category}
       onClick={() => handleCategoryClick(category)}
       className={`border-2 ${
-        selectedCategory === category ? 'bg-orange-500 border-orange-500' : ''
-      } text-gray-200 rounded-full px-2 py-1 text-center hover:bg-orange-300 cursor-pointer hover:text-gray-950 transition-all active:bg-orange-500`}
+        selectedCategory === category ? 'bg-orange-500 border-orange-500 font-bold' : ''
+      } text-gray-200 rounded-full px-2 py-1 text-center hover:bg-orange-300 cursor-pointer hover:text-gray-950 transition-all active:bg-orange-500 `}
     >
       {category}
     </div>

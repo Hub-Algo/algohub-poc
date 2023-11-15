@@ -13,6 +13,7 @@ import { AssetServices } from '../services/assetServices'
 import { useEffect, useState } from 'react'
 import { ellipseAddress } from '../core/util/wallet/ellipseAddress'
 import { AssetInfoInterface } from '../interfaces/AssetInfoInterface'
+import ProjectInformation from '../components/campaign/campaign-tabs/ProjectInformation'
 
 const images = [
   'https://pbs.twimg.com/profile_banners/1429713964288471040/1661936165/1500x500',
@@ -42,8 +43,8 @@ const CampaignDetails = () => {
     },
     { id: 'details', content: 'Details' },
     {
-      id: 'Settings',
-      content: 'Settings',
+      id: 'investors-list',
+      content: 'Investors list',
     },
   ]
 
@@ -64,8 +65,8 @@ const CampaignDetails = () => {
     <PageContainer>
       <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.record.companyRegistrationInfo.registeredCompanyName}`]} />
       <section>
-        <div className="flex gap-5">
-          <div className="w-16 h-16 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">
+        <div className="flex gap-5 items-center">
+          <div className="w-20 h-20 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">
             <img
               className="w-full h-full object-cover"
               src="https://pbs.twimg.com/profile_banners/973713781627830272/1683779199/600x200"
@@ -73,10 +74,8 @@ const CampaignDetails = () => {
             />
           </div>
           <div>
-            <h2 className="font-bold text-4xl text-gray-100 font-oswald">
-              {campaign?.record.companyRegistrationInfo.registeredCompanyName}
-            </h2>
-            <h3 className="text-gray-100">Community for everyone</h3>
+            <h2 className="font-bold text-6xl text-gray-100 ">{campaign?.record.companyRegistrationInfo.registeredCompanyName}</h2>
+            <h3 className="text-gray-100 text-xl ">Developing the future for everyone</h3>
           </div>
         </div>
       </section>
@@ -86,39 +85,9 @@ const CampaignDetails = () => {
           <CampaignDetailsDashboard campaign={campaign}>{getTxnModal()}</CampaignDetailsDashboard>
         </div>
       </section>
-      <section className="mt-6">
+      <section>
         <Tab items={tabItems}>
-          <div className="flex flex-col gap-3">
-            <div className="flex items-end gap-6">
-              <h4 className="text-2xl font-bold text-gray-100 font-oswald">Project name:</h4>
-              <h3 className="text-2xl font-oswald text-gray-100">{campaign.record.companyRegistrationInfo.registeredCompanyName}</h3>
-            </div>
-            <div className="flex items-end gap-6">
-              <h4 className="text-2xl font-bold text-gray-100 font-oswald">Asset id:</h4>
-              <a href={`https://testnet.algoexplorer.io/asset/${campaign.record.productDocumentation.assetId}`}>
-                <h3 className="text-2xl font-oswald text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600">
-                  {campaign.record.productDocumentation.assetId} - {assetInfo?.params.name}
-                </h3>
-              </a>
-            </div>
-            <div className="flex items-end gap-6">
-              <h4 className="text-2xl font-bold text-gray-100 font-oswald">Creator address:</h4>
-              <a href={`https://testnet.algoexplorer.io/address/${assetInfo?.params.creator}`}>
-                <h3 className="text-2xl font-oswald text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600">
-                  {ellipseAddress(assetInfo?.params.creator)}
-                </h3>
-              </a>
-            </div>
-            <div className="flex items-end gap-6">
-              <h4 className="text-2xl font-bold text-gray-100 font-oswald">Project communities:</h4>
-              <a href={`https://testnet.algoexplorer.io/address/${assetInfo?.params.creator}`}>
-                <h3 className="text-2xl font-oswald text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600">
-                  {ellipseAddress(assetInfo?.params.creator)}
-                </h3>
-              </a>
-            </div>
-          </div>
-
+          <ProjectInformation campaign={campaign} assetInfo={assetInfo!} />
           <div>
             {' '}
             <div className="h-96 flex items-center justify-center">

@@ -2,7 +2,7 @@ import { SiGitbook } from 'react-icons/si'
 
 const Footer = () => {
   return (
-    <footer className="footer p-10 bg-gray-950 text-gray-100 border-t-2 border-gray-100">
+    <footer className="footer p-10 bg-gray-950 text-gray-100 border-t-2 border-gray-800">
       <nav>
         <header className="footer-title">Company</header>
         <a href="about" className="link link-hover">

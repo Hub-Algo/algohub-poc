@@ -9,9 +9,10 @@ import { CampaignInterface } from '../../../interfaces/new-campaign-interface'
 
 interface CampaignsListPropsInterface {
   campaigns: CampaignInterface[]
+  listLabel: string
 }
 
-const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
+const CampaignList = ({ campaigns, listLabel }: CampaignsListPropsInterface) => {
   const maxOffset = campaigns.length
 
   const { isSmallScreen, isXSmallScreen, isMidRangeScreen } = useWindowSizeContext()
@@ -36,34 +37,37 @@ const CampaignList = ({ campaigns }: CampaignsListPropsInterface) => {
   })
 
   return (
-    <div className={'flex gap-4 md:gap-14 items-center h-120 w-full justify-start bg-gray-950 px-2 mt-5 my-2'}>
-      <Button
-        aria-label={'previous-button'}
-        onClick={handleDisplayPrevious}
-        buttonColor="ghost"
-        customClassName={'btn-round text-orange-500 campaign-list__previous-button group'}
-        isDisabled={!displayedCampaignsOffset}
-      >
-        <TiMediaPlayReverse className="text-3xl group-hover:text-orange-600" />
-      </Button>
+    <div className="py-6">
+      <h3 className="text-4xl font-bold text-gray-100 md:ml-6 w-full text-center md:text-start">{listLabel}</h3>
+      <div className={'flex gap-4 md:gap-14 items-center h-120 w-full justify-start bg-gray-950 px-2 mt-5 border-b-2 border-gray-900'}>
+        <Button
+          aria-label={'previous-button'}
+          onClick={handleDisplayPrevious}
+          buttonColor="ghost"
+          customClassName={'btn-round text-orange-500 campaign-list__previous-button group'}
+          isDisabled={!displayedCampaignsOffset}
+        >
+          <TiMediaPlayReverse className="text-3xl group-hover:text-orange-600" />
+        </Button>
 
-      <div className="flex gap-10 py-5 w-full justify-center md:justify-start">
-        {campaigns.length <= 0 ? (
-          <div className="w-full text-3xl text-center text-gray-500">No campaigns to display</div>
-        ) : (
-          campaignListRenderer
-        )}
+        <div className="flex gap-10 py-5 w-full justify-center md:justify-start">
+          {campaigns.length <= 0 ? (
+            <div className="w-full text-3xl text-center text-gray-500">No campaigns to display</div>
+          ) : (
+            campaignListRenderer
+          )}
+        </div>
+
+        <Button
+          aria-label={'next-button'}
+          onClick={handleDisplayNext}
+          buttonColor="ghost"
+          customClassName={'btn-round text-orange-500 campaign-list__next-button group'}
+          isDisabled={displayedCampaignsOffset >= maxOffset - limit}
+        >
+          <TiMediaPlay className="text-3xl group-hover:text-orange-600" />
+        </Button>
       </div>
-
-      <Button
-        aria-label={'next-button'}
-        onClick={handleDisplayNext}
-        buttonColor="ghost"
-        customClassName={'btn-round text-orange-500 campaign-list__next-button group'}
-        isDisabled={displayedCampaignsOffset >= maxOffset - limit}
-      >
-        <TiMediaPlay className="text-3xl group-hover:text-orange-600" />
-      </Button>
     </div>
   )
 
