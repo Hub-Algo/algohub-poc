@@ -33,7 +33,7 @@ function CardWithImage({ imageProps, campaign }: CardWithImageProps) {
         </div>
         <div className="flex items-center">
           <p className="text-lg font-bold ">Goal:</p>
-          <h3>USDC {campaign.record.fundraisingGoal.maxAmount}</h3>
+          <h3>{campaign.record.fundraisingGoal.maxAmount} USDC</h3>
         </div>
         <ProgressBar hard_goal={campaign.record.fundraisingGoal.maxAmount} invested_amount={campaign.record.fundraisingGoal.minAmount} />
         <div className={'bg-gray-950 p-2 rounded-md '}>
