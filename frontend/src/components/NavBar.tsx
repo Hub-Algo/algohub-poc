@@ -15,7 +15,7 @@ const NavBar = ({ userData, resetUserData }: UserPropsInterface) => {
     <div className="navbar bg-gray-950 top-0 z-10 text-gray-100 shadow-sm">
       <div className="flex-1">
         <a href={routes.BASE} className="btn btn-ghost normal-case text-xl">
-          <img className="h-6 md:h-8" src="../public/images/algohub_logo_light.png" />
+          <img className="h-6 md:h-8" src="public/images/algohub_logo_light.png" />
           <h2 className=" text-md md:text-2xl">AlgoHub</h2>
         </a>
       </div>

@@ -11,7 +11,7 @@ const HeroSection = ({ userData }: UserDataOutletInterface) => {
         <div className="rounded-md flex flex-col items-center justify-center ">
           <div className="flex flex-col items-center text-center md:text-start md:items-start">
             <div className="flex">
-              <img className="h-14" src="../public/images/algohub_logo_light.png" alt="" />
+              <img className="h-14" src="public/images/algohub_logo_light.png" alt="" />
               <p className="text-6xl  font-bold text-gray-100">ALGOHUB</p>
             </div>
             <p className=" text-xl font-normal text-gray-400 w-96 flex flex-col md:text-left">
