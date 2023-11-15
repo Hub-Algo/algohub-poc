@@ -2,7 +2,7 @@ import { useOutletContext } from 'react-router-dom'
 import { CampaignOutletInterface } from './CampaignDetails'
 import { useEffect, useState } from 'react'
 import { CampaignInterface } from '../interfaces/campaign-interface'
-import { filterCampaignByCategory } from '../services/campaignServices'
+import { CampaignObj, filterCampaignByCategory } from '../services/campaignServices'
 import CampaignList from '../components/campaign/list/CampaignList'
 import CampaignFilter from '../components/campaign/filter/CampaignFilter'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
@@ -11,7 +11,7 @@ import PageContainer from '../components/PageContainer'
 const AllCampaigns = () => {
   const { campaignList } = useOutletContext() as CampaignOutletInterface
 
-  const [displayCampaigns, setDisplayCampaigns] = useState<CampaignInterface[]>(campaignList)
+  const [displayCampaigns, setDisplayCampaigns] = useState<CampaignObj[]>(campaignList)
   const [selectedCategory, setSelectedCategory] = useState<string>('all campaigns')
 
   useEffect(() => {

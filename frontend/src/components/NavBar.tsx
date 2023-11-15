@@ -10,7 +10,15 @@ export interface UserDataOutletInterface {
   userData: UserInterface
 }
 
-const NavBar = ({ userData, resetUserData }: UserPropsInterface) => {
+const NavBar = ({ userData, resetUserData, providerId }: UserPropsInterface) => {
+  const links = [{ title: 'About us', path: routes.ABOUT.ROUTE }]
+
+  const linksRenderer = links.map((link) => (
+    <li key={link.title} className="hidden md:block">
+      <Link to={link.path}>{link.title}</Link>
+    </li>
+  ))
+
   return (
     <div className="navbar bg-gray-950 top-0 z-10 text-gray-100 shadow-sm">
       <div className="flex-1">
@@ -28,8 +36,13 @@ const NavBar = ({ userData, resetUserData }: UserPropsInterface) => {
             </div>
           </li>
           <li className="md:block">
-            {userData ? (
-              <WalletWidget username={userData?.username} walletAddress={userData.wallet_address} resetUserData={resetUserData} />
+            {userData?.wallet_address ? (
+              <WalletWidget
+                username={userData?.username}
+                walletAddress={userData.wallet_address}
+                resetUserData={resetUserData}
+                providerId={providerId}
+              />
             ) : (
               <ConnectDropdown />
             )}
