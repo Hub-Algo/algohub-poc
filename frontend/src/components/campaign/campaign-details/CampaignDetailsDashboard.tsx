@@ -1,26 +1,15 @@
-import { useEffect, useState } from 'react'
 import { convertFromBaseUnits } from '../../../core/util/transaction/transactionUtils'
 import { AssetInfoInterface } from '../../../interfaces/AssetInfoInterface'
-import { AssetServices } from '../../../services/assetServices'
 import { CampaignObj } from '../../../services/campaignServices'
 import CategoryBadge from '../../CategoryBadge'
 
 interface CampaignDetailsDashboardPropsInterface {
   children: React.ReactNode
   campaign: CampaignObj
+  investAssetInfo: AssetInfoInterface
 }
 
-const CampaignDetailsDashboard = ({ children, campaign }: CampaignDetailsDashboardPropsInterface) => {
-  const [assetInfo, setAssetInfo] = useState<AssetInfoInterface>()
-
-  const assetServices = new AssetServices()
-  const fetchAssetInfo = async () => {
-    const { asset } = await assetServices.getAssetInformation(campaign?.investAsa)
-    setAssetInfo(asset)
-  }
-  useEffect(() => {
-    fetchAssetInfo()
-  }, [])
+const CampaignDetailsDashboard = ({ children, campaign, investAssetInfo }: CampaignDetailsDashboardPropsInterface) => {
   return (
     <div className="w-full  bg-gradient-to-b from-black via-gray-950 to-gray-950 rounded-md p-6 gap-6 flex flex-col col-span-4 ">
       <div className="flex flex-col gap-5">
@@ -31,23 +20,31 @@ const CampaignDetailsDashboard = ({ children, campaign }: CampaignDetailsDashboa
           <CategoryBadge marketCategory={campaign?.metadata?.record?.productOverview?.marketType} size="lg" />
         </div>
         <div>
-          <p className="text-sm md:text-lg text-gray-400">Fundraise goal</p>
+          <p className="text-sm md:text-lg text-gray-400">
+            {campaign?.maxTotalInvestment > campaign?.minTotalInvestment ? 'Streach' : 'Fundraise'} goal
+          </p>
           <h2 className="text-xl md:text-4xl font-bold  text-gray-100 ">
-            {convertFromBaseUnits(assetInfo?.params.decimals || 0, campaign?.maxTotalInvestment)} {assetInfo?.params['unit-name']}
+            {convertFromBaseUnits(investAssetInfo?.params.decimals || 0, campaign?.maxTotalInvestment)}{' '}
+            {investAssetInfo?.params['unit-name']}
           </h2>
         </div>
       </div>
+      {campaign?.maxTotalInvestment > campaign?.minTotalInvestment && (
+        <div className="text-gray-300 flex w-full items-center justify-between">
+          <p className="w-2/6">Min allocation</p>
+          <div className="w-2/6 border h-px border-dashed border-gray-600"></div>
+          <p className="w-2/6 flex justify-end">
+            {convertFromBaseUnits(investAssetInfo?.params.decimals || 0, campaign?.maxTotalInvestment)}{' '}
+            {investAssetInfo?.params['unit-name']}
+          </p>
+        </div>
+      )}
       <div className="text-gray-300 flex w-full items-center justify-between">
-        <p className="w-2/6 fontb">Max allocation</p>
-        <div className="w-2/6 border h-px border-dashed border-gray-600"></div>
-        <p className="w-2/6 flex justify-end">500 USDC</p>
-      </div>
-
-      <div className="text-gray-300 flex w-full items-center justify-between">
-        <p className="w-2/6">Min allocation</p>
+        <p className="w-2/6 fontb">Max Inv. / Wallet </p>
         <div className="w-2/6 border h-px border-dashed border-gray-600"></div>
         <p className="w-2/6 flex justify-end">
-          {convertFromBaseUnits(assetInfo?.params.decimals || 0, campaign?.maxTotalInvestment)} {assetInfo?.params['unit-name']}
+          {convertFromBaseUnits(investAssetInfo?.params.decimals || 0, campaign?.maxInvestmentPerAccount)}{' '}
+          {investAssetInfo?.params['unit-name']}
         </p>
       </div>
 
