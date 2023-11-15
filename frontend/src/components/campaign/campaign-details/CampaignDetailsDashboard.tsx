@@ -15,9 +15,7 @@ const CampaignDetailsDashboard = ({ children, campaign, investAssetInfo }: Campa
     <div className="w-full  bg-gradient-to-b from-black via-gray-950 to-gray-950 rounded-md p-6 gap-6 flex flex-col col-span-4 ">
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl md:text-5xl font-bold  text-gray-100">
-            {campaign?.metadata.record['company-registration-info'].registeredCompanyName}
-          </h2>
+          <h2 className="text-3xl md:text-5xl font-bold  text-gray-100">{campaign?.metadata.record['product-overview'].productName}</h2>
 
           <CategoryBadge marketCategory={campaign?.metadata.record['product-overview'].marketType} size="lg" />
         </div>

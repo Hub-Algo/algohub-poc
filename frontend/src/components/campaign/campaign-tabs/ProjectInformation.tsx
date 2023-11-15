@@ -12,7 +12,7 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
     <div className="flex flex-col gap-5 text-lg md:text-xl">
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100 ">Project name:</h4>
-        <h3 className=" text-gray-100">{campaign?.metadata.record['company-registration-info'].registeredCompanyName}</h3>
+        <h3 className=" text-gray-100">{campaign?.metadata.record['product-overview'].productName}</h3>
       </div>
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100">Asset id:</h4>

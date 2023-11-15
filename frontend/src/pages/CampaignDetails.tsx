@@ -85,7 +85,7 @@ const CampaignDetails = () => {
 
   return (
     <PageContainer>
-      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.metadata.record['company-registration-info'].registeredCompanyName}`]} />
+      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.metadata.record['product-overview'].productName}`]} />
 
       <section>
         <div className="flex gap-5 items-center">
@@ -97,9 +97,7 @@ const CampaignDetails = () => {
             />
           </div>
           <div>
-            <h2 className="font-bold text-6xl text-gray-100 ">
-              {campaign?.metadata.record['company-registration-info'].registeredCompanyName}
-            </h2>
+            <h2 className="font-bold text-6xl text-gray-100 ">{campaign?.metadata.record['product-overview'].productName}</h2>
             <h3 className="text-gray-100 text-xl ">Developing the future for everyone</h3>
           </div>
         </div>
