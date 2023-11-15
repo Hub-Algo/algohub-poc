@@ -1,22 +1,25 @@
+import { FormEvent, Fragment, useEffect, useState } from 'react'
+import algosdk, { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk'
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { useWallet } from '@txnlab/use-wallet'
-import algosdk, { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk'
-import { FormEvent, Fragment, useState } from 'react'
-import { CampaignClient } from '../../contracts/CampaignClient'
-import algod from '../../core/algosdk/AlgodManager'
-import { convertToBaseUnits } from '../../core/util/transaction/transactionUtils'
-import useAppContext from '../../core/util/useAppContext'
-import Modal from '../common/modal/Modal'
 import Toast from '../common/toast/Toast'
 import InvestModalConfirmView from './view/confirm/InvestModalConfirmModal'
 import InvestModalInitialView from './view/initial/InvestModalInitialView'
-import { USDC_ASSET } from '../../core/util/asset/AssetConstants'
+import { convertToBaseUnits } from '../../core/util/transaction/transactionUtils'
+import Modal from '../common/modal/Modal'
+import useAppContext from '../../core/util/useAppContext'
+import algod from '../../core/algosdk/AlgodManager'
+import { CampaignClient } from '../../contracts/CampaignClient'
+import { USDC_ASSET } from '../../core/util/asset/assetConstants'
+import { CampaignObj } from '../../services/campaignServices'
+import { AssetInfoInterface } from '../../interfaces/AssetInfoInterface'
+import { assetServices } from '../../services/assetServices'
 interface InvestModalProps {
   campaignStatus: 'hypelist' | 'whitelist'
-  campaignId: bigint | number
+  campaign: CampaignObj
 }
 
-function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
+function InvestModal({ campaignStatus, campaign }: InvestModalProps) {
   const state = useAppContext()
   const { signer } = useWallet()
   const [value, setValue] = useState<number>()
@@ -24,10 +27,20 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
   const [investState, setInvestState] = useState<'success' | 'failed'>()
   const [toastMessage, setToaastMessage] = useState('')
   const [loading, setLoading] = useState<boolean>()
+  const [idoAsaInfo, setIdoAsaInfo] = useState<AssetInfoInterface>()
+
+  const fetchIdoAssetInfo = async (assetId: number) => {
+    const { asset } = await assetServices.getAssetInformation(assetId)
+    setIdoAsaInfo(asset)
+  }
+
+  useEffect(() => {
+    fetchIdoAssetInfo(campaign.idoAsa)
+  }, [campaign.idoAsa])
 
   return (
     <>
-      <Modal id="invest-modal" modalButtonName={campaignStatus === 'hypelist' ? 'Hypelist' : 'Whitelist'}>
+      <Modal id="invest-modal" modalButtonName={campaignStatus === 'hypelist' ? 'Hypelist' : 'Invest'}>
         {renderContent()}
       </Modal>
 
@@ -40,7 +53,14 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
 
     switch (view) {
       case 'initial': {
-        content = <InvestModalInitialView onInvestButtonClick={handleChangeView} inputProps={{ value, onChange: handleChangeValue }} />
+        content = (
+          <InvestModalInitialView
+            onInvestButtonClick={handleChangeView}
+            inputProps={{ value, onChange: handleChangeValue }}
+            campaign={campaign}
+            idoAsa={idoAsaInfo}
+          />
+        )
         break
       }
 
@@ -52,6 +72,8 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
             inputAmount={value!}
             state={investState}
             shouldDisplaySpinner={loading}
+            idoAsa={idoAsaInfo}
+            conversionRate={campaign.conversionRate}
           />
         )
       }
@@ -93,7 +115,7 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
           {
             sender: { signer, addr: state.activeAccount.address } as TransactionSignerAccount,
             resolveBy: 'id',
-            id: campaignId,
+            id: Number(campaign.appId),
           },
           algod.client,
         )

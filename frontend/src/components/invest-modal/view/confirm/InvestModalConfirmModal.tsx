@@ -2,6 +2,7 @@ import { BiError } from 'react-icons/bi'
 import Lottie from 'lottie-react'
 import Button from '../../../common/button/Button'
 import successAnimation from '../../../../core/animation/success-confetti.json'
+import { AssetInfoInterface } from '../../../../interfaces/AssetInfoInterface'
 
 interface InvestModalConfirmViewProps {
   onConfirm: VoidFunction
@@ -9,10 +10,20 @@ interface InvestModalConfirmViewProps {
   inputAmount: number
   state?: 'success' | 'failed'
   shouldDisplaySpinner?: boolean
+  idoAsa?: AssetInfoInterface
+  conversionRate: number
 }
 
-function InvestModalConfirmView({ onConfirm, inputAmount, state, onCancel, shouldDisplaySpinner }: InvestModalConfirmViewProps) {
-  const outputTokenAmount = inputAmount / 10
+function InvestModalConfirmView({
+  onConfirm,
+  inputAmount,
+  state,
+  onCancel,
+  shouldDisplaySpinner,
+  idoAsa,
+  conversionRate,
+}: InvestModalConfirmViewProps) {
+  const outputTokenAmount = inputAmount * conversionRate
   const algoFee = '0.03 ALGO'
 
   return <div className={'flex flex-col gap-4 text-gray-100'}>{renderContent()}</div>
@@ -29,7 +40,7 @@ function InvestModalConfirmView({ onConfirm, inputAmount, state, onCancel, shoul
 
           <ul>
             <li>{`Input token: ${inputAmount} USDC`}</li>
-            <li>{`Output token: ${outputTokenAmount} X`}</li>
+            <li>{`Output token: ${outputTokenAmount} ${idoAsa?.params['unit-name']}`}</li>
             <li>{`Transaction fee: ${algoFee}`}</li>
           </ul>
 
@@ -61,7 +72,7 @@ function InvestModalConfirmView({ onConfirm, inputAmount, state, onCancel, shoul
 
               <ul className={'text-green-500 font-bold'}>
                 <li>{`Input token: ${inputAmount} USDC`}</li>
-                <li>{`Output token: ${outputTokenAmount} X`}</li>
+                <li>{`Output token: ${outputTokenAmount} ${idoAsa?.params['unit-name']}`}</li>
                 <li>{`Transaction fee: ${algoFee}`}</li>
               </ul>
             </div>
@@ -82,7 +93,7 @@ function InvestModalConfirmView({ onConfirm, inputAmount, state, onCancel, shoul
 
             <ul>
               <li>{`Input token: ${inputAmount} USDC`}</li>
-              <li>{`Output token: ${outputTokenAmount} X`}</li>
+              <li>{`Output token: ${outputTokenAmount} ${idoAsa?.params['unit-name']}`}</li>
               <li>{`Transaction fee: ${algoFee}`}</li>
             </ul>
 

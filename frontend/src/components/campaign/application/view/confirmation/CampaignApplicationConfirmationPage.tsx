@@ -9,7 +9,7 @@ import {
 import { CampaignApplicationData, CampaignApplicationFormView } from '../../../../../pages/campaign-application/CampaignApplication.types'
 import AlgohubCreateCampaign from '../../../../algohub-pre-generated/AlgohubCreateCampaign'
 import Button from '../../../../common/button/Button'
-import { USDC_ASSET } from '../../../../../core/util/asset/AssetConstants'
+import { USDC_ASSET } from '../../../../../core/util/asset/assetConstants'
 
 function CampaignApplicationConfirmationPage() {
   const dispatch = useCampaignApplicationDispatchContext()

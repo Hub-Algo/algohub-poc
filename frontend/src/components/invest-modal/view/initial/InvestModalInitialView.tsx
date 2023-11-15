@@ -2,6 +2,8 @@ import { FormEvent } from 'react'
 import useAppContext from '../../../../core/util/useAppContext'
 import Button from '../../../common/button/Button'
 import Input from '../../../common/input/Input'
+import { CampaignObj } from '../../../../services/campaignServices'
+import { AssetInfoInterface } from '../../../../interfaces/AssetInfoInterface'
 
 interface InvestModalInitialViewProps {
   inputProps: {
@@ -9,12 +11,15 @@ interface InvestModalInitialViewProps {
     onChange: (event: React.SyntheticEvent<HTMLInputElement, Event>) => void
   }
   onInvestButtonClick: (event: FormEvent<HTMLFormElement>) => void
+  campaign: CampaignObj
+  idoAsa?: AssetInfoInterface
 }
-function InvestModalInitialView({ inputProps, onInvestButtonClick }: InvestModalInitialViewProps) {
+
+function InvestModalInitialView({ inputProps, onInvestButtonClick, campaign, idoAsa }: InvestModalInitialViewProps) {
   const { userData } = useAppContext()
-  const outputToken = (inputProps.value ?? 0) / 10 // TODO: Calculate output token
+  const outputToken = (inputProps.value ?? 0) * campaign.conversionRate
   const algoFee = '0.03 ALGO' // TODO: Calculate manually
-  const maxInvestmentPerAccount = 5000 // TODO: fetch this info from the contract/api
+  const maxInvestmentPerAccount = campaign.maxInvestmentPerAccount
 
   return (
     <form onSubmit={onInvestButtonClick} className={'flex flex-col gap-4'}>
@@ -34,7 +39,7 @@ function InvestModalInitialView({ inputProps, onInvestButtonClick }: InvestModal
       />
 
       <ul className="text-gray-100">
-        <li>{`Output token: ${outputToken}X`} </li>
+        <li>{`Output token: ${outputToken}${idoAsa?.params['unit-name']}`} </li>
         <li>{`Fee: ${algoFee}`}</li>
       </ul>
 

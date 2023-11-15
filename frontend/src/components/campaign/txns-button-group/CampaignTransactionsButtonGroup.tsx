@@ -13,27 +13,32 @@ import CampaignWithdrawSales from '../../campaign-pre-generated/CampaignWithdraw
 import WalletConnectModal from '../../common/wallet-connect-modal/WalletConnectModal'
 import InvestModal from '../../invest-modal/InvestModal'
 import OptInButton from '../../opt-in/OptInButton'
-import { USDC_ASSET } from '../../../core/util/asset/AssetConstants'
+import { USDC_ASSET } from '../../../core/util/asset/assetConstants'
+import { CampaignObj } from '../../../services/campaignServices'
 
 function CampaignTransactionsButtonGroup({
-  campaignId,
+  campaign,
   campaignPeriod,
   campaignGoalStatus,
   userStatus,
   idoAsaId,
+  isDemonstrating,
+  idoAssetUnitName,
 }: {
-  campaignId: number | bigint
+  campaign: CampaignObj
   campaignPeriod: 'voting' | 'investing' | 'ended'
-  campaignGoalStatus: 'incomplete' | 'softcap' | 'hardcap'
+  campaignGoalStatus: 'incomplete' | 'softcap_reached' | 'hardcap_reached'
   userStatus: 'voted' | 'voted_and_invested' | 'invested' | 'not_interacted' | 'campaign_owner'
   idoAsaId: number
+  isDemonstrating: boolean
+  idoAssetUnitName?: string
 }) {
   const { activeAccount, userData } = useAppContext()
   const { signer } = useWallet()
 
   const appDetails = {
     resolveBy: 'id',
-    id: campaignId,
+    id: Number(campaign.appId),
     sender: { signer, addr: activeAccount?.address } as TransactionSignerAccount,
     creatorAddress: activeAccount?.address,
     findExistingUsing: algod.indexer,
@@ -56,19 +61,59 @@ function CampaignTransactionsButtonGroup({
   function getCampaignOwnerTransactionButtons() {
     let content = <Fragment />
 
-    if (campaignPeriod === 'ended' && campaignGoalStatus === 'incomplete') {
-      content = <CampaignWithdrawIdoAsa buttonClass="" buttonNode={'withdraw ido asa'} typedClient={campaignClient} idoAsa={idoAsaId} />
-    } else if (campaignPeriod === 'ended' && campaignGoalStatus === 'softcap') {
+    // TODO: Remove this
+    if (isDemonstrating) {
       content = (
         <>
-          <CampaignWithdrawSales buttonClass="" buttonNode={'claim sales'} typedClient={campaignClient} investmentAsa={USDC_ASSET.id} />
+          {!hasUserOptedInToInvestAsa && (
+            <>
+              <p className={'text-gray-100 text-center'}>{'You need to opt-in to the asset, in order to claim your USDC sales'}</p>
 
-          <CampaignWithdrawIdoAsa buttonClass="" buttonNode={'withdraw ido asa'} typedClient={campaignClient} idoAsa={idoAsaId} />
+              <OptInButton assetId={USDC_ASSET.id} activeAddress={activeAccount?.address ?? ''} />
+            </>
+          )}
+          <CampaignWithdrawSales typedClient={campaignClient} investmentAsa={USDC_ASSET.id}>
+            {'claim sales'}
+          </CampaignWithdrawSales>
         </>
       )
-    } else if (campaignPeriod !== 'ended' && campaignGoalStatus === 'softcap') {
+    } else if (campaignPeriod === 'ended' && campaignGoalStatus === 'incomplete') {
+      content = <CampaignWithdrawIdoAsa buttonClass="" buttonNode={'withdraw ido asa'} typedClient={campaignClient} idoAsa={idoAsaId} />
+    } else if (campaignPeriod === 'ended' && campaignGoalStatus !== 'incomplete') {
       content = (
-        <CampaignWithdrawSales buttonClass="" buttonNode={'claim sales'} typedClient={campaignClient} investmentAsa={USDC_ASSET.id} />
+        <>
+          {!hasUserOptedInToInvestAsa && (
+            <>
+              <p className={'text-gray-100 text-center'}>{'You need to opt-in to the asset, in order to claim your USDC sales'}</p>
+
+              <OptInButton assetId={USDC_ASSET.id} activeAddress={activeAccount?.address ?? ''} />
+            </>
+          )}
+
+          <CampaignWithdrawSales typedClient={campaignClient} investmentAsa={USDC_ASSET.id}>
+            {'claim sales'}
+          </CampaignWithdrawSales>
+
+          {campaignGoalStatus === 'softcap_reached' && (
+            <CampaignWithdrawIdoAsa buttonClass="" buttonNode={'withdraw ido asa'} typedClient={campaignClient} idoAsa={idoAsaId} />
+          )}
+        </>
+      )
+    } else if (campaignPeriod !== 'ended' && campaignGoalStatus === 'softcap_reached') {
+      content = (
+        <>
+          {!hasUserOptedInToInvestAsa && (
+            <>
+              <p className={'text-gray-100 text-center'}>{'You need to opt-in to the asset, in order to claim your USDC sales'}</p>
+
+              <OptInButton assetId={USDC_ASSET.id} activeAddress={activeAccount?.address ?? ''} />
+            </>
+          )}
+
+          <CampaignWithdrawSales typedClient={campaignClient} investmentAsa={USDC_ASSET.id}>
+            {'claim sales'}
+          </CampaignWithdrawSales>
+        </>
       )
     }
 
@@ -78,22 +123,33 @@ function CampaignTransactionsButtonGroup({
   function getCampaignClientTransactionButtons() {
     let content = <Fragment />
 
-    if (campaignPeriod === 'voting' && userStatus === 'not_interacted') {
+    // TODO: Remove this
+    if (isDemonstrating) {
+      content = (
+        <>
+          <InvestModal campaignStatus={'whitelist'} campaign={campaign} />
+
+          <CampaignClaim campaignId={Number(campaign.appId)} idoAsa={idoAsaId} isDisabled={!hasUserOptedInToIdoAsa}>
+            {`claim ${idoAssetUnitName}`}
+          </CampaignClaim>
+        </>
+      )
+    } else if (campaignPeriod === 'voting' && userStatus === 'not_interacted') {
       content = <VoteModal hasVotedAlready={false} />
     } else if (
       campaignPeriod === 'voting' &&
       (userStatus === 'voted' || userStatus === 'voted_and_invested') &&
-      campaignGoalStatus !== 'hardcap'
+      campaignGoalStatus !== 'hardcap_reached'
     ) {
       content = (
         <>
           <VoteModal hasVotedAlready={true} />
 
-          <InvestModal campaignStatus={'hypelist'} campaignId={campaignId} />
+          <InvestModal campaignStatus={'hypelist'} campaign={campaign} />
         </>
       )
-    } else if (campaignPeriod === 'investing' && campaignGoalStatus !== 'hardcap') {
-      content = <InvestModal campaignStatus={'whitelist'} campaignId={campaignId} />
+    } else if (campaignPeriod === 'investing' && campaignGoalStatus !== 'hardcap_reached') {
+      content = <InvestModal campaignStatus={'whitelist'} campaign={campaign} />
     } else if (campaignGoalStatus === 'incomplete' && (userStatus === 'invested' || userStatus === 'voted_and_invested')) {
       content = (
         <>
@@ -105,13 +161,9 @@ function CampaignTransactionsButtonGroup({
             </>
           )}
 
-          <CampaignWithdrawInvestment
-            buttonClass=""
-            buttonNode={'withdraw investment'}
-            typedClient={campaignClient}
-            investmentAsa={USDC_ASSET.id}
-            isDisabled={!hasUserOptedInToInvestAsa}
-          />
+          <CampaignWithdrawInvestment typedClient={campaignClient} investmentAsa={USDC_ASSET.id} isDisabled={!hasUserOptedInToInvestAsa}>
+            {'withdraw investment'}
+          </CampaignWithdrawInvestment>
         </>
       )
     } else if (
@@ -128,8 +180,9 @@ function CampaignTransactionsButtonGroup({
               <OptInButton assetId={idoAsaId} activeAddress={activeAccount?.address ?? ''} />
             </>
           )}
-          <CampaignClaim campaignId={campaignId} idoAsa={idoAsaId} isDisabled={!hasUserOptedInToIdoAsa}>
-            {'claim'}
+
+          <CampaignClaim campaignId={Number(campaign.appId)} idoAsa={idoAsaId} isDisabled={!hasUserOptedInToIdoAsa}>
+            {`claim ${idoAssetUnitName}`}
           </CampaignClaim>
         </>
       )
