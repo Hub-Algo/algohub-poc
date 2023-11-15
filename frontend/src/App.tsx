@@ -39,25 +39,7 @@ export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignObj[]>([])
   const [userData, setUserData] = useState<UserInterface>()
   const [algohubClient, setAlgohubClient] = useState<AlgohubClient>()
-  const { activeAccount, signer, activeAddress, connectedAccounts } = useWallet()
-
-  // const algohubClientAppDetails: AppDetails = {
-  //   resolveBy: 'id',
-  //   // id: 479483526,
-  //   id: 479564984,
-  //   sender: { signer, addr: activeAddress } as TransactionSignerAccount,
-  // }
-
-  // const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined
-
-  // const algohubClientAppDetails: AppDetails = {
-  //   resolveBy: 'id',
-  //   // id: 479483526,
-  //   id: 479564984,
-  //   sender: { signer, addr: activeAddress } as TransactionSignerAccount,
-  // }
-
-  // const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined
+  const { activeAccount, signer, activeAddress } = useWallet()
 
   let providersArray: ProvidersArray
 
@@ -118,52 +100,30 @@ export default function App() {
   }, [])
 
   const fetchCampaigns = useCallback(async () => {
-    if (algohubClient === undefined || algohubClient === null) {
-      setCampaignList([])
-    }
     const allCampaignIds = await fetchAllCampaignIds(algohubClient)
-    // console.log('allCampaignIds', allCampaignIds)
     const allCampaigns: CampaignObj[] = []
     for (let i = 0; i < allCampaignIds.length; i++) {
       const campaigndetails = await fetchCampaignDetails(Number(allCampaignIds[i]), algod.client)
-      // console.log('capmaignDetails', campaigndetails)
       allCampaigns.push(campaigndetails)
+      setCampaignList(allCampaigns)
     }
-
-    setCampaignList(allCampaigns)
   }, [algohubClient])
 
   useEffect(() => {
     fetchCampaigns()
-  }, [fetchCampaigns, activeAccount])
+  }, [fetchCampaigns, activeAccount, algohubClient])
 
   useEffect(() => {
+    const algohubClientAppDetails: AppDetails = {
+      resolveBy: 'id',
+      id: 479564984,
+      sender: activeAddress ? ({ signer, addr: activeAddress } as TransactionSignerAccount) : undefined,
+    }
+
+    setAlgohubClient(new AlgohubClient(algohubClientAppDetails, algod.client))
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
     }
-    const algohubClientAppDetails: AppDetails = {
-      resolveBy: 'id',
-      // id: 479483526,
-      id: 479564984,
-      sender: { signer, addr: activeAddress } as TransactionSignerAccount,
-    }
-
-    setAlgohubClient(activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeAccount, activeAddress, connectedAccounts, fetchAndAppendUserData])
-
-  useEffect(() => {
-    if (activeAccount) {
-      fetchAndAppendUserData(activeAccount?.address)
-    }
-    const algohubClientAppDetails: AppDetails = {
-      resolveBy: 'id',
-      // id: 479483526,
-      id: 479564984,
-      sender: { signer, addr: activeAddress } as TransactionSignerAccount,
-    }
-
-    setAlgohubClient(activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined)
   }, [activeAccount, activeAddress, fetchAndAppendUserData])
 
   const router = createBrowserRouter([

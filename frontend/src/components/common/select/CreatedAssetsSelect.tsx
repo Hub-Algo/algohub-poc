@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 const CreatedAssetsSelect = ({ options, handleSetAssetId }) => {
   const [selectedAsset, setSelectedAsset] = useState<number>()
+  console.log(options)
 
   const handleAssetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value

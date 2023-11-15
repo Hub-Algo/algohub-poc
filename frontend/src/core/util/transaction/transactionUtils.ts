@@ -56,6 +56,7 @@ function generateAlgoExplorerLink(type: 'group-id' | 'txn-id' | 'account-detail'
 }
 
 function convertToBaseUnits(assetDecimals: number, amount: number) {
+  if (!assetDecimals) return 0
   return Math.pow(10, assetDecimals) * amount
 }
 
@@ -63,4 +64,4 @@ function convertFromBaseUnits(assetDecimals: number, amount: number) {
   return Math.pow(10, -assetDecimals) * amount
 }
 
-export { generateAlgoExplorerLink, generateOptIntoAssetTxns, convertToBaseUnits, convertFromBaseUnits }
+export { convertFromBaseUnits, convertToBaseUnits, generateAlgoExplorerLink, generateOptIntoAssetTxns }

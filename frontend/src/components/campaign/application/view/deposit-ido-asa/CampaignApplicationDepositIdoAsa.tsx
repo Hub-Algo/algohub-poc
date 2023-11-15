@@ -1,17 +1,17 @@
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
+import { useWallet } from '@txnlab/use-wallet'
+import { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { CampaignClient } from '../../../../../contracts/CampaignClient'
 import algod from '../../../../../core/algosdk/AlgodManager'
+import routes from '../../../../../core/routes'
+import { convertToBaseUnits } from '../../../../../core/util/transaction/transactionUtils'
 import useAppContext from '../../../../../core/util/useAppContext'
-import { useWallet } from '@txnlab/use-wallet'
 import { useCampaignApplicationStateContext } from '../../../../../pages/campaign-application/CampaignApplication.context'
 import { CampaignApplicationFormView } from '../../../../../pages/campaign-application/CampaignApplication.types'
 import Button from '../../../../common/button/Button'
-import { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk'
 import Toast, { ToastProps } from '../../../../common/toast/Toast'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import routes from '../../../../../core/routes'
-import { convertToBaseUnits } from '../../../../../core/util/transaction/transactionUtils'
 
 function CampaignApplicationDepositIdoAsa() {
   const { signer } = useWallet()
@@ -37,14 +37,16 @@ function CampaignApplicationDepositIdoAsa() {
 
       <p>{`If you don't have enough ${idoAsa?.params?.['unit-name']} in your account, the transaction will be reverted`}</p>
 
-      <p>{`Deposit amount: ${
-        formData[CampaignApplicationFormView.FundraisingGoal]
+      <p>
+        {`Deposit amount: ${(formData[CampaignApplicationFormView.FundraisingGoal]
           ? ((formData[CampaignApplicationFormView.FundraisingGoal].maxAmount ??
               formData[CampaignApplicationFormView.FundraisingGoal].minAmount) *
               100) /
             Number(formData[CampaignApplicationFormView.FundraisingGoal].usdPricePerToken ?? 0)
           : 0
-      }`}</p>
+        ).toLocaleString('us-EN')}`}{' '}
+        {idoAsa?.params?.['unit-name']}
+      </p>
 
       <Button
         onClick={handleDepositIdoAsa}

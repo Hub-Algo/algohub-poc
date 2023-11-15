@@ -37,19 +37,19 @@ function Profile() {
 
       <Tab items={tabItems}>
         <div className="h-96 flex items-center justify-center">
-          <p className="text-3xl text-gray-300">Comming soon</p>
+          <p className="text-3xl text-gray-300">Coming soon</p>
         </div>
 
         <div className="h-96 flex items-center justify-center">
-          <p className="text-3xl text-gray-300">Comming soon</p>
+          <p className="text-3xl text-gray-300">Coming soon</p>
         </div>
 
         <div className="h-96 flex items-center justify-center">
-          <p className="text-3xl text-gray-300">Comming soon</p>
+          <p className="text-3xl text-gray-300">Coming soon</p>
         </div>
 
         <div className="h-96 flex items-center justify-center">
-          <p className="text-3xl text-gray-300">Comming soon</p>
+          <p className="text-3xl text-gray-300">Coming soon</p>
         </div>
       </Tab>
     </div>

@@ -1,8 +1,28 @@
 # algohub-poc
 
-This starter full stack project has been generated using AlgoKit. See below for default getting started instructions.
+<img src="./frontend/public/images/algohub_logo.png" width="150" title="hover text">
+
+***The Home of Algorand Projects***
+
+## Intro
+
+Algohub is presently an Early-Stage organization building a decentralized 'one-stop-shop' platform for Algorand related fundraising and collabboration services:
+- **Launchpad** - A fundraising platform for enterprise projects building on Algorand.
+Features a decentralized diligence process, post-raise accountability mechanisms and has no
+native token requirements for participation, unlike most similar solutions.
+- **Crowdfunding** - A Kickstarter-like platform for consumer projects seeking community
+support and funding. Features post-raise accountability mechanisms
+- **Talent Labs** - A decentralized freelancing marketplace dedicated to Algorand.
+An UpWork-like platform to find either talents or jobs, without a centralized intermediary.
+- **AlgoCrypt** - Time-locked token vaults and multi-sig treasuries. Basically, UniCrypt and
+Gnosis Vaults made available for the Algorand ecosystem.
+
+
+This project is developed as part of the Algorand Build-a-Bull Hackathon (2023) and it serves as an PoC for the Launchpad part of the solution. 
 
 ## Setup
+
+This starter full stack project has been generated using AlgoKit. See below for default getting started instructions.
 
 ### Initial setup
 
