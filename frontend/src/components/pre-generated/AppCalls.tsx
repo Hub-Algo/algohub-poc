@@ -6,7 +6,6 @@ import { useState } from 'react'
 import { AlgohubClient } from '../../contracts/AlgohubClient'
 import { CampaignClient } from '../../contracts/CampaignClient'
 import algod from '../../core/algosdk/AlgodManager'
-import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
 import AlgohubGetTotalVoters from '../algohub-pre-generated/AlgohubGetTotalVoters'
 
 interface AppCallsInterface {
@@ -33,9 +32,6 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const [response, setResponse] = useState<Error | AppCallTransactionResultOfType<bigint[]>>()
-
-  console.log(response)
   const sendAppCall = async () => {
     setLoading(true)
 
@@ -69,7 +65,6 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
       return e
     })
 
-    setResponse(algohubResponse)
     enqueueSnackbar(`Response from the campaign contract. Campaign Details: ${campaignResponse?.return}`, { variant: 'success' })
     console.log(`Response from the algohub master contract. All Campaigns: ${algohubResponse}`, { variant: 'success' })
     setLoading(false)

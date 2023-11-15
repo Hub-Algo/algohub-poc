@@ -6,14 +6,13 @@ import { PeraWalletConnect } from '@perawallet/connect'
 import { Account, PROVIDER_ID, ProvidersArray, WalletProvider, useInitializeProviders, useWallet } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
 import NavBar from './components/NavBar'
 import { AlgohubClient } from './contracts/AlgohubClient'
 import algod from './core/algosdk/AlgodManager'
 import ROUTES from './core/routes'
-import { USDC_ASSET } from './core/util/asset/AssetConstants'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
@@ -26,13 +25,15 @@ import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 import { fetchAllCampaigns } from './services/campaignServices'
-import { userServices } from './services/userServices'
+import { userService } from './services/userServices'
+import { USDC_ASSET } from './core/util/asset/AssetConstants'
 
 export interface AppState {
   activeAccount?: Account | null
   campaignList: CampaignInterface[]
   userData?: UserInterface
   algohubClient: AlgohubClient | null
+  fetchAndAppendUserData: (walletAddress: string) => Promise<void>
 }
 
 export default function App() {
@@ -47,7 +48,6 @@ export default function App() {
   }
 
   const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : null
-  const userService = new userServices()
 
   let providersArray: ProvidersArray
 
@@ -70,7 +70,7 @@ export default function App() {
     setCampaignList(allCampaigns)
   }
 
-  const fetchAndAppendUserData = async (walletAddress: string) => {
+  const fetchAndAppendUserData = useCallback(async (walletAddress: string) => {
     const userAssets = (await userService.fetchUserAssets(walletAddress)).assets
 
     const userCreatedAssets = (await userService.fetchUserAssets(walletAddress)).created_assets
@@ -97,7 +97,7 @@ export default function App() {
       user_assets: userAssets,
       user_created_assets: userCreatedAssets,
     })
-  }
+  }, [])
 
   useEffect(() => {
     fetchCampaigns()
@@ -107,7 +107,7 @@ export default function App() {
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
     }
-  }, [activeAccount])
+  }, [activeAccount, fetchAndAppendUserData])
 
   const algodConfig = getAlgodConfigFromViteEnvironment()
 
@@ -127,7 +127,7 @@ export default function App() {
       element: (
         <>
           <NavBar userData={userData} resetUserData={resetUserData} />
-          <Outlet context={{ activeAccount, campaignList, userData, algohubClient } satisfies AppState} />
+          <Outlet context={{ activeAccount, campaignList, userData, algohubClient, fetchAndAppendUserData } satisfies AppState} />
           <Footer />
         </>
       ),

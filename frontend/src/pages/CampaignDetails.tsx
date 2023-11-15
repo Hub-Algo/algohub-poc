@@ -1,19 +1,17 @@
-import { useOutletContext, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import Carousel from '../components/common/carousel/Carousel'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
 import { CampaignInterface } from '../interfaces/campaign-interface'
-import InvestModal from '../components/invest-modal/InvestModal'
-import WalletConnectModal from '../components/common/wallet-connect-modal/WalletConnectModal'
-import { useWallet } from '@txnlab/use-wallet'
 import CampaignDetailsDashboard from '../components/campaign/campaign-details/CampaignDetailsDashboard'
-import { AssetServices } from '../services/assetServices'
-import { useEffect, useState } from 'react'
-import { ellipseAddress } from '../core/util/wallet/ellipseAddress'
+import { useCallback, useEffect, useState } from 'react'
 import { AssetInfoInterface } from '../interfaces/AssetInfoInterface'
 import ProjectInformation from '../components/campaign/campaign-tabs/ProjectInformation'
+import useAppContext from '../core/util/useAppContext'
+import CampaignTransactions from '../components/campaign/transactions/CampaignTransactions'
+import { assetServices } from '../services/assetServices'
 
 const images = [
   'https://pbs.twimg.com/profile_banners/1429713964288471040/1661936165/1500x500',
@@ -27,10 +25,7 @@ export interface CampaignOutletInterface {
 }
 
 const CampaignDetails = () => {
-  const { campaignList } = useOutletContext() as CampaignOutletInterface
-
-  const { activeAccount } = useWallet()
-
+  const { campaignList } = useAppContext()
   const { campaignId } = useParams()
 
   const [assetInfo, setAssetInfo] = useState<AssetInfoInterface>()
@@ -48,18 +43,16 @@ const CampaignDetails = () => {
     },
   ]
 
-  const assetServices = new AssetServices()
+  const campaign = campaignList?.filter((campaign) => campaign.metadata.id === campaignId)[0]
 
-  const campaign = campaignList.filter((campaign) => campaign.metadata.id === campaignId)[0]
-
-  const fetchAssetInfo = async () => {
-    const { asset } = await assetServices.getAssetInformation(campaign.record.productDocumentation.assetId)
+  const fetchAssetInfo = useCallback(async () => {
+    const { asset } = await assetServices.getAssetInformation(campaign?.record.productDocumentation.assetId)
     setAssetInfo(asset)
-  }
+  }, [campaign?.record.productDocumentation.assetId])
 
   useEffect(() => {
     fetchAssetInfo()
-  }, [])
+  }, [fetchAssetInfo])
 
   return (
     <PageContainer>
@@ -82,28 +75,38 @@ const CampaignDetails = () => {
       <section>
         <div className="flex flex-col gap-6 md:grid md:grid-cols-9 md:gap-10">
           <Carousel images={images} />
-          <CampaignDetailsDashboard campaign={campaign}>{getTxnModal()}</CampaignDetailsDashboard>
+
+          {campaign && (
+            <CampaignDetailsDashboard campaign={campaign}>
+              {campaign.record.productDocumentation.assetId && (
+                <CampaignTransactions
+                  campaignId={479634869n}
+                  campaignPeriod={'ended'}
+                  campaignGoalStatus={'hardcap'}
+                  userStatus={'invested'}
+                  idoAsaId={479553947}
+                />
+              )}
+            </CampaignDetailsDashboard>
+          )}
         </div>
       </section>
       <section>
         <Tab items={tabItems}>
-          <ProjectInformation campaign={campaign} assetInfo={assetInfo!} />
+          {campaign && <ProjectInformation campaign={campaign} assetInfo={assetInfo!} />}
           <div>
-            {' '}
             <div className="h-96 flex items-center justify-center">
               <p className="text-3xl text-gray-300">Comming soon</p>
             </div>
           </div>
 
           <div>
-            {' '}
             <div className="h-96 flex items-center justify-center">
               <p className="text-3xl text-gray-300">Comming soon</p>
             </div>
           </div>
 
           <div>
-            {' '}
             <div className="h-96 flex items-center justify-center">
               <p className="text-3xl text-gray-300">Comming soon</p>
             </div>
@@ -112,26 +115,6 @@ const CampaignDetails = () => {
       </section>
     </PageContainer>
   )
-
-  function getTxnModal() {
-    if (!activeAccount) {
-      return <WalletConnectModal buttonLabel="Connect to vote" />
-    }
-    // if ((campaign?.campaign_status === 'new' && hasVoted) || campaign?.campaign_status === 'pending') {
-    //   // TODO: Get campaign id dynamically
-    return <InvestModal campaignStatus={'new'} campaignId={479460351n} />
-    // } else if (campaign?.campaign_status === 'new' && !hasVoted) {
-    //   return <VoteModal />
-    // }
-
-    // return (
-    //   <Modal id={'CampaignDetails.TxnModal'} modalButtonName={'Whitelist'}>
-    //     <h2>{'Transaction details'}</h2>
-
-    //     <p>{'Enter the amount you want to fund'}</p>
-    //   </Modal>
-    // )
-  }
 }
 
 export default CampaignDetails

@@ -47,3 +47,7 @@ export class userServices {
     }
   }
 }
+
+const userService = new userServices()
+
+export { userService }

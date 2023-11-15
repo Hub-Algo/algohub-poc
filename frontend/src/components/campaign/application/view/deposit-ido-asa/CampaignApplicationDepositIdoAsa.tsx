@@ -29,17 +29,19 @@ function CampaignApplicationDepositIdoAsa() {
   )
 
   const idoAsaId = formData[CampaignApplicationFormView.ProductDocumentation]?.assetId
+  const idoAsa = appState.userData?.user_created_assets.find((asset) => asset.index === idoAsaId)
 
   return (
     <div className={'flex flex-col justify-start text-white font-semibold mt-32 gap-6 h-screen max-w-lg mx-auto'}>
       <p>{'Please note that the deposit amount is calculated base on the fundraising goal you filled in the form'}</p>
 
-      <p>{`If you don't have enough ${idoAsaId} in your account, the transaction will be reverted`}</p>
+      <p>{`If you don't have enough ${idoAsa?.params?.['unit-name']} in your account, the transaction will be reverted`}</p>
 
       <p>{`Deposit amount: ${
         formData[CampaignApplicationFormView.FundraisingGoal]
-          ? formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount /
-            Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken)
+          ? (formData[CampaignApplicationFormView.FundraisingGoal].maxAmount ??
+              formData[CampaignApplicationFormView.FundraisingGoal].minAmount) /
+            (Number(formData[CampaignApplicationFormView.FundraisingGoal].usdPricePerToken) / 100)
           : 0
       }`}</p>
 
@@ -67,18 +69,19 @@ function CampaignApplicationDepositIdoAsa() {
     try {
       if (idoAsaId && appState.activeAccount?.address) {
         setLoading(true)
-
         const suggestedParams = await algod.client.getTransactionParams().do()
         const appMetadata = await campaignContract.appClient.getAppReference()
-        const idoAsaToTransfer = formData[CampaignApplicationFormView.FundraisingGoal]
-          ? formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount /
-            Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken)
+
+        const idoAsaAmountToTransfer = formData[CampaignApplicationFormView.FundraisingGoal]
+          ? (formData[CampaignApplicationFormView.FundraisingGoal]?.maxAmount ??
+              formData[CampaignApplicationFormView.FundraisingGoal]?.minAmount) *
+            Number(formData[CampaignApplicationFormView.FundraisingGoal]?.usdPricePerToken ?? 0)
           : 0
+
         const idoXferTxn = makeAssetTransferTxnWithSuggestedParamsFromObject({
           from: appState.activeAccount.address,
           to: appMetadata.appAddress,
-          // Convert to base units
-          amount: convertToBaseUnits(6, idoAsaToTransfer),
+          amount: convertToBaseUnits(idoAsa?.params?.decimals ?? 0, idoAsaAmountToTransfer),
           suggestedParams,
           assetIndex: idoAsaId,
         })
@@ -91,12 +94,15 @@ function CampaignApplicationDepositIdoAsa() {
         )
 
         setLoading(false)
-        setToastProps({ type: 'success', message: `Successfully deposited amount` })
+        setToastProps({ type: 'success', message: `Successfully deposited ${idoAsaAmountToTransfer} ${idoAsa?.params?.['unit-name']}` })
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setLoading(false)
-      setToastProps({ type: 'error', message: error.message ?? 'Something went wrong while sending the txn' })
+      setToastProps({
+        type: 'error',
+        message: error.message ?? `Something went wrong while depositing ${idoAsa?.params?.['unit-name']} asset`,
+      })
     }
   }
 }

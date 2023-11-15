@@ -65,8 +65,14 @@ function CampaignApplicationFormFundRaisingGoal({
         </div>
 
         <div className="w-full">
-          <LabelTooltip labelContent="USD conversionRate of the token" />
-          <Input type={'string'} value={state?.usdPricePerToken ?? ''} onChange={handleSetUsdPricePerToken} customClassName={'mx-auto'} />
+          <LabelTooltip labelContent="USD conversion rate of the token" />
+          <Input
+            type={'number'}
+            value={state?.usdPricePerToken ? parseFloat(state?.usdPricePerToken) / 100 : ''}
+            onChange={handleSetUsdPricePerToken}
+            customClassName={'mx-auto'}
+            min={0 + (parseFloat(state?.usdPricePerToken ?? '') ?? 0) / 100}
+          />
         </div>
 
         <div className="w-full">
@@ -74,7 +80,7 @@ function CampaignApplicationFormFundRaisingGoal({
           <Input type={'url'} value={state?.financialPlan ?? ''} onChange={handleSetFinancialPlan} customClassName={'mx-auto'} />
         </div>
 
-        <div className="flex flex-col gap-6 mt-6">
+        <div className="flex flex-col gap-6 mt-6 w-full">
           <div className="gap-1 flex flex-col">
             <p className="text-gray-100 font-bold">
               {'In order to prevent spam applications, AlgoHub applies an application fee of 100 USDC.'}
@@ -106,7 +112,7 @@ function CampaignApplicationFormFundRaisingGoal({
             </label>
           </div>
 
-          <div className="gap-1 w-full flex flex-col">
+          <div className="gap-1 flex flex-col">
             <p className="text-gray-100 font-bold">{`By submitting this application form, you agree to AlgoHub's terms of service`}</p>
 
             <label className={'gap-2 flex text-gray-300'}>
@@ -170,10 +176,17 @@ function CampaignApplicationFormFundRaisingGoal({
   }
 
   function handleSetUsdPricePerToken(event: React.SyntheticEvent<HTMLInputElement, Event>) {
-    const { value } = event.currentTarget
+    let { value } = event.currentTarget
 
+    if (parseFloat(value) < parseFloat(event.currentTarget.min)) {
+      value = value.slice(0, value.length - 1)
+    }
+
+    value = parseFloat(value).toFixed(2)
     setState((prev) => {
-      return prev ? { ...prev, usdPricePerToken: value } : { ...INITIAL_CAMPAIGN_APPLICATION_FUND_RAISING_GOAL, usdPricePerToken: value }
+      return prev
+        ? { ...prev, usdPricePerToken: String(parseFloat(value) * 100) }
+        : { ...INITIAL_CAMPAIGN_APPLICATION_FUND_RAISING_GOAL, usdPricePerToken: String(parseFloat(value) * 100) }
     })
   }
 

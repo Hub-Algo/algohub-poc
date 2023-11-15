@@ -24,7 +24,7 @@ const CampaignList = ({ campaigns, listLabel }: CampaignsListPropsInterface) => 
     const currentLimit = getDisplayedCampaignsLimit(isSmallScreen, isXSmallScreen, isMidRangeScreen)
 
     setLimit(currentLimit)
-  }, [isSmallScreen, isXSmallScreen])
+  }, [isMidRangeScreen, isSmallScreen, isXSmallScreen])
 
   const campaignListRenderer = displayedCampaigns.map((campaign, index) => {
     return (

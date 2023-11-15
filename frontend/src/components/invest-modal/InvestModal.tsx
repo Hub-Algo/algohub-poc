@@ -1,21 +1,22 @@
+import { FormEvent, Fragment, useState } from 'react'
+import algosdk, { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk'
 import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
 import { useWallet } from '@txnlab/use-wallet'
-import algosdk, { makeAssetTransferTxnWithSuggestedParamsFromObject } from 'algosdk'
-import { FormEvent, Fragment, useState } from 'react'
-import { CampaignClient } from '../../contracts/CampaignClient'
-import algod from '../../core/algosdk/AlgodManager'
-import { USDC_ASSET } from '../../core/util/asset/AssetConstants'
-import useAppContext from '../../core/util/useAppContext'
-import { CampaignInterface } from '../../interfaces/campaign-interface'
-import Modal from '../common/modal/Modal'
+
 import Toast from '../common/toast/Toast'
 import InvestModalConfirmView from './view/confirm/InvestModalConfirmModal'
 import InvestModalInitialView from './view/initial/InvestModalInitialView'
-
+import { convertToBaseUnits } from '../../core/util/transaction/transactionUtils'
+import Modal from '../common/modal/Modal'
+import useAppContext from '../../core/util/useAppContext'
+import algod from '../../core/algosdk/AlgodManager'
+import { CampaignClient } from '../../contracts/CampaignClient'
+import { USDC_ASSET } from '../../core/util/asset/AssetConstants'
 interface InvestModalProps {
-  campaignStatus: string
+  campaignStatus: 'hypelist' | 'whitelist'
   campaignId: bigint | number
 }
+
 function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
   const state = useAppContext()
   const { signer } = useWallet()
@@ -27,7 +28,7 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
 
   return (
     <>
-      <Modal id="invest-modal" modalButtonName={campaignStatus === 'new' ? 'Hypelist' : 'Whitelist'}>
+      <Modal id="invest-modal" modalButtonName={campaignStatus === 'hypelist' ? 'Hypelist' : 'Whitelist'}>
         {renderContent()}
       </Modal>
 
@@ -85,18 +86,22 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
       if (state.activeAccount?.address && value) {
         setLoading(true)
 
+        if (!state.userData?.usdc_balance || (state.userData?.usdc_balance && state.userData.usdc_balance < value)) {
+          throw new Error(`You don't have enough balance to invest ${value} USDC`)
+        }
+
         const campaignContract = new CampaignClient(
           {
-            sender: { signer, addr: state.activeAccount?.address } as TransactionSignerAccount,
+            sender: { signer, addr: state.activeAccount.address } as TransactionSignerAccount,
             resolveBy: 'id',
-            id: campaignId!,
+            id: campaignId,
           },
           algod.client,
         )
 
         const suggestedParams = await algod.client.getTransactionParams().do()
         const appClient = await campaignContract.appClient.getAppReference()
-        const investmentAmount = value * Math.pow(10, 6)
+        const investmentAmount = convertToBaseUnits(USDC_ASSET.decimals, value)
         const investXferTxn = makeAssetTransferTxnWithSuggestedParamsFromObject({
           from: state.activeAccount.address,
           to: appClient.appAddress,
@@ -105,22 +110,11 @@ function InvestModal({ campaignStatus, campaignId }: InvestModalProps) {
           assetIndex: USDC_ASSET.id, // TODO: Use mainnet usdc asset
         })
 
-        if (!state.userData?.usdc_balance && state.userData?.usdc_balance && state.userData.usdc_balance < value) {
-          throw new Error(`You don't have enough balance to invest ${value} USDC`)
-        }
-
         await campaignContract.invest(
-          { investmentAsaXfer: investXferTxn, investmentAsa: USDC_ASSET.id, investmentAmount: investmentAmount },
+          { investmentAsaXfer: investXferTxn, investmentAsa: USDC_ASSET.id, investmentAmount: value },
           {
             sender: { signer, addr: state.activeAccount?.address } as TransactionSignerAccount,
-            boxes: [
-              {
-                appIndex: 0,
-                name: new Uint8Array(
-                  Buffer.from(`${Buffer.from('p').toString('hex')}${algosdk.encodeAddress(Buffer.from(state.activeAccount.address))}`),
-                ),
-              },
-            ],
+            boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(state.activeAccount.address).publicKey]))],
           },
         )
 
