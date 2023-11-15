@@ -1,12 +1,11 @@
-import { useOutletContext } from 'react-router-dom'
-import { CampaignOutletInterface } from './CampaignDetails'
 import { useEffect, useState } from 'react'
-import { CampaignInterface } from '../interfaces/campaign-interface'
-import { CampaignObj, filterCampaignByCategory } from '../services/campaignServices'
-import CampaignList from '../components/campaign/list/CampaignList'
-import CampaignFilter from '../components/campaign/filter/CampaignFilter'
-import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
+import { useOutletContext } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
+import CampaignFilter from '../components/campaign/filter/CampaignFilter'
+import CampaignList from '../components/campaign/list/CampaignList'
+import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
+import { CampaignObj, filterCampaignByCategory } from '../services/campaignServices'
+import { CampaignOutletInterface } from './CampaignDetails'
 
 const AllCampaigns = () => {
   const { campaignList } = useOutletContext() as CampaignOutletInterface

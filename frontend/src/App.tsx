@@ -130,7 +130,6 @@ export default function App() {
       allCampaigns.push(campaigndetails)
     }
 
-    console.log('allCampaigns', allCampaigns)
     setCampaignList(allCampaigns)
   }, [algohubClient])
 

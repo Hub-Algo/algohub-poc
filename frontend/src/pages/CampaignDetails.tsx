@@ -1,21 +1,21 @@
+import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
+import algosdk from 'algosdk'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
 import CampaignDetailsDashboard from '../components/campaign/campaign-details/CampaignDetailsDashboard'
 import ProjectInformation from '../components/campaign/campaign-tabs/ProjectInformation'
+import CampaignTransactionsButtonGroup from '../components/campaign/txns-button-group/CampaignTransactionsButtonGroup'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import Carousel from '../components/common/carousel/Carousel'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
+import { CampaignClient } from '../contracts/CampaignClient'
+import algod from '../core/algosdk/AlgodManager'
+import useAppContext from '../core/util/useAppContext'
 import { AssetInfoInterface } from '../interfaces/AssetInfoInterface'
 import { assetServices } from '../services/assetServices'
 import { CampaignObj } from '../services/campaignServices'
-import CampaignTransactionsButtonGroup from '../components/campaign/txns-button-group/CampaignTransactionsButtonGroup'
-import useAppContext from '../core/util/useAppContext'
-import { CampaignClient } from '../contracts/CampaignClient'
-import algod from '../core/algosdk/AlgodManager'
-import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
-import algosdk from 'algosdk'
 
 const images = [
   'https://pbs.twimg.com/profile_banners/1429713964288471040/1661936165/1500x500',
@@ -51,8 +51,6 @@ const CampaignDetails = () => {
   ]
 
   const campaign = campaignList.filter((campaign) => campaign.appId === campaignId)[0]
-
-  console.log(campaign)
 
   const fetchIdoAssetInfo = async (assetId: number) => {
     const { asset } = await assetServices.getAssetInformation(assetId)

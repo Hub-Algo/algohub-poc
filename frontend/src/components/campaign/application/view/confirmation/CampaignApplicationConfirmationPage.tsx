@@ -1,5 +1,6 @@
 import { AppCallTransactionResultOfType } from '@algorandfoundation/algokit-utils/types/app'
 import { useState } from 'react'
+import { USDC_ASSET } from '../../../../../core/util/asset/assetConstants'
 import { filterTruthyObjectValues } from '../../../../../core/util/object/objectUtils'
 import useAppContext from '../../../../../core/util/useAppContext'
 import {
@@ -9,7 +10,6 @@ import {
 import { CampaignApplicationData, CampaignApplicationFormView } from '../../../../../pages/campaign-application/CampaignApplication.types'
 import AlgohubCreateCampaign from '../../../../algohub-pre-generated/AlgohubCreateCampaign'
 import Button from '../../../../common/button/Button'
-import { USDC_ASSET } from '../../../../../core/util/asset/assetConstants'
 
 function CampaignApplicationConfirmationPage() {
   const dispatch = useCampaignApplicationDispatchContext()
