@@ -3,6 +3,9 @@ import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 import Button from '../common/button/Button'
+import algosdk from 'algosdk'
+import Toast from '../common/toast/Toast'
+import { microAlgos } from '@algorandfoundation/algokit-utils'
 
 /* Example usage
 <CampaignWithdrawInvestment
@@ -16,34 +19,62 @@ import Button from '../common/button/Button'
 type CampaignWithdrawInvestmentArgs = Campaign['methods']['withdrawInvestment(asset)void']['argsObj']
 
 type Props = {
-  buttonClass: string
-  buttonNode: ReactNode
+  children: ReactNode
   typedClient: CampaignClient
   investmentAsa: CampaignWithdrawInvestmentArgs['investmentAsa']
   isDisabled?: boolean
+  buttonClass?: string
 }
 
 const CampaignWithdrawInvestment = (props: Props) => {
+  const [toastMessage, setToaastMessage] = useState<string>()
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
-    setLoading(true)
-    console.log(`Calling withdrawInvestment`)
-    await props.typedClient.withdrawInvestment(
-      {
-        investmentAsa: props.investmentAsa,
-      },
-      { sender },
-    )
-    setLoading(false)
+    if (activeAddress) {
+      setLoading(true)
+      console.log(`Calling withdrawInvestment`)
+      await props.typedClient
+        .withdrawInvestment(
+          {
+            investmentAsa: props.investmentAsa,
+          },
+          {
+            sender,
+            sendParams: {
+              fee: microAlgos(3_000),
+            },
+            boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(activeAddress).publicKey]))],
+          },
+        )
+        .then(() => {
+          setLoading(false)
+          setToaastMessage('Successfully withdrown USDc investment')
+        })
+        .catch((e) => {
+          setLoading(false)
+          setToaastMessage(e.message ?? 'Something went wrong while withdrawing investment')
+          return Promise.reject(e)
+        })
+    }
   }
 
   return (
-    <Button customClassName={props.buttonClass} onClick={callMethod} shouldDisplaySpinner={loading} isDisabled={props.isDisabled}>
-      {props.buttonNode}
-    </Button>
+    <>
+      <Button
+        customClassName={props.buttonClass}
+        onClick={callMethod}
+        shouldDisplaySpinner={loading}
+        isDisabled={props.isDisabled}
+        size="md"
+      >
+        {props.children}
+      </Button>
+
+      <Toast>{toastMessage}</Toast>
+    </>
   )
 }
 

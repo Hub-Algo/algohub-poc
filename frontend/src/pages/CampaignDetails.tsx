@@ -12,6 +12,10 @@ import { assetServices } from '../services/assetServices'
 import { CampaignObj } from '../services/campaignServices'
 import CampaignTransactionsButtonGroup from '../components/campaign/txns-button-group/CampaignTransactionsButtonGroup'
 import useAppContext from '../core/util/useAppContext'
+import { CampaignClient } from '../contracts/CampaignClient'
+import algod from '../core/algosdk/AlgodManager'
+import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
+import algosdk from 'algosdk'
 
 const images = [
   'https://pbs.twimg.com/profile_banners/1429713964288471040/1661936165/1500x500',
@@ -25,11 +29,13 @@ export interface CampaignOutletInterface {
 }
 
 const CampaignDetails = () => {
-  const { campaignList } = useAppContext()
+  const { campaignList, activeAccount } = useAppContext()
   const { campaignId } = useParams()
 
   const [assetInfo, setAssetInfo] = useState<AssetInfoInterface>()
   const [assetInvestInfo, setAssetInvestInfo] = useState<AssetInfoInterface>()
+  const [adminAddress, setAdminAddress] = useState<unknown>()
+  const isActiveUserCampaignOwner = activeAccount?.address === adminAddress
 
   const tabItems: TabItem[] = [
     { id: 'project-info', content: 'Project information' },
@@ -56,10 +62,24 @@ const CampaignDetails = () => {
     setAssetInvestInfo(asset)
   }
 
+  const getAdminInfo = async () => {
+    if (campaign) {
+      const appDetails: AppDetails = {
+        resolveBy: 'id',
+        id: Number(campaign.appId),
+      }
+      const campaignClient = new CampaignClient(appDetails, algod.client)
+      const state = await campaignClient.appClient.getGlobalState()
+
+      setAdminAddress(algosdk.ABIType.from('address').decode(state.admin?.['valueRaw']) as string)
+    }
+  }
+
   useEffect(() => {
     if (campaign) {
       fetchIdoAssetInfo(campaign.idoAsa)
       fetchInvestAssetInfo(campaign.investAsa)
+      getAdminInfo()
     }
   }, [campaign])
 
@@ -91,11 +111,13 @@ const CampaignDetails = () => {
           {campaign && (
             <CampaignDetailsDashboard investAssetInfo={assetInvestInfo!} campaign={campaign}>
               <CampaignTransactionsButtonGroup
-                campaignId={Number(campaign.appId)}
-                campaignPeriod={'ended'}
-                campaignGoalStatus={'hardcap'}
-                userStatus={'invested'}
+                campaign={campaign}
+                campaignPeriod={'investing'}
+                campaignGoalStatus={getCampaignGoalStatus()}
+                userStatus={isActiveUserCampaignOwner ? 'campaign_owner' : 'not_interacted'}
                 idoAsaId={campaign.idoAsa}
+                isDemonstrating={true}
+                idoAssetUnitName={assetInfo?.params['unit-name']}
               />
             </CampaignDetailsDashboard>
           )}
@@ -126,6 +148,16 @@ const CampaignDetails = () => {
       </section>
     </PageContainer>
   )
+
+  function getCampaignGoalStatus(): 'incomplete' | 'softcap_reached' | 'hardcap_reached' {
+    if (campaign.maxTotalInvestment <= campaign.investedAmount) {
+      return 'hardcap_reached'
+    } else if (campaign.minTotalInvestment <= campaign.investedAmount) {
+      return 'softcap_reached'
+    }
+
+    return 'incomplete'
+  }
 }
 
 export default CampaignDetails
