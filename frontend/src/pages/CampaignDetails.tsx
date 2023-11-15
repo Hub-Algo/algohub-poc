@@ -52,6 +52,8 @@ const CampaignDetails = () => {
 
   const campaign = campaignList.filter((campaign) => campaign.appId === campaignId)[0]
 
+  console.log(campaign)
+
   const fetchIdoAssetInfo = async () => {
     const { asset } = await assetServices.getAssetInformation(campaign?.idoAsa)
     setAssetInfo(asset)
@@ -69,9 +71,7 @@ const CampaignDetails = () => {
 
   return (
     <PageContainer>
-      <Breadcrumbs
-        pathList={['Home', 'Campaigns', `${campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName || campaign.appId}`]}
-      />
+      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.metadata.record['company-registration-info'].registeredCompanyName}`]} />
       <section>
         <div className="flex gap-5 items-center">
           <div className="w-20 h-20 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">
@@ -83,7 +83,7 @@ const CampaignDetails = () => {
           </div>
           <div>
             <h2 className="font-bold text-6xl text-gray-100 ">
-              {campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName}
+              {campaign?.metadata.record['company-registration-info'].registeredCompanyName}
             </h2>
             <h3 className="text-gray-100 text-xl ">Developing the future for everyone</h3>
           </div>

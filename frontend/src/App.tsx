@@ -49,6 +49,15 @@ export default function App() {
 
   // const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined
 
+  // const algohubClientAppDetails: AppDetails = {
+  //   resolveBy: 'id',
+  //   // id: 479483526,
+  //   id: 479564984,
+  //   sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+  // }
+
+  // const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined
+
   let providersArray: ProvidersArray
 
   if (import.meta.env.VITE_ALGOD_NETWORK === '') {
@@ -141,6 +150,20 @@ export default function App() {
 
     setAlgohubClient(activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined)
   }, [activeAccount, activeAddress, connectedAccounts, fetchAndAppendUserData])
+
+  useEffect(() => {
+    if (activeAccount) {
+      fetchAndAppendUserData(activeAccount?.address)
+    }
+    const algohubClientAppDetails: AppDetails = {
+      resolveBy: 'id',
+      // id: 479483526,
+      id: 479564984,
+      sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+    }
+
+    setAlgohubClient(activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined)
+  }, [activeAccount, activeAddress, fetchAndAppendUserData])
 
   const router = createBrowserRouter([
     {
