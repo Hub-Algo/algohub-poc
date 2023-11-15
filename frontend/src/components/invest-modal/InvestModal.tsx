@@ -11,7 +11,7 @@ import Modal from '../common/modal/Modal'
 import useAppContext from '../../core/util/useAppContext'
 import algod from '../../core/algosdk/AlgodManager'
 import { CampaignClient } from '../../contracts/CampaignClient'
-import { USDC_ASSET } from '../../core/util/asset/AssetConstants'
+import { USDC_ASSET } from '../../core/util/asset/assetConstants'
 interface InvestModalProps {
   campaignStatus: 'hypelist' | 'whitelist'
   campaignId: bigint | number

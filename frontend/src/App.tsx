@@ -26,7 +26,7 @@ import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { userService } from './services/userServices'
-import { USDC_ASSET } from './core/util/asset/AssetConstants'
+import { USDC_ASSET } from './core/util/asset/assetConstants'
 
 export interface AppState {
   activeAccount?: Account | null

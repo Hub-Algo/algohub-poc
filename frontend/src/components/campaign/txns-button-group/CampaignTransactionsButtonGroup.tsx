@@ -12,10 +12,10 @@ import { CampaignClient } from '../../../contracts/CampaignClient'
 import CampaignWithdrawIdoAsa from '../../campaign-pre-generated/CampaignWithdrawIdoAsa'
 import CampaignWithdrawSales from '../../campaign-pre-generated/CampaignWithdrawSales'
 import { Fragment } from 'react'
-import { USDC_ASSET } from '../../../core/util/asset/AssetConstants'
+import { USDC_ASSET } from '../../../core/util/asset/assetConstants'
 import OptInButton from '../../opt-in/OptInButton'
 
-function CampaignTransactions({
+function CampaignTransactionsButtonGroup({
   campaignId,
   campaignPeriod,
   campaignGoalStatus,
@@ -139,4 +139,4 @@ function CampaignTransactions({
   }
 }
 
-export default CampaignTransactions
+export default CampaignTransactionsButtonGroup

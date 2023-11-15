@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { AssetInfoInterface } from '../interfaces/AssetInfoInterface'
 import ProjectInformation from '../components/campaign/campaign-tabs/ProjectInformation'
 import useAppContext from '../core/util/useAppContext'
-import CampaignTransactions from '../components/campaign/transactions/CampaignTransactions'
+import CampaignTransactions from '../components/campaign/txns-button-group/CampaignTransactionsButtonGroup'
 import { assetServices } from '../services/assetServices'
 
 const images = [
