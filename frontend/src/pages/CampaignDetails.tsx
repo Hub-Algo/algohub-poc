@@ -1,17 +1,17 @@
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PageContainer from '../components/PageContainer'
+import CampaignDetailsDashboard from '../components/campaign/campaign-details/CampaignDetailsDashboard'
+import ProjectInformation from '../components/campaign/campaign-tabs/ProjectInformation'
 import Breadcrumbs from '../components/common/breadcrumbs/Breadcrumbs'
 import Carousel from '../components/common/carousel/Carousel'
 import Tab from '../components/common/tab/Tab'
 import { TabItem } from '../components/common/tab/Tab.types'
-import { CampaignInterface } from '../interfaces/campaign-interface'
-import CampaignDetailsDashboard from '../components/campaign/campaign-details/CampaignDetailsDashboard'
-import { useCallback, useEffect, useState } from 'react'
 import { AssetInfoInterface } from '../interfaces/AssetInfoInterface'
-import ProjectInformation from '../components/campaign/campaign-tabs/ProjectInformation'
-import useAppContext from '../core/util/useAppContext'
-import CampaignTransactions from '../components/campaign/txns-button-group/CampaignTransactionsButtonGroup'
 import { assetServices } from '../services/assetServices'
+import { CampaignObj } from '../services/campaignServices'
+import CampaignTransactionsButtonGroup from '../components/campaign/txns-button-group/CampaignTransactionsButtonGroup'
+import useAppContext from '../core/util/useAppContext'
 
 const images = [
   'https://pbs.twimg.com/profile_banners/1429713964288471040/1661936165/1500x500',
@@ -21,7 +21,7 @@ const images = [
 ]
 
 export interface CampaignOutletInterface {
-  campaignList: CampaignInterface[]
+  campaignList: CampaignObj[]
 }
 
 const CampaignDetails = () => {
@@ -29,6 +29,7 @@ const CampaignDetails = () => {
   const { campaignId } = useParams()
 
   const [assetInfo, setAssetInfo] = useState<AssetInfoInterface>()
+  const [assetInvestInfo, setAssetInvestInfo] = useState<AssetInfoInterface>()
 
   const tabItems: TabItem[] = [
     { id: 'project-info', content: 'Project information' },
@@ -43,20 +44,30 @@ const CampaignDetails = () => {
     },
   ]
 
-  const campaign = campaignList?.filter((campaign) => campaign.metadata.id === campaignId)[0]
+  const campaign = campaignList.filter((campaign) => campaign.appId === campaignId)[0]
 
-  const fetchAssetInfo = useCallback(async () => {
-    const { asset } = await assetServices.getAssetInformation(campaign?.record.productDocumentation.assetId)
+  const fetchIdoAssetInfo = async (assetId: number) => {
+    const { asset } = await assetServices.getAssetInformation(assetId)
     setAssetInfo(asset)
-  }, [campaign?.record.productDocumentation.assetId])
+  }
+
+  const fetchInvestAssetInfo = async (assetId: number) => {
+    const { asset } = await assetServices.getAssetInformation(assetId)
+    setAssetInvestInfo(asset)
+  }
 
   useEffect(() => {
-    fetchAssetInfo()
-  }, [fetchAssetInfo])
+    if (campaign) {
+      fetchIdoAssetInfo(campaign.idoAsa)
+      fetchInvestAssetInfo(campaign.investAsa)
+    }
+  }, [campaign])
 
   return (
     <PageContainer>
-      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.record.companyRegistrationInfo.registeredCompanyName}`]} />
+      <Breadcrumbs
+        pathList={['Home', 'Campaigns', `${campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName || campaign.appId}`]}
+      />
       <section>
         <div className="flex gap-5 items-center">
           <div className="w-20 h-20 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">
@@ -67,7 +78,9 @@ const CampaignDetails = () => {
             />
           </div>
           <div>
-            <h2 className="font-bold text-6xl text-gray-100 ">{campaign?.record.companyRegistrationInfo.registeredCompanyName}</h2>
+            <h2 className="font-bold text-6xl text-gray-100 ">
+              {campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName}
+            </h2>
             <h3 className="text-gray-100 text-xl ">Developing the future for everyone</h3>
           </div>
         </div>
@@ -75,18 +88,15 @@ const CampaignDetails = () => {
       <section>
         <div className="flex flex-col gap-6 md:grid md:grid-cols-9 md:gap-10">
           <Carousel images={images} />
-
           {campaign && (
-            <CampaignDetailsDashboard campaign={campaign}>
-              {campaign.record.productDocumentation.assetId && (
-                <CampaignTransactions
-                  campaignId={479634869n}
-                  campaignPeriod={'ended'}
-                  campaignGoalStatus={'hardcap'}
-                  userStatus={'invested'}
-                  idoAsaId={479553947}
-                />
-              )}
+            <CampaignDetailsDashboard investAssetInfo={assetInvestInfo!} campaign={campaign}>
+              <CampaignTransactionsButtonGroup
+                campaignId={479634869n}
+                campaignPeriod={'ended'}
+                campaignGoalStatus={'hardcap'}
+                userStatus={'invested'}
+                idoAsaId={479553947}
+              />
             </CampaignDetailsDashboard>
           )}
         </div>

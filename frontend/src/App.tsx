@@ -16,7 +16,6 @@ import ROUTES from './core/routes'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
-import { CampaignInterface } from './interfaces/new-campaign-interface'
 import { UserInterface } from './interfaces/userInterface'
 import About from './pages/About'
 import AllCampaigns from './pages/AllCampaigns'
@@ -24,30 +23,32 @@ import CampaignDetails from './pages/CampaignDetails'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
-import { fetchAllCampaigns } from './services/campaignServices'
+import { CampaignObj, fetchAllCampaignIds, fetchCampaignDetails } from './services/campaignServices'
 import { userService } from './services/userServices'
 import { USDC_ASSET } from './core/util/asset/assetConstants'
 
 export interface AppState {
   activeAccount?: Account | null
-  campaignList: CampaignInterface[]
+  campaignList: CampaignObj[]
   userData?: UserInterface
-  algohubClient: AlgohubClient | null
+  algohubClient: AlgohubClient | undefined
   fetchAndAppendUserData: (walletAddress: string) => Promise<void>
 }
 
 export default function App() {
-  const [campaignList, setCampaignList] = useState<CampaignInterface[]>([])
+  const [campaignList, setCampaignList] = useState<CampaignObj[]>([])
   const [userData, setUserData] = useState<UserInterface>()
-  const { activeAccount, signer, activeAddress } = useWallet()
+  const [algohubClient, setAlgohubClient] = useState<AlgohubClient>()
+  const { activeAccount, signer, activeAddress, connectedAccounts } = useWallet()
 
-  const algohubClientAppDetails: AppDetails = {
-    resolveBy: 'id',
-    id: 479564984,
-    sender: { signer, addr: activeAddress } as TransactionSignerAccount,
-  }
+  // const algohubClientAppDetails: AppDetails = {
+  //   resolveBy: 'id',
+  //   // id: 479483526,
+  //   id: 479564984,
+  //   sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+  // }
 
-  const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : null
+  // const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined
 
   let providersArray: ProvidersArray
 
@@ -61,14 +62,22 @@ export default function App() {
     ]
   }
 
-  const resetUserData = () => {
-    setUserData(undefined)
-  }
+  const algodConfig = getAlgodConfigFromViteEnvironment()
 
-  const fetchCampaigns = async () => {
-    const allCampaigns = await fetchAllCampaigns()
-    setCampaignList(allCampaigns)
-  }
+  const walletProviders = useInitializeProviders({
+    providers: providersArray,
+    nodeConfig: {
+      network: algodConfig.network,
+      nodeServer: algodConfig.server,
+      nodePort: String(algodConfig.port),
+      nodeToken: String(algodConfig.token),
+    },
+    algosdkStatic: algosdk,
+  })
+
+  const resetUserData = useCallback(() => {
+    setUserData(undefined)
+  }, [])
 
   const fetchAndAppendUserData = useCallback(async (walletAddress: string) => {
     const userAssets = (await userService.fetchUserAssets(walletAddress)).assets
@@ -99,34 +108,47 @@ export default function App() {
     })
   }, [])
 
+  const fetchCampaigns = useCallback(async () => {
+    if (algohubClient === undefined || algohubClient === null) {
+      setCampaignList([])
+    }
+    const allCampaignIds = await fetchAllCampaignIds(algohubClient)
+    // console.log('allCampaignIds', allCampaignIds)
+    const allCampaigns: CampaignObj[] = []
+    for (let i = 0; i < allCampaignIds.length; i++) {
+      const campaigndetails = await fetchCampaignDetails(Number(allCampaignIds[i]), algod.client)
+      // console.log('capmaignDetails', campaigndetails)
+      allCampaigns.push(campaigndetails)
+    }
+
+    console.log('allCampaigns', allCampaigns)
+    setCampaignList(allCampaigns)
+  }, [algohubClient])
+
   useEffect(() => {
     fetchCampaigns()
-  }, [])
+  }, [fetchCampaigns, activeAccount])
 
   useEffect(() => {
     if (activeAccount) {
       fetchAndAppendUserData(activeAccount?.address)
     }
-  }, [activeAccount, fetchAndAppendUserData])
+    const algohubClientAppDetails: AppDetails = {
+      resolveBy: 'id',
+      // id: 479483526,
+      id: 479564984,
+      sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+    }
 
-  const algodConfig = getAlgodConfigFromViteEnvironment()
-
-  const walletProviders = useInitializeProviders({
-    providers: providersArray,
-    nodeConfig: {
-      network: algodConfig.network,
-      nodeServer: algodConfig.server,
-      nodePort: String(algodConfig.port),
-      nodeToken: String(algodConfig.token),
-    },
-    algosdkStatic: algosdk,
-  })
+    setAlgohubClient(activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeAccount, activeAddress, connectedAccounts, fetchAndAppendUserData])
 
   const router = createBrowserRouter([
     {
       element: (
         <>
-          <NavBar userData={userData} resetUserData={resetUserData} />
+          <NavBar userData={userData} resetUserData={resetUserData} providerId={activeAccount?.providerId} />
           <Outlet context={{ activeAccount, campaignList, userData, algohubClient, fetchAndAppendUserData } satisfies AppState} />
           <Footer />
         </>

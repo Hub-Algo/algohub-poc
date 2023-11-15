@@ -1,14 +1,14 @@
 import './_campaign-list.scss'
 
-import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti'
 import { useEffect, useState } from 'react'
+import { TiMediaPlay, TiMediaPlayReverse } from 'react-icons/ti'
 import { useWindowSizeContext } from '../../../core/window-size/WindowSizeContext'
 import Button from '../../common/button/Button'
 import CardWithImage from '../../common/card/with-image/CardWithImage'
-import { CampaignInterface } from '../../../interfaces/new-campaign-interface'
+import { CampaignObj } from '../../../services/campaignServices'
 
 interface CampaignsListPropsInterface {
-  campaigns: CampaignInterface[]
+  campaigns: CampaignObj[]
   listLabel: string
 }
 
