@@ -52,7 +52,7 @@ const CampaignDetails = () => {
   const campaign = campaignList.filter((campaign) => campaign.appId === campaignId)[0]
 
   const fetchAssetInfo = async () => {
-    const { asset } = await assetServices.getAssetInformation(campaign?.metadata?.record?.productDocumentation?.assetId)
+    const { asset } = await assetServices.getAssetInformation(campaign?.idoAsa)
     setAssetInfo(asset)
   }
 
@@ -62,7 +62,9 @@ const CampaignDetails = () => {
 
   return (
     <PageContainer>
-      <Breadcrumbs pathList={['Home', 'Campaigns', `${campaign?.metadata.record.companyRegistrationInfo.registeredCompanyName}`]} />
+      <Breadcrumbs
+        pathList={['Home', 'Campaigns', `${campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName || campaign.appId}`]}
+      />
       <section>
         <div className="flex gap-5 items-center">
           <div className="w-20 h-20 rounded-full bg-blue-300 border-2 border-orange-500 flex items-center justify-center overflow-hidden">

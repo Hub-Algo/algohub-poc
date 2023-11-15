@@ -8,6 +8,8 @@ import { CampaignInterface, Metadata, Records } from '../interfaces/campaign-int
 
 export type CampaignObj = {
   appId: string
+  idoAsa: number
+  investAsa: number
   conversionRate: number
   maxInvestmentPerAccount: number
   minTotalInvestment: number
@@ -38,6 +40,7 @@ const fetchCampaignDetails = async (appId: number, algod: algosdk.Algodv2): Prom
   const state = await campaignClient.appClient.getGlobalState()
   const contactTupleType = algosdk.ABITupleType.from('(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string)')
   const decodedTuple = contactTupleType.decode(state.campaign.valueRaw).valueOf() as string[]
+  console.log(state)
 
   const metadata = await axios.get(decodedTuple[8])
   console.log(metadata)
@@ -45,6 +48,8 @@ const fetchCampaignDetails = async (appId: number, algod: algosdk.Algodv2): Prom
   return {
     appId: appId.toString(),
     conversionRate: Number(decodedTuple[0]),
+    idoAsa: state.idoAsaId.value,
+    investAsa: state.investmentAsaId.value,
     maxInvestmentPerAccount: Number(decodedTuple[1]),
     minTotalInvestment: Number(decodedTuple[2]),
     maxTotalInvestment: Number(decodedTuple[3]),

@@ -16,9 +16,10 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
       </div>
       <div className="flex items-end gap-6">
         <h4 className="font-bold text-gray-100">Asset id:</h4>
-        <a href={`https://testnet.algoexplorer.io/asset/${campaign?.metadata?.record?.productDocumentation.assetId}`}>
+
+        <a href={`https://testnet.algoexplorer.io/asset/${campaign?.idoAsa}`}>
           <h3 className=" text-blue-500 border-b border-blue-500 hover:text-blue-600 hover:border-blue-600">
-            {campaign?.metadata?.record?.productDocumentation?.assetId} - {assetInfo?.params.name}
+            {campaign?.idoAsa} - {assetInfo?.params.name}
           </h3>
         </a>
       </div>

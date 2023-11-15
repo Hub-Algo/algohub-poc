@@ -195,19 +195,19 @@ describe('Algohub App', () => {
   });
 
   test('Algohub - app creation', async () => {
-    console.log('==============================');
+    // console.log('==============================');
 
     const votersDetails = await appClient.getVotersDetails({}, { sender: sender1 });
-    const simulateResult = await (
-      await appClient.compose().getVotersDetails({}, { sender: sender1 }).atc()
-    ).simulate(algod);
+    // const simulateResult = await (
+    //   await appClient.compose().getVotersDetails({}, { sender: sender1 }).atc()
+    // ).simulate(algod);
 
     // expect(simulateResult.methodResults?.[0].returnValue).toBe(expectedValue);
-    console.log(simulateResult);
-    const state = await appClient.appClient.getGlobalState();
-    console.log(state);
+    // console.log(simulateResult);
+    // const state = await appClient.appClient.getGlobalState();
+    // console.log(state);
 
-    console.log('==============================');
+    // console.log('==============================');
     expect(votersDetails.return?.[0].valueOf()).toBe(BigInt(algoToVoteRatio));
     expect(votersDetails.return?.[1].valueOf()).toBe(BigInt(vipVoteWeight));
     expect(votersDetails.return?.[2].valueOf()).toBe(BigInt(0));

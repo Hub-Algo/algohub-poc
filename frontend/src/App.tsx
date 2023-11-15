@@ -38,7 +38,16 @@ export default function App() {
   const [campaignList, setCampaignList] = useState<CampaignObj[]>([])
   const [userData, setUserData] = useState<UserInterface>()
   const [algohubClient, setAlgohubClient] = useState<AlgohubClient>()
-  const { activeAccount, signer, activeAddress } = useWallet()
+  const { activeAccount, signer, activeAddress, connectedAccounts } = useWallet()
+
+  // const algohubClientAppDetails: AppDetails = {
+  //   resolveBy: 'id',
+  //   // id: 479483526,
+  //   id: 479564984,
+  //   sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+  // }
+
+  // const algohubClient = activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined
 
   // const algohubClientAppDetails: AppDetails = {
   //   resolveBy: 'id',
@@ -122,11 +131,25 @@ export default function App() {
 
     console.log('allCampaigns', allCampaigns)
     setCampaignList(allCampaigns)
-  }, [])
+  }, [algohubClient])
 
   useEffect(() => {
     fetchCampaigns()
-  }, [fetchCampaigns])
+  }, [fetchCampaigns, activeAccount])
+
+  useEffect(() => {
+    if (activeAccount) {
+      fetchAndAppendUserData(activeAccount?.address)
+    }
+    const algohubClientAppDetails: AppDetails = {
+      resolveBy: 'id',
+      // id: 479483526,
+      id: 479564984,
+      sender: { signer, addr: activeAddress } as TransactionSignerAccount,
+    }
+
+    setAlgohubClient(activeAddress ? new AlgohubClient(algohubClientAppDetails, algod.client) : undefined)
+  }, [activeAccount, activeAddress, connectedAccounts, fetchAndAppendUserData])
 
   useEffect(() => {
     if (activeAccount) {

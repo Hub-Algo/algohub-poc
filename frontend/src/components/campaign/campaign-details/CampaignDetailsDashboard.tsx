@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react'
+import { convertFromBaseUnits } from '../../../core/util/transaction/transactionUtils'
+import { AssetInfoInterface } from '../../../interfaces/AssetInfoInterface'
+import { AssetServices } from '../../../services/assetServices'
 import { CampaignObj } from '../../../services/campaignServices'
 import CategoryBadge from '../../CategoryBadge'
 
@@ -7,6 +11,16 @@ interface CampaignDetailsDashboardPropsInterface {
 }
 
 const CampaignDetailsDashboard = ({ children, campaign }: CampaignDetailsDashboardPropsInterface) => {
+  const [assetInfo, setAssetInfo] = useState<AssetInfoInterface>()
+
+  const assetServices = new AssetServices()
+  const fetchAssetInfo = async () => {
+    const { asset } = await assetServices.getAssetInformation(campaign?.investAsa)
+    setAssetInfo(asset)
+  }
+  useEffect(() => {
+    fetchAssetInfo()
+  }, [])
   return (
     <div className="w-full  bg-gradient-to-b from-black via-gray-950 to-gray-950 rounded-md p-6 gap-6 flex flex-col col-span-4 ">
       <div className="flex flex-col gap-5">
@@ -18,7 +32,9 @@ const CampaignDetailsDashboard = ({ children, campaign }: CampaignDetailsDashboa
         </div>
         <div>
           <p className="text-sm md:text-lg text-gray-400">Fundraise goal</p>
-          <h2 className="text-xl md:text-4xl font-bold  text-gray-100 ">{campaign?.maxTotalInvestment} USDC</h2>
+          <h2 className="text-xl md:text-4xl font-bold  text-gray-100 ">
+            {convertFromBaseUnits(assetInfo?.params.decimals || 0, campaign?.maxTotalInvestment)} {assetInfo?.params['unit-name']}
+          </h2>
         </div>
       </div>
       <div className="text-gray-300 flex w-full items-center justify-between">
@@ -30,12 +46,14 @@ const CampaignDetailsDashboard = ({ children, campaign }: CampaignDetailsDashboa
       <div className="text-gray-300 flex w-full items-center justify-between">
         <p className="w-2/6">Min allocation</p>
         <div className="w-2/6 border h-px border-dashed border-gray-600"></div>
-        <p className="w-2/6 flex justify-end">{campaign?.maxTotalInvestment} USDC</p>
+        <p className="w-2/6 flex justify-end">
+          {convertFromBaseUnits(assetInfo?.params.decimals || 0, campaign?.maxTotalInvestment)} {assetInfo?.params['unit-name']}
+        </p>
       </div>
 
       {children}
 
-      <a className="btn" href={campaign?.metadata?.record.productOverview.website} target="_blank" rel="noopener noreferrer">
+      <a className="btn" href={campaign?.metadata?.record?.productOverview?.website} target="_blank" rel="noopener noreferrer">
         {'Visit project Website'}
       </a>
     </div>
