@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import Input from '../../../../../../common/input/Input'
 
-import { INITIAL_CAMPAIGN_APPLICATION_FUND_RAISING_GOAL } from '../../CampaignApplicationForm.constants'
-import Button from '../../../../../../common/button/Button'
+import { BiQuestionMark } from 'react-icons/bi'
 import {
   CampaignApplicationFormData,
   CampaignApplicationFormView,
   CampaignApplicationFundRaisingGoal,
 } from '../../../../../../../pages/campaign-application/CampaignApplication.types'
 import LabelTooltip from '../../../../../../common/LabelTooltip'
-import { BiQuestionMark } from 'react-icons/bi'
+import Button from '../../../../../../common/button/Button'
+import { INITIAL_CAMPAIGN_APPLICATION_FUND_RAISING_GOAL } from '../../CampaignApplicationForm.constants'
 
 interface CampaignApplicationFormFundRaisingGoalProps {
   onSubmitForm: (data: CampaignApplicationFormData) => void
@@ -65,7 +65,7 @@ function CampaignApplicationFormFundRaisingGoal({
         </div>
 
         <div className="w-full">
-          <LabelTooltip labelContent="USD price of the token" />
+          <LabelTooltip labelContent="USD conversionRate of the token" />
           <Input type={'string'} value={state?.usdPricePerToken ?? ''} onChange={handleSetUsdPricePerToken} customClassName={'mx-auto'} />
         </div>
 

@@ -2,7 +2,6 @@
 import { useWallet } from '@txnlab/use-wallet'
 import { ReactNode, useState } from 'react'
 import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
-import Button from '../common/button/Button'
 
 /* Example usage
 <CampaignCreateApplication
@@ -10,6 +9,7 @@ import Button from '../common/button/Button'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call createApplication"
   typedClient={typedClient}
+  algohubApp={algohubApp}
 />
 */
 type CampaignCreateApplicationArgs = Campaign['methods']['createApplication(application)void']['argsObj']
@@ -40,9 +40,9 @@ const CampaignCreateApplication = (props: Props) => {
   }
 
   return (
-    <Button customClassName={props.buttonClass} onClick={callMethod} shouldDisplaySpinner={loading}>
-      {props.buttonNode}
-    </Button>
+    <button className={props.buttonClass} onClick={callMethod}>
+      {loading ? props.buttonLoadingNode || props.buttonNode : props.buttonNode}
+    </button>
   )
 }
 

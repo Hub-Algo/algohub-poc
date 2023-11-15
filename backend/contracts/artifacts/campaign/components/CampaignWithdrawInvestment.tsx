@@ -9,7 +9,7 @@ import { useWallet } from '@txnlab/use-wallet'
   buttonLoadingNode={<span className="loading loading-spinner" />}
   buttonNode="Call withdrawInvestment"
   typedClient={typedClient}
-  buyAsa={buyAsa}
+  investmentAsa={investmentAsa}
 />
 */
 type CampaignWithdrawInvestmentArgs = Dao['methods']['withdrawInvestment(asset)void']['argsObj']
@@ -19,7 +19,7 @@ type Props = {
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  buyAsa: CampaignWithdrawInvestmentArgs['buyAsa']
+  investmentAsa: CampaignWithdrawInvestmentArgs['investmentAsa']
 }
 
 const CampaignWithdrawInvestment = (props: Props) => {
@@ -32,7 +32,7 @@ const CampaignWithdrawInvestment = (props: Props) => {
     console.log(`Calling withdrawInvestment`)
     await props.typedClient.withdrawInvestment(
       {
-        buyAsa: props.buyAsa,
+        investmentAsa: props.investmentAsa,
       },
       { sender },
     )

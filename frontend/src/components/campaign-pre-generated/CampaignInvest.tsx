@@ -4,41 +4,41 @@ import { ReactNode, useState } from 'react'
 import { Campaign, CampaignClient } from '../../contracts/CampaignClient'
 
 /* Example usage
-<CampaignBuy
+<CampaignInvest
   buttonClass="btn m-2"
   buttonLoadingNode={<span className="loading loading-spinner" />}
-  buttonNode="Call buy"
+  buttonNode="Call invest"
   typedClient={typedClient}
-  buyAsaXfer={buyAsaXfer}
-  buyAsa={buyAsa}
-  buyAmount={buyAmount}
+  investmentAsaXfer={investmentAsaXfer}
+  investmentAsa={investmentAsa}
+  investmentAmount={investmentAmount}
 />
 */
-type CampaignBuyArgs = Campaign['methods']['buy(axfer,asset,uint64)void']['argsObj']
+type CampaignInvestArgs = Campaign['methods']['invest(axfer,asset,uint64)void']['argsObj']
 
 type Props = {
   buttonClass: string
   buttonLoadingNode?: ReactNode
   buttonNode: ReactNode
   typedClient: CampaignClient
-  buyAsaXfer: CampaignBuyArgs['buyAsaXfer']
-  buyAsa: CampaignBuyArgs['buyAsa']
-  buyAmount: CampaignBuyArgs['buyAmount']
+  investmentAsaXfer: CampaignInvestArgs['investmentAsaXfer']
+  investmentAsa: CampaignInvestArgs['investmentAsa']
+  investmentAmount: CampaignInvestArgs['investmentAmount']
 }
 
-const CampaignBuy = (props: Props) => {
+const CampaignInvest = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { activeAddress, signer } = useWallet()
   const sender = { signer, addr: activeAddress! }
 
   const callMethod = async () => {
     setLoading(true)
-    console.log(`Calling buy`)
-    await props.typedClient.buy(
+    console.log(`Calling invest`)
+    await props.typedClient.invest(
       {
-        buyAsaXfer: props.buyAsaXfer,
-        buyAsa: props.buyAsa,
-        buyAmount: props.buyAmount,
+        investmentAsaXfer: props.investmentAsaXfer,
+        investmentAsa: props.investmentAsa,
+        investmentAmount: props.investmentAmount,
       },
       { sender },
     )
@@ -52,4 +52,4 @@ const CampaignBuy = (props: Props) => {
   )
 }
 
-export default CampaignBuy
+export default CampaignInvest

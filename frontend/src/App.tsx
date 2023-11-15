@@ -17,6 +17,7 @@ import { USDC_ASSET } from './core/util/asset/AssetConstants'
 import { getAlgodConfigFromViteEnvironment } from './core/util/network/getAlgoClientConfigs'
 import { convertFromBaseUnits } from './core/util/transaction/transactionUtils'
 import { WindowSizeContextProvider } from './core/window-size/WindowSizeContext'
+import { CampaignInterface } from './interfaces/new-campaign-interface'
 import { UserInterface } from './interfaces/userInterface'
 import About from './pages/About'
 import AllCampaigns from './pages/AllCampaigns'
@@ -26,7 +27,6 @@ import Profile from './pages/Profile'
 import { CampaignApplicationContextProvider } from './pages/campaign-application/CampaignApplication.context'
 import { fetchAllCampaigns } from './services/campaignServices'
 import { userServices } from './services/userServices'
-import { CampaignInterface } from './interfaces/new-campaign-interface'
 
 export interface AppState {
   activeAccount?: Account | null
@@ -42,7 +42,7 @@ export default function App() {
 
   const algohubClientAppDetails: AppDetails = {
     resolveBy: 'id',
-    id: 479483526,
+    id: 479564984,
     sender: { signer, addr: activeAddress } as TransactionSignerAccount,
   }
 

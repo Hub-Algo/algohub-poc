@@ -1,7 +1,7 @@
 import { FormEvent } from 'react'
+import useAppContext from '../../../../core/util/useAppContext'
 import Button from '../../../common/button/Button'
 import Input from '../../../common/input/Input'
-import useAppContext from '../../../../core/util/useAppContext'
 
 interface InvestModalInitialViewProps {
   inputProps: {
@@ -14,7 +14,7 @@ function InvestModalInitialView({ inputProps, onInvestButtonClick }: InvestModal
   const { userData } = useAppContext()
   const outputToken = (inputProps.value ?? 0) / 10 // TODO: Calculate output token
   const algoFee = '0.03 ALGO' // TODO: Calculate manually
-  const maxBuyCap = 5000 // TODO: fetch this info from the contract/api
+  const maxInvestmentPerAccount = 5000 // TODO: fetch this info from the contract/api
 
   return (
     <form onSubmit={onInvestButtonClick} className={'flex flex-col gap-4'}>
@@ -29,7 +29,7 @@ function InvestModalInitialView({ inputProps, onInvestButtonClick }: InvestModal
         value={inputProps.value ?? ''}
         placeholder={'Enter amount'}
         onChange={inputProps.onChange}
-        max={Math.max(userData?.usdc_balance ?? 0, maxBuyCap)}
+        max={Math.max(userData?.usdc_balance ?? 0, maxInvestmentPerAccount)}
         min={0}
       />
 
