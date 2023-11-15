@@ -30,7 +30,7 @@ const CampaignDetailsDashboard = ({ children, campaign, investAssetInfo }: Campa
             <p className="md:text-lg text-gray-100 text-xl font-bold">
               {campaign?.maxTotalInvestment > campaign?.minTotalInvestment ? 'Stretch' : 'Fundraise'} goal:
             </p>
-            <p className="md:text-4xl text-gray-100 text-xl">
+            <p className="text-gray-100 text-xl">
               {convertFromBaseUnits(investAssetInfo?.params.decimals || 0, campaign?.maxTotalInvestment)}{' '}
               {investAssetInfo?.params['unit-name']}
             </p>

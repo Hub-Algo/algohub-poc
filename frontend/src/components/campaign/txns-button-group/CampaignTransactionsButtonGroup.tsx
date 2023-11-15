@@ -14,17 +14,6 @@ import CampaignWithdrawInvestment from '../../campaign-pre-generated/CampaignWit
 import CampaignWithdrawSales from '../../campaign-pre-generated/CampaignWithdrawSales'
 import WalletConnectModal from '../../common/wallet-connect-modal/WalletConnectModal'
 import InvestModal from '../../invest-modal/InvestModal'
-<<<<<<< HEAD
-=======
-import { TransactionSignerAccount } from '@algorandfoundation/algokit-utils/types/account'
-import algod from '../../../core/algosdk/AlgodManager'
-import { AppDetails } from '@algorandfoundation/algokit-utils/types/app-client'
-import { CampaignClient } from '../../../contracts/CampaignClient'
-import CampaignWithdrawIdoAsa from '../../campaign-pre-generated/CampaignWithdrawIdoAsa'
-import CampaignWithdrawSales from '../../campaign-pre-generated/CampaignWithdrawSales'
-import { Fragment } from 'react'
-import { USDC_ASSET } from '../../../core/util/asset/AssetConstants'
->>>>>>> 833a211 ((ui) change logos used on hero and navbar)
 import OptInButton from '../../opt-in/OptInButton'
 
 function CampaignTransactionsButtonGroup({
