@@ -66,7 +66,7 @@ const CampaignDetails = () => {
   return (
     <PageContainer>
       <Breadcrumbs
-        pathList={['Home', 'Campaigns', `${campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName || campaign.appId}`]}
+        pathList={['Home', 'Campaigns', `${campaign?.metadata?.record?.companyRegistrationInfo?.registeredCompanyName || campaign?.appId}`]}
       />
       <section>
         <div className="flex gap-5 items-center">
@@ -88,14 +88,15 @@ const CampaignDetails = () => {
       <section>
         <div className="flex flex-col gap-6 md:grid md:grid-cols-9 md:gap-10">
           <Carousel images={images} />
+
           {campaign && (
             <CampaignDetailsDashboard investAssetInfo={assetInvestInfo!} campaign={campaign}>
               <CampaignTransactionsButtonGroup
-                campaignId={479634869n}
+                campaignId={Number(campaign.appId)}
                 campaignPeriod={'ended'}
                 campaignGoalStatus={'hardcap'}
                 userStatus={'invested'}
-                idoAsaId={479553947}
+                idoAsaId={campaign.idoAsa}
               />
             </CampaignDetailsDashboard>
           )}
