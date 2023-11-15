@@ -59,7 +59,7 @@ const ProjectInformation = ({ campaign, assetInfo }: ProjectInformationPropsInte
               <FaDiscord />
             </li>
           </a>
-          <a href={`https://twitter.com/${campaign?.metadata.record?.productOverview?.xAccount}`}>
+          <a href={`https://twitter.com/${campaign?.metadata.record?.['product-overview'].xAccount}`}>
             <li className="hover:text-blue-500 hover:border-blue-600 border-b border-blue-500 pb-1">
               <FaSquareXTwitter />
             </li>
