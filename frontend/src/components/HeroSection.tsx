@@ -1,8 +1,8 @@
-import { BiDollarCircle, BiWallet } from 'react-icons/bi'
+import { BiDollarCircle } from 'react-icons/bi'
+import routes from '../core/routes'
 import HeroButton from './HeroButton'
 import { UserDataOutletInterface } from './NavBar'
 import Button from './common/button/Button'
-import routes from '../core/routes'
 
 const HeroSection = ({ userData }: UserDataOutletInterface) => {
   return (
