@@ -103,6 +103,26 @@
       }
     },
     {
+      "name": "setHypelistedAccount",
+      "args": [
+        {
+          "name": "account",
+          "type": "account",
+          "desc": ""
+        },
+        {
+          "name": "isHypelisted",
+          "type": "bool",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
       "name": "depositIdoAsa",
       "args": [
         {
@@ -237,7 +257,7 @@
       }
     },
     {
-      "name": "getAccountTotalPurchases",
+      "name": "getAccountTotalInvestment",
       "args": [
         {
           "name": "account",

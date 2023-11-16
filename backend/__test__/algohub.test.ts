@@ -119,7 +119,7 @@ describe('Algohub App', () => {
   beforeAll(async () => {
     await fixture.beforeEach();
     algod = fixture.context.algod;
-    await algod.setBlockOffsetTimestamp(0).do();
+    await algod.setBlockOffsetTimestamp(1).do();
     const { kmd } = fixture.context;
 
     sender1 = await getOrCreateKmdWalletAccount(
@@ -427,7 +427,8 @@ describe('Algohub App', () => {
       suggestedParams: await algokit.getTransactionParams(undefined, algod),
       assetIndex: Number(idoAsa.index),
     });
-
+    // atestTimestamp; >; assert @ 275000
+    await algod.setBlockOffsetTimestamp(votingPeriod - 375000).do();
     await campaignContract.depositIdoAsa(
       { idoXfer: idoXferTxn, idoAsa: idoAsa.index },
       {
@@ -489,8 +490,8 @@ describe('Algohub App', () => {
       suggestedParams: await algokit.getTransactionParams(undefined, algod),
       assetIndex: Number(usdcAsa.index),
     });
-    await algod.setBlockOffsetTimestamp(votingPeriod + campaign.duration).do();
 
+    await algod.setBlockOffsetTimestamp(campaign.duration).do();
     const usdcBalanceBefore = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa.index)).do();
     expect(BigInt(usdcBalanceBefore['asset-holding'].amount)).toBe(
       BigInt(totalIdoTokens * 10 ** usdcAsa.params.decimals)
@@ -504,7 +505,10 @@ describe('Algohub App', () => {
       },
       {
         sender: sender1,
-        boxes: [new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey]))],
+        boxes: [
+          new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey])),
+          new Uint8Array(Buffer.concat([Buffer.from('h'), algosdk.decodeAddress(sender1.addr).publicKey])),
+        ],
       }
     );
     const usdcBalanceAfter = await algod.accountAssetInformation(sender1.addr, Number(usdcAsa.index)).do();
@@ -536,10 +540,8 @@ describe('Algohub App', () => {
         {
           sender: sender1,
           boxes: [
-            {
-              appIndex: 0,
-              name: new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey])),
-            },
+            new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey])),
+            new Uint8Array(Buffer.concat([Buffer.from('h'), algosdk.decodeAddress(sender1.addr).publicKey])),
           ],
         }
       )
@@ -547,7 +549,7 @@ describe('Algohub App', () => {
   });
 
   test('Campaign Contract - claim()', async () => {
-    const claimAmount = await campaignContract.getAccountTotalPurchases(
+    const claimAmount = await campaignContract.getAccountTotalInvestment(
       { account: sender1.addr },
       { boxes: [new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey]))] }
     );
@@ -564,6 +566,7 @@ describe('Algohub App', () => {
         boxes: [
           new Uint8Array(Buffer.concat([Buffer.from('c'), algosdk.decodeAddress(sender1.addr).publicKey])),
           new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(sender1.addr).publicKey])),
+          new Uint8Array(Buffer.concat([Buffer.from('h'), algosdk.decodeAddress(sender1.addr).publicKey])),
         ],
       }
     );

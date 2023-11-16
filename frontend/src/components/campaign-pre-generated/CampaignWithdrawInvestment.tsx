@@ -46,7 +46,7 @@ const CampaignWithdrawInvestment = (props: Props) => {
             sendParams: {
               fee: microAlgos(3_000),
             },
-            boxes: [new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(activeAddress).publicKey]))],
+            boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(activeAddress).publicKey]))],
           },
         )
         .then(() => {

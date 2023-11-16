@@ -135,7 +135,7 @@ function InvestModal({ campaignStatus, campaign }: InvestModalProps) {
           { investmentAsaXfer: investXferTxn, investmentAsa: USDC_ASSET.id, investmentAmount: value },
           {
             sender: { signer, addr: state.activeAccount?.address } as TransactionSignerAccount,
-            boxes: [new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(state.activeAccount.address).publicKey]))],
+            boxes: [new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(state.activeAccount.address).publicKey]))],
           },
         )
 

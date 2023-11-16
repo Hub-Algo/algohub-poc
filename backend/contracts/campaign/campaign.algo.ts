@@ -144,10 +144,6 @@ export default class Campaign extends Contract {
     this.hypelist(account).value = isHypelisted;
   }
 
-  isHypelisted(account: Account): boolean {
-    return this.hypelist(account).value;
-  }
-
   // eslint-disable-next-line no-unused-vars
   depositIdoAsa(idoXfer: AssetTransferTxn, idoAsa: Asset): void {
     // TODO: Safeguard the allowance of deposit IDO Assets only once
@@ -178,10 +174,10 @@ export default class Campaign extends Contract {
     // Check amount to invest is not more than max invest cap
     const investmentAsaToTransfer = investmentAmount * 10 ** investmentAsa.decimals;
     assert(this.campaign.value.maxInvestmentPerAccount >= investmentAsaToTransfer);
-    // Allow hypelisted addresses to invest before start time
-    if (!this.isHypelisted(this.txn.sender)) {
-      assert(this.campaign.value.startTime < globals.latestTimestamp);
-    }
+    // TODO: Allow hypelisted addresses to invest before start time
+    // if (!this.hypelist(this.txn.sender).value) {
+    assert(this.campaign.value.startTime < globals.latestTimestamp);
+    // }
     // check that hardcap is not reached
     assert(this.campaign.value.maxTotalInvestment >= this.campaign.value.investedAmount + investmentAsaToTransfer);
     // TODO: allow set approve campaign in case invest cannot be called due to hardcap reached
@@ -279,7 +275,7 @@ export default class Campaign extends Contract {
     // in latter case, can withdraw all the Ido tokens
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
-    assert(this.campaign.value.endTime > globals.latestTimestamp);
+    assert(this.campaign.value.endTime < globals.latestTimestamp);
     if (this.isApproved()) {
       const totalUnsoldAmount = this.campaign.value.maxTotalInvestment - this.campaign.value.investedAmount;
       assert(totalUnsoldAmount > 0);
@@ -304,7 +300,7 @@ export default class Campaign extends Contract {
     // to allow them to withdaw all or part of the sale/invest tokens.
     assert(this.campaign.exists);
     verifyTxn(this.txn, { sender: this.admin.value });
-    assert(this.campaign.value.endTime > globals.latestTimestamp);
+    assert(this.campaign.value.endTime < globals.latestTimestamp);
     // TODO: We might want to introduce some vesting schedule for admin as well
     sendAssetTransfer({
       sender: this.app.address,

@@ -61,7 +61,7 @@ const CampaignClaim = (props: Props) => {
             },
             boxes: [
               new Uint8Array(Buffer.concat([Buffer.from('c'), algosdk.decodeAddress(activeAddress).publicKey])),
-              new Uint8Array(Buffer.concat([Buffer.from('i'), algosdk.decodeAddress(activeAddress).publicKey])),
+              new Uint8Array(Buffer.concat([Buffer.from('p'), algosdk.decodeAddress(activeAddress).publicKey])),
             ],
           },
         )
